@@ -1,6 +1,10 @@
 package terminal;
 
+/**
+ * AnsiColorUtils provides utility methods for formatting strings with ANSI color codes.
+ */
 public class AnsiColorUtils {
+    // ANSI color code constants
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_BLACK = "\u001B[30m";
     private static final String ANSI_RED = "\u001B[31m";
@@ -11,9 +15,18 @@ public class AnsiColorUtils {
     private static final String ANSI_CYAN = "\u001B[36m";
     private static final String ANSI_WHITE = "\u001B[37m";
 
+    /**
+     * Formats the given string with the specified ANSI color.
+     *
+     * @param string the string to format
+     * @param color  the color name (e.g., "red", "green")
+     * @return the colored string
+     * @throws IllegalArgumentException if the color is invalid
+     */
     public static String formatStringWithColor(String string, String color) {
-        String targetColor = "";
+        String targetColor;
 
+        // Select the ANSI color code based on the color name
         switch (color) {
             case "black":
                 targetColor = ANSI_BLACK;
@@ -43,6 +56,7 @@ public class AnsiColorUtils {
                 throw new IllegalArgumentException("Invalid color: " + color);
         }
 
+        // Return the colored string with reset at the end
         return targetColor + string + ANSI_RESET;
     }
 }

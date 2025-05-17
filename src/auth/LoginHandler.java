@@ -1,18 +1,36 @@
 package auth;
 
-import cli.Argument;
-import cli.ArgumentDataType;
 import cli.CommandParser;
+import cli.CommandParser.*;
+import cli.arguments.ArgumentDataType;
+import cli.arguments.ArgumentList;
+import cli.arguments.KeywordArgument;
+import cli.arguments.PositionalArgument;
 import utils.SimpleMap;
 
+/**
+ * LoginHandler handles the login command and argument validation.
+ */
 public class LoginHandler {
-    private static final Argument[] REQUIRED_ARGS = {
-        new Argument("username", "u", ArgumentDataType.STRING),
-        new Argument("password", "p", ArgumentDataType.STRING)
-    };
+    // Allowed arguments for the login command
+    private static final ArgumentList ALLOWED_ARGS = new ArgumentList(
+            new PositionalArgument[]{
+                    new PositionalArgument("username", ArgumentDataType.STRING),
+                    new PositionalArgument("password", ArgumentDataType.STRING),
+            },
+            new KeywordArgument[]{
+                    new KeywordArgument("colored", "c", ArgumentDataType.FLAG, false),
+            }
+    );
 
-    public static void login(String[][] args) {
-        SimpleMap<String, String> argsMap = CommandParser.validateAndGenerateArgsMap(args, REQUIRED_ARGS);
+    /**
+     * Handles the login process using the parsed command.
+     *
+     * @param parsedCommand the parsed command containing arguments
+     */
+    public static void login(ParsedCommand parsedCommand) {
+        // Validate and extract arguments
+        SimpleMap<String, String> argsMap = CommandParser.validateAndGenerateArgsMap(parsedCommand, ALLOWED_ARGS);
 
         String username = argsMap.get("username");
         String password = argsMap.get("password");
