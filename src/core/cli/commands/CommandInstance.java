@@ -10,10 +10,10 @@ import core.utils.SimpleMap;
  * It includes the command name, a description, a list of arguments, and a handler that processes the command.
  */
 public class CommandInstance {
-    private final String name;
-    private final String description;
-    private final ArgumentList args;
-    private final Handler handler;
+    public final String name;
+    public final String description;
+    public final ArgumentList args;
+    public final Handler handler;
 
     /**
      * Constructs a Command with the given command name, argument list, and handler.
@@ -63,33 +63,6 @@ public class CommandInstance {
 
         handler.argsMap = argsMap;
         handler.run();
-    }
-
-    /**
-     * Returns the name of the command.
-     *
-     * @return the command name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Returns the description of the command.
-     *
-     * @return the command description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Returns the list of arguments for the command.
-     *
-     * @return the argument list
-     */
-    public ArgumentList getArgs() {
-        return args;
     }
 
     /**

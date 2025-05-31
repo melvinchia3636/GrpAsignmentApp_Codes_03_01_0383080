@@ -4,9 +4,9 @@ package core.cli.arguments;
  * PositionalArgument represents a positional argument for a command.
  */
 public class PositionalArgument {
-    private final String name;
-    private final String description;
-    private final ArgumentDataType dataType;
+    public final String name;
+    public final String description;
+    public final ArgumentDataType dataType;
 
     /**
      * Constructs a PositionalArgument with the given name and data type.
@@ -23,17 +23,5 @@ public class PositionalArgument {
         this.name = name;
         this.description = description;
         this.dataType = dataType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public ArgumentDataType getDataType() {
-        return dataType;
     }
 }

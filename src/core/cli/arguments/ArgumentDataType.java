@@ -12,19 +12,10 @@ public class ArgumentDataType {
     public static final ArgumentDataType FLOAT = new ArgumentDataType("float");
     public static final ArgumentDataType FLAG = new ArgumentDataType("flag");
 
-    private final String type;
+    public final String type;
 
     private ArgumentDataType(String type) {
         this.type = type;
-    }
-
-    /**
-     * Returns the string representation of the data type.
-     *
-     * @return the type as a string
-     */
-    public String getType() {
-        return type;
     }
 
     /**
@@ -57,7 +48,7 @@ public class ArgumentDataType {
      * @return the maximum length of type strings
      */
     public static int getMaxTypeStringLength() {
-        return Math.max(Math.max(STRING.getType().length(), INTEGER.getType().length()),
-                Math.max(FLOAT.getType().length(), FLAG.getType().length()));
+        return Math.max(Math.max(STRING.type.length(), INTEGER.type.length()),
+                Math.max(FLOAT.type.length(), FLAG.type.length()));
     }
 }

@@ -64,8 +64,8 @@ public class HelpHandler extends CommandInstance.Handler {
 
         // Dynamically append command names and descriptions into the help message
         for (CommandInstance command : CommandRegistrar.commandInstances) {
-            String commandName = command.getName();
-            String commandDescription = command.getDescription();
+            String commandName = command.name;
+            String commandDescription = command.description;
 
             String firstSentenceOfDescription = commandDescription.contains(".")
                     ? commandDescription.substring(0, commandDescription.indexOf(".") + 1)
@@ -93,7 +93,7 @@ public class HelpHandler extends CommandInstance.Handler {
      * @param commandInstance The CommandInstance object representing the command to display help for.
      */
     private static void printCommandHelp(CommandInstance commandInstance) {
-        String description = commandInstance.getDescription();
+        String description = commandInstance.description;
 
         int fullStopIndex = description.indexOf(".");
         fullStopIndex = fullStopIndex == -1 ? description.length() : fullStopIndex + 1;
@@ -102,7 +102,7 @@ public class HelpHandler extends CommandInstance.Handler {
         String remainingDescription = description.substring(fullStopIndex).trim();
 
         String usageMsg = new Chalk("USAGE:").yellow().bold() + "\n" +
-                "    " + new Chalk(commandInstance.getName()).bold().green().toString() + " [positional_arguments] [--keyword-arguments]\n\n";
+                "    " + new Chalk(commandInstance.name).bold().green().toString() + " [positional_arguments] [--keyword-arguments]\n\n";
 
         String descriptionMsg = new Chalk("DESCRIPTION:").yellow().bold() + "\n" +
                 formatStringWithIndentation(firstSentence) + "\n\n" +
@@ -112,20 +112,23 @@ public class HelpHandler extends CommandInstance.Handler {
 
         int maxTypeStringLength = ArgumentDataType.getMaxTypeStringLength();
 
-        if (commandInstance.getArgs().getPositionalArguments().length != 0) {
+        PositionalArgument[] positionalArgs = commandInstance.args.positionalArguments;
+        KeywordArgument[] keywordArgs = commandInstance.args.keywordArguments;
+
+        if (positionalArgs.length != 0) {
             argsMsg.append(new Chalk("POSITIONAL ARGUMENTS:").yellow().bold()).append("\n");
 
-            int maxPositionalArgNameLength = commandInstance.getArgs().getMaxPositionalArgumentNameLength();
+            int maxPositionalArgNameLength = commandInstance.args.getMaxPositionalArgumentNameLength();
 
-            for (PositionalArgument arg : commandInstance.getArgs().getPositionalArguments()) {
-                String argName = arg.getName();
-                String argDescription = arg.getDescription();
+            for (PositionalArgument arg : positionalArgs) {
+                String argName = arg.name;
+                String argDescription = arg.description;
 
                 argsMsg.append("    ")
                         .append(new Chalk(argName).bold().blue().toString())
                         .append(String.format("%" + (maxPositionalArgNameLength - argName.length() + 4) + "s", ""))
-                        .append(new Chalk(String.format("[%s]", arg.getDataType().getType())).bold().purple().toString())
-                        .append(String.format("%" + (maxTypeStringLength - arg.getDataType().getType().length() + 4) + "s", ""))
+                        .append(new Chalk(String.format("[%s]", arg.dataType.type)).bold().purple().toString())
+                        .append(String.format("%" + (maxTypeStringLength - arg.dataType.type.length() + 4) + "s", ""))
                         .append(argDescription)
                         .append("\n");
 
@@ -133,22 +136,22 @@ public class HelpHandler extends CommandInstance.Handler {
             argsMsg.append("\n");
         }
 
-        if (commandInstance.getArgs().getKeywordArguments().length != 0) {
+        if (keywordArgs.length != 0) {
             argsMsg.append(new Chalk("KEYWORD ARGUMENTS:").yellow().bold()).append("\n");
 
-            int maxKeywordArgNameLength = commandInstance.getArgs().getMaxKeywordArgumentNameLength();
+            int maxKeywordArgNameLength = commandInstance.args.getMaxKeywordArgumentNameLength();
 
-            for (KeywordArgument arg : commandInstance.getArgs().getKeywordArguments()) {
-                String argName = arg.getName();
-                String argAbbreviation = arg.getAbbreviation();
-                String argDescription = arg.getDescription();
+            for (KeywordArgument arg : keywordArgs) {
+                String argName = arg.name;
+                String argAbbreviation = arg.abbreviation;
+                String argDescription = arg.description;
 
                 argsMsg.append("    ")
                         .append(new Chalk(String.format("-%s, --%s", argAbbreviation, argName)).bold().blue().toString())
                         .append(String.format("%" + (maxKeywordArgNameLength - argName.length() + 4) + "s", ""))
-                        .append(new Chalk(String.format("[%s]", arg.getDataType().getType())).bold().purple().toString())
-                        .append(String.format("%" + (maxTypeStringLength - arg.getDataType().getType().length() + 4) + "s", ""))
-                        .append(arg.isRequired() ? new Chalk("(required)").bold().red().toString() : new Chalk("(optional)").bold().green().toString())
+                        .append(new Chalk(String.format("[%s]", arg.dataType.type)).bold().purple().toString())
+                        .append(String.format("%" + (maxTypeStringLength - arg.dataType.type.length() + 4) + "s", ""))
+                        .append(arg.required ? new Chalk("(required)").bold().red().toString() : new Chalk("(optional)").bold().green().toString())
                         .append("    ")
                         .append(argDescription)
                         .append("\n");

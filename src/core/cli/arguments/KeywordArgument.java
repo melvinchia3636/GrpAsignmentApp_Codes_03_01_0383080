@@ -4,11 +4,11 @@ package core.cli.arguments;
  * KeywordArgument represents a keyword (flag or option) argument for a command.
  */
 public class KeywordArgument {
-    private final String name;
-    private final String abbreviation;
-    private final String description;
-    private final ArgumentDataType dataType;
-    private final boolean required;
+    public final String name;
+    public final String abbreviation;
+    public final String description;
+    public final ArgumentDataType dataType;
+    public final boolean required;
 
     /**
      * Constructs a KeywordArgument with the given properties.
@@ -25,25 +25,5 @@ public class KeywordArgument {
         this.description = description;
         this.dataType = dataType;
         this.required = required;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAbbreviation() {
-        return abbreviation;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public ArgumentDataType getDataType() {
-        return dataType;
-    }
-
-    public boolean isRequired() {
-        return required;
     }
 }

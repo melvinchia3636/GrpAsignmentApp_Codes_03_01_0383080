@@ -4,8 +4,8 @@ package core.cli.arguments;
  * ArgumentList holds the definitions for positional and keyword arguments for a command.
  */
 public class ArgumentList {
-    private PositionalArgument[] positionalArguments = new PositionalArgument[0];
-    private KeywordArgument[] keywordArguments = new KeywordArgument[0];
+    public final PositionalArgument[] positionalArguments;
+    public final KeywordArgument[] keywordArguments;
 
     /**
      * Constructs an ArgumentList with the given positional and keyword arguments.
@@ -25,6 +25,7 @@ public class ArgumentList {
      */
     public ArgumentList(PositionalArgument[] positionalArguments) {
         this.positionalArguments = positionalArguments;
+        this.keywordArguments = new KeywordArgument[0]; // Initialize with empty keyword arguments
     }
 
     /**
@@ -34,15 +35,7 @@ public class ArgumentList {
      */
     public ArgumentList(KeywordArgument[] keywordArguments) {
         this.keywordArguments = keywordArguments;
-    }
-
-    /**
-     * Returns the positional arguments defined in this ArgumentList.
-     *
-     * @return an array of PositionalArgument objects
-     */
-    public PositionalArgument[] getPositionalArguments() {
-        return positionalArguments;
+        this.positionalArguments = new PositionalArgument[0]; // Initialize with empty positional arguments
     }
 
     /**
@@ -53,20 +46,11 @@ public class ArgumentList {
     public int getMaxPositionalArgumentNameLength() {
         int maxLength = 0;
         for (PositionalArgument arg : positionalArguments) {
-            if (arg.getName().length() > maxLength) {
-                maxLength = arg.getName().length();
+            if (arg.name.length() > maxLength) {
+                maxLength = arg.name.length();
             }
         }
         return maxLength;
-    }
-
-    /**
-     * Returns the keyword arguments defined in this ArgumentList.
-     *
-     * @return an array of KeywordArgument objects
-     */
-    public KeywordArgument[] getKeywordArguments() {
-        return keywordArguments;
     }
 
     /**
@@ -77,8 +61,8 @@ public class ArgumentList {
     public int getMaxKeywordArgumentNameLength() {
         int maxLength = 0;
         for (KeywordArgument arg : keywordArguments) {
-            if (arg.getName().length() > maxLength) {
-                maxLength = arg.getName().length();
+            if (arg.name.length() > maxLength) {
+                maxLength = arg.name.length();
             }
         }
         return maxLength;

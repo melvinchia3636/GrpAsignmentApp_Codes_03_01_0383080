@@ -39,7 +39,7 @@ public class REPL {
 
             // Loop through the commands and execute the matching one
             for (CommandInstance commandInstance : CommandRegistrar.commandInstances) {
-                if (commandInstance.getName().equals(parsedUserInput.command)) {
+                if (commandInstance.name.equals(parsedUserInput.command)) {
                     commandInstance.execute(parsedUserInput);
                     commandFound = true;
                     break;

@@ -26,18 +26,18 @@ public class CommandParser {
         Scanner scanner = new Scanner(System.in);
         for (PositionalArgument positionalArgs : allowedPositionalArgs) {
             while (true) {
-                System.out.print("Enter " + positionalArgs.getName() + ": ");
+                System.out.print("Enter " + positionalArgs.name + ": ");
                 String input = scanner.nextLine().trim();
 
                 // Validate the input against the expected data type
-                if (positionalArgs.getDataType().isInvalid(input)) {
+                if (positionalArgs.dataType.isInvalid(input)) {
                     OutputUtils.error(
-                            "Positional argument: \"" + positionalArgs.getName() + "\" has invalid type. Argument type should be: " + positionalArgs.getDataType().getType()
+                            "Positional argument: \"" + positionalArgs.name + "\" has invalid type. Argument type should be: " + positionalArgs.dataType.type
                     );
                     continue;
                 }
 
-                argsMap.put(positionalArgs.getName(), input);
+                argsMap.put(positionalArgs.name, input);
                 break; // Exit loop if valid input is provided
             }
         }
@@ -133,8 +133,8 @@ public class CommandParser {
             allowedArguments = new ArgumentList(new PositionalArgument[0], new KeywordArgument[0]);
         }
 
-        PositionalArgument[] positionalArgs = allowedArguments.getPositionalArguments();
-        KeywordArgument[] keywordArgs = allowedArguments.getKeywordArguments();
+        PositionalArgument[] positionalArgs = allowedArguments.positionalArguments;
+        KeywordArgument[] keywordArgs = allowedArguments.keywordArguments;
 
         SimpleMap<String, String> argsMap = new SimpleMap<>();
         boolean positionalArgsNeedPrompting = false;
@@ -153,14 +153,14 @@ public class CommandParser {
 
             // Validate and map positional arguments
             for (int i = 0; i < positionalArgs.length; i++) {
-                String argName = positionalArgs[i].getName();
+                String argName = positionalArgs[i].name;
                 String argValue = parsedCommand.positionalArgs[i];
 
                 // Check if the argument value matches the expected data type
-                ArgumentDataType targetDataType = positionalArgs[i].getDataType();
+                ArgumentDataType targetDataType = positionalArgs[i].dataType;
                 if (targetDataType.isInvalid(argValue)) {
                     OutputUtils.error(
-                            "Positional argument: \"" + argName + "\" has invalid type. Argument type should be: " + targetDataType.getType()
+                            "Positional argument: \"" + argName + "\" has invalid type. Argument type should be: " + targetDataType.type
                     );
                     return null;
                 }
@@ -180,7 +180,7 @@ public class CommandParser {
 
             // Check if the argument is in the allowed arguments
             for (KeywordArgument allowedArg : keywordArgs) {
-                if (argKey.equals(allowedArg.getName()) || argKey.equals(allowedArg.getAbbreviation())) {
+                if (argKey.equals(allowedArg.name) || argKey.equals(allowedArg.abbreviation)) {
                     isValid = true;
                     break;
                 }
@@ -197,9 +197,9 @@ public class CommandParser {
         for (KeywordArgument requiredArgument : keywordArgs) {
             SimpleMap.Entry<String, String> targetArg = null;
 
-            String targetName = requiredArgument.getName();
-            String targetAbbreviation = requiredArgument.getAbbreviation();
-            ArgumentDataType targetDataType = requiredArgument.getDataType();
+            String targetName = requiredArgument.name;
+            String targetAbbreviation = requiredArgument.abbreviation;
+            ArgumentDataType targetDataType = requiredArgument.dataType;
 
             // Search for the argument by name or abbreviation
             for (SimpleMap.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
@@ -219,7 +219,7 @@ public class CommandParser {
 
             // If required argument is missing, print error and exit
             if (targetArg == null) {
-                if (!requiredArgument.isRequired()) {
+                if (!requiredArgument.required) {
                     continue;
                 }
 
@@ -235,7 +235,7 @@ public class CommandParser {
                         "Argument: \"" + targetArg.getKey() + "\" has invalid type. " + (
                                 targetDataType == ArgumentDataType.FLAG ?
                                         "It is a flag and hence should not have any value" :
-                                        "Argument type should be: " + targetDataType.getType()
+                                        "Argument type should be: " + targetDataType.type
                         ));
                 return null;
             }
