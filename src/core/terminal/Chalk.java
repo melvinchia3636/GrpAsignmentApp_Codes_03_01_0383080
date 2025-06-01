@@ -4,6 +4,9 @@ package core.terminal;
 /**
  * Chalk is a utility class for formatting strings with ANSI color codes.
  * It allows chaining methods to apply multiple styles to a string.
+ *</p>
+ * Idea comes from the popular Node.js library "chalk"
+ * which I've been using for a long time in my personal projects.
  */
 public class Chalk {
     // ANSI color code constants

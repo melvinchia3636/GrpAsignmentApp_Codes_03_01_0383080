@@ -1,13 +1,13 @@
 package features;
 
 import core.cli.commands.CommandInstance;
-import core.cli.arguments.ArgumentDataType;
-import core.cli.arguments.ArgumentList;
-import core.cli.arguments.KeywordArgument;
-import core.cli.arguments.PositionalArgument;
-import features.terminal.ExitHandler;
-import features.auth.handlers.LoginHandler;
-import features.terminal.ClearScreenHandler;
+
+import features.auth.commands.LoginCommand;
+import features.auth.commands.SignupCommand;
+
+import features.terminal.commands.ClearScreenCommand;
+import features.terminal.commands.ExitCommand;
+import features.terminal.commands.HelpCommand;
 
 /**
  * CommandRegistrar is responsible for registering all commands available in the application.
@@ -16,41 +16,11 @@ import features.terminal.ClearScreenHandler;
  */
 public class CommandRegistrar {
     public static CommandInstance[] commandInstances = new CommandInstance[]{
-            new CommandInstance(
-                    "login",
-                    "Login to the system with your credentials.",
-                    new ArgumentList(
-                            new PositionalArgument[]{
-                                    new PositionalArgument("username", "Username of the your profile", ArgumentDataType.STRING),
-                                    new PositionalArgument("password", "Password of the your profile", ArgumentDataType.STRING)
-                            },
-                            new KeywordArgument[] {
-                                    new KeywordArgument("remember-me", "r", "Whether to remember the user for future logins", ArgumentDataType.FLAG, false),
-                            }
-                    ), new LoginHandler()),
-            new CommandInstance(
-                    "help",
-                    "Display help information for commands.",
-                    new ArgumentList(
-                            new KeywordArgument[]{
-                                    new KeywordArgument("command", "c", "The command to get help for", ArgumentDataType.STRING, false)
-                            }
-                    ),
-                    new features.terminal.HelpHandler()
-            ),
-            new CommandInstance(
-                    "clear",
-                    "Clear the terminal screen. " +
-                            "Note: This command only works in a terminal environment, not in an IDE console. " +
-                            "It will not work in the screen that gets pop up when you simply press the run button " +
-                            "in IntelliJ IDEA or similar IDEs. So please, run this system in an actual terminal.",
-                    new ClearScreenHandler()
-            ),
-            new CommandInstance(
-                    "exit",
-                    "Exit the application.",
-                    new ExitHandler()
-            )
+            new LoginCommand(),
+            new SignupCommand(),
+            new HelpCommand(),
+            new ClearScreenCommand(),
+            new ExitCommand()
     };
 
     /**

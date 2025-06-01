@@ -1,4 +1,4 @@
-package features.terminal;
+package features.terminal.handlers;
 
 import core.cli.commands.CommandInstance;
 import core.terminal.OutputUtils;

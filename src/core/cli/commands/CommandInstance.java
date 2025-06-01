@@ -12,20 +12,23 @@ import core.utils.SimpleMap;
 public class CommandInstance {
     public final String name;
     public final String description;
+    public final String example;
     public final ArgumentList args;
-    public final Handler handler;
+    protected final Handler handler;
 
     /**
      * Constructs a Command with the given command name, argument list, and handler.
      *
      * @param name        the name of the command
      * @param description a brief description of the command
+     * @param example     an example of how to use the command
      * @param args        the list of arguments for the command
      * @param handler     the handler that will process the command
      */
-    public CommandInstance(String name, String description, ArgumentList args, Handler handler) {
+    protected CommandInstance(String name, String description, String example, ArgumentList args, Handler handler) {
         this.name = name;
         this.description = description;
+        this.example = example;
         this.args = args;
         this.handler = handler;
     }
@@ -35,11 +38,13 @@ public class CommandInstance {
      *
      * @param name        the name of the command
      * @param description a brief description of the command
+     * @param example     an example of how to use the command
      * @param handler     the handler that will process the command
      */
-    public CommandInstance(String name, String description, Handler handler) {
+    protected CommandInstance(String name, String description, String example, Handler handler) {
         this.name = name;
         this.description = description;
+        this.example = example;
         this.args = new ArgumentList(new PositionalArgument[0], new KeywordArgument[0]);
         this.handler = handler;
     }

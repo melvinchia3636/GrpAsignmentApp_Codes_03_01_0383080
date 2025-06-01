@@ -15,19 +15,52 @@ import java.util.Scanner;
  */
 public class REPL {
     /**
+     * Prompts the user for input, reads the command line, and parses it into a command object.
+     * If the input is invalid, it will print an error message and return null.
+     *
+     * @return A ParsedCommand object containing the command and its arguments, or null if parsing fails.
+     */
+    private static CommandParser.ParsedCommand promptAndParseCommand() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print(new Chalk("❯ ").bold().green());
+        String input = scanner.nextLine().trim();
+
+        return CommandParser.parseFromRaw(input);
+    }
+
+    /**
+     * Finds the command that matches the user's input and dispatches it for execution.
+     * If no command matches, it prints an error message.
+     *
+     * @param parsedUserInput The parsed command input from the user.
+     */
+    private static void findAndDispatchCommand(CommandParser.ParsedCommand parsedUserInput) {
+        boolean commandFound = false;
+
+        for (CommandInstance commandInstance : CommandRegistrar.commandInstances) {
+            if (commandInstance.name.equals(parsedUserInput.command)) {
+                commandInstance.execute(parsedUserInput);
+                commandFound = true;
+                break;
+            }
+        }
+
+        if (!commandFound) {
+            OutputUtils.printError("Command not found: " + parsedUserInput.command);
+        }
+    }
+
+    /**
      * Starts the REPL loop, which continuously prompts the user for input,
      * parses the input into commands, and executes the corresponding command.
      */
     public static void start() {
+        System.out.println(new Chalk("Starting the REPL...").bold().green());
         OutputUtils.printHeader();
-        Scanner scanner = new Scanner(System.in);
 
         // noinspection InfiniteLoopStatement - This is a REPL loop and the user is expected to exit manually.
         while (true) {
-            // Prompt the user for command input, split the input by whitespace, and dump it into the CommandParser
-            System.out.print(new Chalk("❯ ").bold().green().toString());
-            String input = scanner.nextLine().trim();
-            CommandParser.ParsedCommand parsedUserInput = CommandParser.parseFromRaw(input);
+            CommandParser.ParsedCommand parsedUserInput = promptAndParseCommand();
 
             // If an error occurs during parsing, it will be handled in the CommandParser and a null will be returned.
             // Since the error message is already printed, we can safely skip further processing.
@@ -35,21 +68,7 @@ public class REPL {
                 continue;
             }
 
-            boolean commandFound = false;
-
-            // Loop through the commands and execute the matching one
-            for (CommandInstance commandInstance : CommandRegistrar.commandInstances) {
-                if (commandInstance.name.equals(parsedUserInput.command)) {
-                    commandInstance.execute(parsedUserInput);
-                    commandFound = true;
-                    break;
-                }
-            }
-
-            // If no command matches, print an error message
-            if (!commandFound) {
-                OutputUtils.error("Command not found: " + parsedUserInput.command);
-            }
+            findAndDispatchCommand(parsedUserInput);
         }
     }
 }
