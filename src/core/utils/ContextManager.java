@@ -5,7 +5,7 @@ import features.auth.AuthContext;
 public class ContextManager {
     private static ContextManager instance;
 
-    private AuthContext authContext;
+    private final AuthContext authContext;
 
     private ContextManager() {
         authContext = new AuthContext();
@@ -21,9 +21,5 @@ public class ContextManager {
 
     public AuthContext getAuthContext() {
         return authContext;
-    }
-
-    public void setAuthContext(AuthContext authContext) {
-        this.authContext = authContext;
     }
 }
