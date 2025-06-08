@@ -1,6 +1,6 @@
 package constants;
 
-import core.utils.SimpleMap;
+import core.models.SimpleMap;
 
 public class Countries {
     private static final SimpleMap<String, String> countriesMap;

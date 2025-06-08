@@ -5,6 +5,8 @@ import core.cli.arguments.ArgumentList;
 import core.cli.arguments.KeywordArgument;
 import core.cli.arguments.PositionalArgument;
 import core.cli.commands.CommandInstance;
+import core.manager.GlobalManager;
+import features.auth.UserManager;
 import features.auth.handlers.SignupHandler;
 
 public class SignupCommand extends CommandInstance {
@@ -25,5 +27,17 @@ public class SignupCommand extends CommandInstance {
                 ),
                 new SignupHandler()
         );
+    }
+
+    /**
+     * Checks if the command is enabled based on the user's login status.
+     * The command is enabled only if the user is not logged in.
+     *
+     * @return true if the user is not logged in, false otherwise
+     */
+    @Override
+    public boolean isDisabled() {
+        UserManager userManager = GlobalManager.getInstance().getUserManager();
+        return userManager.isLoggedIn;
     }
 }

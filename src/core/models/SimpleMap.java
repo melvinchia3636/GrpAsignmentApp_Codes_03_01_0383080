@@ -1,4 +1,4 @@
-package core.utils;
+package core.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +79,26 @@ public class SimpleMap<K, V> {
      */
     public List<Entry<K, V>> entries() {
         return new ArrayList<>(entries);
+    }
+
+    public ArrayList<K> keys() {
+        ArrayList<K> keys = new ArrayList<>();
+        for (Entry<K, V> entry : entries) {
+            keys.add(entry.key);
+        }
+
+        return keys;
+    }
+
+    public V[] values() {
+        @SuppressWarnings("unchecked")
+        V[] values = (V[]) new Object[entries.size()];
+
+        for (int i = 0; i < entries.size(); i++) {
+            values[i] = entries.get(i).value;
+        }
+
+        return values;
     }
 
     /**

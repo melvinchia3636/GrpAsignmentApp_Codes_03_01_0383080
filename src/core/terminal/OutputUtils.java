@@ -15,7 +15,10 @@ public class OutputUtils {
                 new Chalk("__  __/  _  ___/  __ \\").bold().green() + "_______  /    __  /  __  /  \n" +
                 new Chalk("_  /___  / /__ / /_/ /").bold().green() + "/_____/ /___  _  /____/ /   \n" +
                 new Chalk("/_____/  \\___/ \\____/").bold().green() + "       \\____/  /_____/___/   \n");
-        System.out.println(("Welcome to the " + new Chalk("Eco-CLI").bold().green() + ", your comprehensive personal climate console!"));
+        System.out.println(("Welcome to the "
+                + new Chalk("Eco-CLI").bold().green()
+                + ", your comprehensive personal climate console!")
+        );
         System.out.println(new Chalk("Type 'help' for detailed usage.").yellow());
 
         // Check if user is using a real terminal

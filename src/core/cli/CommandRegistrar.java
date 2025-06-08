@@ -1,8 +1,9 @@
-package features;
+package core.cli;
 
 import core.cli.commands.CommandInstance;
 
 import features.auth.commands.LoginCommand;
+import features.auth.commands.ProfileCommand;
 import features.auth.commands.SignupCommand;
 
 import features.terminal.commands.ClearScreenCommand;
@@ -18,6 +19,7 @@ public class CommandRegistrar {
     public static CommandInstance[] commandInstances = new CommandInstance[]{
             new LoginCommand(),
             new SignupCommand(),
+            new ProfileCommand(),
             new HelpCommand(),
             new ClearScreenCommand(),
             new ExitCommand()
@@ -44,14 +46,21 @@ public class CommandRegistrar {
      * Retrieves a CommandInstance by its name.
      *
      * @param name the name of the command to retrieve
-     * @return the CommandInstance if found, or null if no command matches the name
+     * @return the CommandInstance if found
+     * @throws IllegalArgumentException if no command matches the given name
+     * @throws IllegalArgumentException if the command is not enabled
      */
     public static CommandInstance getCommandByName(String name) {
         for (CommandInstance command : commandInstances) {
             if (command.name.equalsIgnoreCase(name)) {
+                if (command.isDisabled()) {
+                    throw new IllegalArgumentException("Command is not accessible: " + name);
+                }
+
                 return command;
             }
         }
-        return null; // Return null if no command matches the name
+
+        throw new IllegalArgumentException("Command not found: " + name);
     }
 }

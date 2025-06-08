@@ -2,85 +2,54 @@ package features.auth.handlers;
 
 import constants.Countries;
 import core.cli.commands.CommandInstance;
-import core.terminal.Chalk;
 import core.terminal.OutputUtils;
-import core.utils.ContextManager;
-import features.auth.AuthContext;
-import features.auth.functions.PasswordValidator;
+import core.manager.GlobalManager;
+import features.auth.UserManager;
+import features.auth.instances.Password;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class SignupHandler extends CommandInstance.Handler {
     @Override
     public void run() {
-        AuthContext authContext = ContextManager.getInstance().getAuthContext();
+        UserManager userManager = GlobalManager.getInstance().getUserManager();
 
         String username = argsMap.get("username").trim();
         String password = argsMap.get("password");
         String countryCode = argsMap.get("country");
 
+        if (!Password.isValid(password)) {
+            throw new IllegalArgumentException("Invalid password. Password must:\n" +
+                    "    - Be at least 8 characters long\n" +
+                    "    - Contain at least one uppercase letter\n" +
+                    "    - Contain at least one lowercase letter\n" +
+                    "    - Contain at least one digit\n" +
+                    "    - Contain at least one special character\n" +
+                    "    - Not contain any whitespace characters");
+        }
+
         if (countryCode != null) {
             String country = Countries.getCountryName(countryCode);
 
             if (country == null) {
-                OutputUtils.printError("Invalid country code: " + countryCode);
-                return;
+                throw new IllegalArgumentException("Invalid country code: " + countryCode);
             }
-
-            authContext.setCountry(country);
         }
 
-        try {
-            PasswordValidator.validate(password);
-        } catch (IllegalArgumentException e) {
-            OutputUtils.printError("Invalid password: " + e.getMessage(), false);
-            return;
-        }
-
+        int retryCount = 0;
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter your password again for confirmation: ");
-        String confirmPassword = scanner.nextLine();
 
-        if (!password.equals(confirmPassword)) {
-            OutputUtils.printError("Passwords do not match. Please try again.", false);
-            return;
+        while (retryCount < 3) {
+            System.out.print("Enter your password again for confirmation: ");
+            String confirmPassword = scanner.nextLine();
+
+            if (password.equals(confirmPassword)) break;
+
+            OutputUtils.printError("Passwords do not match. Please try again.");
+            retryCount++;
         }
 
-        Path currentDir = Paths.get("").toAbsolutePath();
-        Path profilesDir = currentDir.resolve("profiles");
-        File profilesFolder = profilesDir.toFile();
-
-        if (!profilesFolder.isDirectory() || !profilesFolder.exists()) {
-            if (profilesFolder.mkdirs()) {
-                System.out.println("Created profile directory at: " + new Chalk(profilesDir.toString()).purple());
-            } else {
-                OutputUtils.printError("Failed to create profile directory at: " + new Chalk(profilesDir.toString()).purple());
-                return;
-            }
-        }
-
-        String[] profiles = Arrays.stream(Objects.requireNonNull(profilesFolder.listFiles()))
-                .filter(File::isDirectory)
-                .map(File::getName)
-                .toArray(String[]::new);
-
-        if (Arrays.asList(profiles).contains(username)) {
-            OutputUtils.printError("Profile with username '" + username + "' already exists. " +
-                    "Please choose a different username.", false);
-            return;
-        }
-
-        File userProfileDir = profilesDir.resolve(username).toFile();
-        if (userProfileDir.mkdirs()) {
-            System.out.println("Created user profile directory at: " + new Chalk(userProfileDir.getAbsolutePath()).purple());
-        } else {
-            OutputUtils.printError("Failed to create user profile directory at: " + new Chalk(userProfileDir.getAbsolutePath()).purple());
-            return;
-        }
+        userManager.signup(username, password, countryCode);
+        userManager.writeToFile();
     }
 }

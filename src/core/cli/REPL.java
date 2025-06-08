@@ -1,11 +1,12 @@
 package core.cli;
 
+import core.cli.commands.CommandError;
 import core.cli.commands.CommandInstance;
 import core.cli.commands.CommandParser;
 import core.terminal.Chalk;
 import core.terminal.OutputUtils;
-import features.CommandRegistrar;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -29,30 +30,62 @@ public class REPL {
     }
 
     /**
-     * Finds the command that matches the user's input and dispatches it for execution.
-     * If no command matches, it prints an error message.
+     * Finds the command by its name and dispatches it for execution.
+     * If the command has subcommands, it will recursively find the appropriate subcommand.
      *
      * @param parsedUserInput The parsed command input from the user.
      */
     private static void findAndDispatchCommand(CommandParser.ParsedCommand parsedUserInput) {
-        boolean commandFound = false;
+        CommandInstance targetCommand = CommandRegistrar.getCommandByName(parsedUserInput.command);
 
-        for (CommandInstance commandInstance : CommandRegistrar.commandInstances) {
-            if (commandInstance.name.equals(parsedUserInput.command)) {
-                commandInstance.execute(parsedUserInput);
-                commandFound = true;
-                break;
-            }
+        if (!targetCommand.hasSubCommands) {
+            targetCommand.execute(parsedUserInput);
+            return;
         }
 
-        if (!commandFound) {
-            OutputUtils.printError("Command not found: " + parsedUserInput.command);
+        findAndDispatchCommand(parsedUserInput, targetCommand);
+    }
+
+
+    /**
+     * Finds the command by its name and dispatches it for execution.
+     * If the command has subcommands, it will recursively find the appropriate subcommand.
+     *
+     * @param parsedUserInput The parsed command input from the user.
+     * @param fromCommand     The command instance from which to start searching for subcommands.
+     */
+    private static void findAndDispatchCommand(
+            CommandParser.ParsedCommand parsedUserInput,
+            CommandInstance fromCommand
+    ) {
+        if (parsedUserInput.positionalArgs.length == 0) {
+            throw new CommandError(
+                    fromCommand.getFullPath(),
+                    "Command: " + fromCommand.name + " requires a sub-command."
+            );
         }
+
+        parsedUserInput.command = parsedUserInput.positionalArgs[0];
+        parsedUserInput.positionalArgs = Arrays.copyOfRange(
+                parsedUserInput.positionalArgs,
+                1,
+                parsedUserInput.positionalArgs.length
+        );
+
+        CommandInstance subCommand = fromCommand.getSubCommandByName(parsedUserInput.command);
+
+        if (!subCommand.hasSubCommands) {
+            subCommand.execute(parsedUserInput);
+            return;
+        }
+
+        findAndDispatchCommand(parsedUserInput, subCommand);
     }
 
     /**
      * Starts the REPL loop, which continuously prompts the user for input,
      * parses the input into commands, and executes the corresponding command.
+     * All the exceptions are caught and handled here, regardless of where they occur in the command execution flow.
      */
     public static void start() {
         System.out.println(new Chalk("Starting the REPL...").bold().green());
@@ -60,15 +93,21 @@ public class REPL {
 
         // noinspection InfiniteLoopStatement - This is a REPL loop and the user is expected to exit manually.
         while (true) {
-            CommandParser.ParsedCommand parsedUserInput = promptAndParseCommand();
+            try {
+                CommandParser.ParsedCommand parsedUserInput = promptAndParseCommand();
 
-            // If an error occurs during parsing, it will be handled in the CommandParser and a null will be returned.
-            // Since the error message is already printed, we can safely skip further processing.
-            if (parsedUserInput == null) {
-                continue;
+                // If an error occurs during parsing, it will be handled in the CommandParser and a null will be returned.
+                // Since the error message is already printed, we can safely skip further processing.
+                if (parsedUserInput == null) {
+                    continue;
+                }
+
+                findAndDispatchCommand(parsedUserInput);
+            } catch (CommandError e) {
+                OutputUtils.printError(e.getMessage(), e.getCommand());
+            } catch (Throwable e) {
+                OutputUtils.printError(e.getMessage());
             }
-
-            findAndDispatchCommand(parsedUserInput);
         }
     }
 }

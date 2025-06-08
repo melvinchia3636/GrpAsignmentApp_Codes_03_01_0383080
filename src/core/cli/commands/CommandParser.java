@@ -5,7 +5,7 @@ import core.cli.arguments.ArgumentList;
 import core.cli.arguments.KeywordArgument;
 import core.cli.arguments.PositionalArgument;
 import core.terminal.OutputUtils;
-import core.utils.SimpleMap;
+import core.models.SimpleMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,29 +24,24 @@ public class CommandParser {
      * @return ParsedCommand object containing the command, positional arguments, and keyword arguments.
      */
     public static ParsedCommand parseFromRaw(String input) {
-        ParsedCommand parsed = null;
+        ParsedCommand parsed;
 
-        try {
-            String[] args = tokenize(input);
+        String[] args = tokenize(input);
 
-            if (args.length == 0) {
-                return null;
-            }
-
-            parsed = new ParsedCommand();
-            parsed.command = args[0];
-
-            int indexOfFirstPositionalArg = getIndexOfFirstPositionalArg(args);
-
-            parsed.positionalArgs = Arrays.copyOfRange(args, 1, indexOfFirstPositionalArg);
-            args = Arrays.copyOfRange(args, indexOfFirstPositionalArg, args.length);
-            parsed.keywordArgs = parseKeywordArgs(args);
-
-            return parsed;
-        } catch (IllegalArgumentException e) {
-            OutputUtils.printError(e.getMessage(), parsed == null ? null : parsed.command);
+        if (args.length == 0) {
             return null;
         }
+
+        parsed = new ParsedCommand();
+        parsed.command = args[0];
+
+        int indexOfFirstPositionalArg = getIndexOfFirstPositionalArg(args);
+
+        parsed.positionalArgs = Arrays.copyOfRange(args, 1, indexOfFirstPositionalArg);
+        args = Arrays.copyOfRange(args, indexOfFirstPositionalArg, args.length);
+        parsed.keywordArgs = parseKeywordArgs(args);
+
+        return parsed;
     }
 
     /**
@@ -56,7 +51,11 @@ public class CommandParser {
      * @param allowedArguments The allowed argument definitions (positional and keyword).
      * @return SimpleMap mapping argument names to their values.
      */
-    public static SimpleMap<String, String> validateAndGenerateArgsMap(ParsedCommand parsedCommand, ArgumentList allowedArguments) {
+    public static SimpleMap<String, String> validateAndGenerateArgsMap(
+            ParsedCommand parsedCommand,
+            ArgumentList allowedArguments,
+            String commandPath
+    ) {
         if (allowedArguments == null) {
             allowedArguments = new ArgumentList(new PositionalArgument[0], new KeywordArgument[0]);
         }
@@ -67,29 +66,24 @@ public class CommandParser {
         SimpleMap<String, String> argsMap = new SimpleMap<>();
         boolean positionalArgsNeedPrompting = false;
 
-        try {
-            if (parsedCommand.positionalArgs.length != 0) {
-                validateAndMapPositionalArgs(parsedCommand, positionalArgs, argsMap);
-            } else {
-                // Flag to indicate that positional arguments need prompting
-                // Will do it later if keyword arguments are valid
-                positionalArgsNeedPrompting = true;
-            }
-
-            checkInvalidKeywordArgs(parsedCommand, keywordArgs);
-            validateAndMapKeywordArgs(parsedCommand, keywordArgs, argsMap);
-
-            // This is the last thing we do, since if there is something wrong with the keyword arguments,
-            // we should exit the process and should not prompt the user for positional arguments.
-            if (positionalArgsNeedPrompting) {
-                promptPositionalArgs(positionalArgs, argsMap);
-            }
-
-            return argsMap;
-        } catch (IllegalArgumentException e) {
-            OutputUtils.printError(e.getMessage(), parsedCommand.command);
-            return null;
+        if (parsedCommand.positionalArgs.length != 0) {
+            validateAndMapPositionalArgs(parsedCommand, positionalArgs, argsMap, commandPath);
+        } else {
+            // Flag to indicate that positional arguments need prompting
+            // Will do it later if keyword arguments are valid
+            positionalArgsNeedPrompting = true;
         }
+
+        checkInvalidKeywordArgs(parsedCommand, keywordArgs, commandPath);
+        validateAndMapKeywordArgs(parsedCommand, keywordArgs, argsMap, commandPath);
+
+        // This is the last thing we do, since if there is something wrong with the keyword arguments,
+        // we should exit the process and should not prompt the user for positional arguments.
+        if (positionalArgsNeedPrompting) {
+            promptPositionalArgs(positionalArgs, argsMap);
+        }
+
+        return argsMap;
     }
 
     /**
@@ -182,12 +176,21 @@ public class CommandParser {
         return indexOfFirstPositionalArg;
     }
 
+    /**
+     * Parses the keyword arguments from the command-line arguments.
+     * It identifies arguments that start with '-' or '--' and maps them to their values.
+     *
+     * @param args The array of command-line arguments.
+     * @return A SimpleMap containing keyword argument names and their corresponding values.
+     * @throws IllegalArgumentException if an argument does not start with '-' or '--'.
+     */
     private static SimpleMap<String, String> parseKeywordArgs(String[] args) {
         SimpleMap<String, String> keywordArguments = new SimpleMap<>();
 
         for (int i = 0; i < args.length; i++) {
             if (!args[i].startsWith("-")) {
-                throw new IllegalArgumentException("Invalid argument format: " + args[i] + ". Keyword arguments should start with '-' or '--'.");
+                throw new IllegalArgumentException("Invalid argument format: " + args[i] + ". " +
+                        "Keyword arguments should start with '-' or '--'.");
             }
 
             String argName = args[i];
@@ -256,13 +259,23 @@ public class CommandParser {
     private static void validateAndMapPositionalArgs(
             ParsedCommand parsedCommand,
             PositionalArgument[] positionalArgs,
-            SimpleMap<String, String> argsMap
+            SimpleMap<String, String> argsMap,
+            String commandPath
     ) {
         // Check if the number of positional arguments matches the expected count
         if (positionalArgs.length != parsedCommand.positionalArgs.length) {
-            throw new IllegalArgumentException(
-                    "Invalid number of positional arguments. Expected: " + positionalArgs.length +
-                            ", Found: " + parsedCommand.positionalArgs.length
+            throw new CommandError(
+                    commandPath,
+                    String.format(
+                            "Expected %d positional arguments, but got %d. Expected arguments: %s",
+                            positionalArgs.length,
+                            parsedCommand.positionalArgs.length,
+                            Arrays.toString(
+                                    Arrays.stream(positionalArgs)
+                                            .map(arg -> arg.name)
+                                            .toArray()
+                            )
+                    )
             );
         }
 
@@ -274,9 +287,13 @@ public class CommandParser {
             // Check if the argument value matches the expected data type
             ArgumentDataType targetDataType = positionalArgs[i].dataType;
             if (targetDataType.isInvalid(argValue)) {
-                throw new IllegalArgumentException(
-                        "Positional argument: \"" + argName +
-                                "\" has invalid type. Argument type should be: " + targetDataType.type
+                throw new CommandError(
+                        commandPath,
+                        String.format(
+                                "Positional argument: \"%s\" has invalid type. Argument type should be: %s",
+                                argName,
+                                targetDataType.type
+                        )
                 );
             }
 
@@ -294,7 +311,8 @@ public class CommandParser {
      */
     private static void checkInvalidKeywordArgs(
             ParsedCommand parsedCommand,
-            KeywordArgument[] keywordArgs
+            KeywordArgument[] keywordArgs,
+            String commandPath
     ) {
         for (SimpleMap.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
             boolean isValid = false;
@@ -310,8 +328,7 @@ public class CommandParser {
 
             // If not valid, print error and exit
             if (!isValid) {
-                throw new IllegalArgumentException("Invalid keyword argument: " + argName);
-
+                throw new CommandError(commandPath, "Invalid keyword argument: " + argName);
             }
         }
     }
@@ -328,7 +345,8 @@ public class CommandParser {
     private static void validateAndMapKeywordArgs(
             ParsedCommand parsedCommand,
             KeywordArgument[] keywordArgs,
-            SimpleMap<String, String> argsMap
+            SimpleMap<String, String> argsMap,
+            String commandPath
     ) {
         for (KeywordArgument requiredArgument : keywordArgs) {
             SimpleMap.Entry<String, String> targetArg = null;
@@ -357,13 +375,15 @@ public class CommandParser {
                     continue;
                 }
 
-                throw new IllegalArgumentException(
+                throw new CommandError(
+                        commandPath,
                         "Argument not found: --" + targetName + " or -" + targetAbbreviation
                 );
             }
 
             if (targetDataType.isInvalid(targetArg.value)) {
-                throw new IllegalArgumentException(
+                throw new CommandError(
+                        commandPath,
                         "Argument: \"" + targetArg.key + "\" has invalid type. " + (
                                 targetDataType == ArgumentDataType.FLAG ?
                                         "It is a flag and hence should not have any value" :

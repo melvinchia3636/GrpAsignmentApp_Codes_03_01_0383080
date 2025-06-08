@@ -4,29 +4,67 @@ package features.terminal.handlers;
 import core.cli.arguments.ArgumentDataType;
 import core.cli.arguments.KeywordArgument;
 import core.cli.arguments.PositionalArgument;
+import core.cli.commands.CommandError;
 import core.cli.commands.CommandInstance;
 import core.terminal.Chalk;
-import core.terminal.OutputUtils;
-import features.CommandRegistrar;
+import core.cli.CommandRegistrar;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HelpHandler extends CommandInstance.Handler {
     @Override
     public void run() {
-        String targetCommandName = argsMap.get("command");
+        String targetCommandNames = argsMap.get("command");
 
-        if (targetCommandName == null) {
+        if (targetCommandNames == null) {
             printGlobalHelp();
             return;
         }
 
-        CommandInstance commandInstance = CommandRegistrar.getCommandByName(targetCommandName);
+        String[] splitCommandNames = Arrays.stream(targetCommandNames.split("\\.")).filter(
+                name -> !name.isEmpty()
+        ).toArray(String[]::new);
 
-        if (commandInstance == null) {
-            OutputUtils.printError("Command not found: " + targetCommandName);
-        } else {
-            printCommandHelp(commandInstance);
+        CommandInstance commandInstance = CommandRegistrar.getCommandByName(splitCommandNames[0]);
+
+        for (int i = 1; i < splitCommandNames.length; i++) {
+            if (!commandInstance.hasSubCommands) {
+                throw new CommandError(
+                        String.join(".", Arrays.copyOfRange(splitCommandNames, 0, i)),
+                        String.format(
+                                "Command '%s' does not have sub-commands. Cannot access '%s'.",
+                                String.join(".", Arrays.copyOfRange(splitCommandNames, 0, i)),
+                                String.join(".", Arrays.copyOfRange(splitCommandNames, i, splitCommandNames.length))
+                        ));
+            }
+
+            String subCommandName = splitCommandNames[i];
+            commandInstance = commandInstance.getSubCommandByName(subCommandName);
+
+            if (commandInstance == null) {
+                throw new CommandError(
+                        String.join(".", Arrays.copyOfRange(splitCommandNames, 0, i)),
+                        String.format(
+                                "Sub-command '%s' not found in command '%s'.",
+                                subCommandName,
+                                String.join(".", Arrays.copyOfRange(splitCommandNames, 0, i + 1))
+                        )
+                );
+            }
+
+            if (commandInstance.isDisabled()) {
+                throw new IllegalArgumentException(
+                        String.format(
+                                "Sub-command '%s' is not enabled in command '%s'.",
+                                subCommandName,
+                                String.join(".", Arrays.copyOfRange(splitCommandNames, 0, i + 1))
+                        )
+                );
+            }
         }
 
+        printCommandHelp(commandInstance);
     }
 
     /**
@@ -35,15 +73,16 @@ public class HelpHandler extends CommandInstance.Handler {
      */
     private static void printGlobalHelp() {
         String usageMsg = new Chalk("Usage:").yellow().bold() + "\n" +
-                "    " + new Chalk("<command>").bold().green() + " [positional_arguments] [--keyword-arguments]\n\n";
+                "    " + new Chalk("<command>").bold().green() + " [positional_arguments] [--keyword-arguments]";
 
         String noteMsg = new Chalk("Note:").yellow().bold() + "\n" +
-                "    Type " + new Chalk("'help -c <command>'").bold().green() + " to get detailed help for a specific command.\n" +
-                "    If no positional arguments are provided, you will be prompted to enter them interactively.\n\n";
+                "    - Type " + new Chalk("'help -c <command>'").bold().green() + " to get detailed help for a specific command.\n" +
+                "    - Type " + new Chalk("'help -c <command>.<sub-command>.[...]'").bold().green() + " to get detailed help for a specific sub-command.\n" +
+                "    - If no positional arguments are provided, you will be prompted to enter them interactively.";
 
         String examplesMsg = new Chalk("Examples:").yellow().bold() + "\n" +
                 "    " + new Chalk("login").bold().green() + " johndoe 12345678 --save-session\n" +
-                "    " + new Chalk("help").bold().green() + " -c login\n\n";
+                "    " + new Chalk("help").bold().green() + " -c login";
 
         StringBuilder commandsMsg = new StringBuilder(
                 new Chalk("Available Commands:").yellow().bold() + "\n"
@@ -53,6 +92,10 @@ public class HelpHandler extends CommandInstance.Handler {
 
         // Dynamically append command names and descriptions into the help message
         for (CommandInstance command : CommandRegistrar.commandInstances) {
+            if (command.isDisabled()) {
+                continue; // Skip commands that are not enabled
+            }
+
             String commandName = command.name;
             String commandDescription = command.description;
 
@@ -67,9 +110,14 @@ public class HelpHandler extends CommandInstance.Handler {
                     .append("\n");
         }
 
-        System.out.println(
-                usageMsg + noteMsg + examplesMsg + commandsMsg
-        );
+        String[] sections = {
+                usageMsg,
+                noteMsg,
+                examplesMsg,
+                commandsMsg.toString()
+        };
+
+        System.out.println(String.join("\n\n", sections));
     }
 
     /**
@@ -79,6 +127,7 @@ public class HelpHandler extends CommandInstance.Handler {
      * @param commandInstance The CommandInstance object representing the command to display help for.
      */
     private static void printCommandHelp(CommandInstance commandInstance) {
+        ArrayList<String> fullCommandPath = commandInstance.getFullPath();
         String description = commandInstance.description;
 
         int fullStopIndex = description.indexOf(".");
@@ -87,26 +136,97 @@ public class HelpHandler extends CommandInstance.Handler {
         String firstSentence = description.substring(0, fullStopIndex);
         String remainingDescription = description.substring(fullStopIndex).trim();
 
-        String usageMsg = new Chalk("Usage:").yellow().bold() + "\n" +
-                "    " + new Chalk(commandInstance.name).bold().green() + " [positional_arguments] [--keyword-arguments]\n\n";
-
-        String descriptionMsg = new Chalk("Description:").yellow().bold() + "\n" +
-                formatStringWithIndentation(firstSentence) + "\n\n" +
-                (remainingDescription.isEmpty() ? "" : formatStringWithIndentation(remainingDescription) + "\n\n");
-
-        String exampleMsg = new Chalk("Example:").yellow().bold() + "\n" +
-                "    " + new Chalk(commandInstance.name).bold().green() + " " + commandInstance.example + "\n\n";
-
-        StringBuilder argsMsg = new StringBuilder();
-        appendPositionalArgumentsToArgsMsg(argsMsg, commandInstance);
-        appendKeywordArgumentsToArgsMsg(argsMsg, commandInstance);
-
-        System.out.println(
-                usageMsg + exampleMsg + descriptionMsg + argsMsg
+        String usageMsg = String.format(
+                "%s\n    %s%s [positional_arguments] [--keyword-arguments]",
+                new Chalk("Usage:").yellow().bold(),
+                new Chalk(String.join(" ", fullCommandPath)).green(),
+                commandInstance.hasSubCommands
+                        ? " <sub-command>"
+                        : ""
         );
+
+        String descriptionMsg = String.format(
+                "%s\n%s%s",
+                new Chalk("Description:").yellow().bold(),
+                formatStringWithIndentation(firstSentence),
+                remainingDescription.isEmpty()
+                        ? ""
+                        : "\n\n" + formatStringWithIndentation(remainingDescription)
+        );
+
+        String exampleMsg = commandInstance.example != null
+                ? String.format(
+                "%s\n    %s %s",
+                new Chalk("Example:").yellow().bold(),
+                new Chalk(String.join(" ", fullCommandPath)).bold().green(),
+                commandInstance.example
+        )
+                : "";
+
+        String argsMsg = getArgsMsg(commandInstance);
+        String subCommandsMsg = getSubCommandsMsg(commandInstance);
+
+        String[] sections = {
+                usageMsg,
+                descriptionMsg,
+                exampleMsg,
+                argsMsg,
+                subCommandsMsg
+        };
+
+        String output = String.join(
+                "\n\n",
+                Arrays.stream(sections)
+                        .filter(e -> !e.isEmpty())
+                        .toArray(String[]::new)
+        );
+
+        System.out.println(output);
     }
 
-    private static void appendPositionalArgumentsToArgsMsg(
+    private static String getSubCommandsMsg(
+            CommandInstance commandInstance
+    ) {
+        if (!commandInstance.hasSubCommands) {
+            return "";
+        }
+
+        StringBuilder subCommandsMsg = new StringBuilder(
+                new Chalk("Sub-Commands:").yellow().bold() + "\n"
+        );
+
+        CommandInstance[] subCommands = commandInstance.subCommands;
+
+        int maxCommandNameLength = CommandRegistrar.getMaxCommandLength();
+
+        for (CommandInstance subCommand : subCommands) {
+            String subCommandName = subCommand.name;
+            String subCommandDescription = subCommand.description;
+
+            subCommandsMsg.append("    ")
+                    .append(new Chalk(subCommandName).bold().green())
+                    .append(String.format("%" + (maxCommandNameLength - subCommandName.length() + 4) + "s", ""))
+                    .append(subCommandDescription)
+                    .append("\n");
+        }
+
+        return subCommandsMsg.toString();
+    }
+
+    private static String getArgsMsg(
+            CommandInstance commandInstance
+    ) {
+        StringBuilder argsMsg = new StringBuilder();
+
+        if (!commandInstance.hasSubCommands) {
+            appendPositionalArgsToMsg(argsMsg, commandInstance);
+            appendKeywordArgsToMsg(argsMsg, commandInstance);
+        }
+
+        return argsMsg.toString();
+    }
+
+    private static void appendPositionalArgsToMsg(
             StringBuilder argsMsg,
             CommandInstance commandInstance
     ) {
@@ -132,12 +252,10 @@ public class HelpHandler extends CommandInstance.Handler {
                     .append(String.format("%" + (maxTypeStringLength - arg.dataType.type.length() + 4) + "s", ""))
                     .append(argDescription)
                     .append("\n");
-
         }
-        argsMsg.append("\n");
     }
 
-    private static void appendKeywordArgumentsToArgsMsg(
+    private static void appendKeywordArgsToMsg(
             StringBuilder argsMsg,
             CommandInstance commandInstance
     ) {
@@ -172,6 +290,7 @@ public class HelpHandler extends CommandInstance.Handler {
     /**
      * Formats a string to fit within a specified line length, adding indentation.
      * This is used to format the description in the help message.
+     * Please don't mind the comments on almost every line, since this function is a little unintuitive
      *
      * @param str The string to format.
      * @return The formatted string with proper indentation and line breaks.

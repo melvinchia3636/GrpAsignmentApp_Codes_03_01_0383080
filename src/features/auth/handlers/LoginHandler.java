@@ -1,22 +1,24 @@
 package features.auth.handlers;
 
 import core.cli.commands.CommandInstance;
-import core.utils.ContextManager;
-import features.auth.AuthContext;
+import core.io.IOManager;
+import core.manager.GlobalManager;
+import features.auth.UserManager;
 
-/**
- * LoginHandler handles the login command and argument validation.
- */
 public class LoginHandler extends CommandInstance.Handler {
-    /**
-     * Handles the login process using the parsed command.
-     */
     @Override
     public void run() {
-        AuthContext authContext = ContextManager.getInstance().getAuthContext();
-        System.out.println(authContext.getUsername());
+        IOManager ioManager = GlobalManager.getInstance().getIOManager();
+        UserManager userManager = GlobalManager.getInstance().getUserManager();
 
         String username = argsMap.get("username");
         String password = argsMap.get("password");
+
+        if (!ioManager.userProfileExists(username)) {
+            throw new IllegalArgumentException("User profile does not exist for username: " + username);
+        }
+
+        userManager.login(username, password);
+        System.out.println("Login successful for user: " + username);
     }
 }
