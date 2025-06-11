@@ -29,12 +29,6 @@ public class SignupCommand extends CommandInstance {
         );
     }
 
-    /**
-     * Checks if the command is enabled based on the user's login status.
-     * The command is enabled only if the user is not logged in.
-     *
-     * @return true if the user is not logged in, false otherwise
-     */
     @Override
     public boolean isDisabled() {
         UserManager userManager = GlobalManager.getInstance().getUserManager();

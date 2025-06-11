@@ -17,10 +17,6 @@ public class SimpleMap<K, V> {
         this.entries = new ArrayList<>();
     }
 
-    public SimpleMap(ArrayList<Entry<K, V>> entries) {
-        this.entries = entries;
-    }
-
     /**
      * Adds a key-value pair to the map. If the key already exists, it updates the value.
      *
@@ -53,14 +49,13 @@ public class SimpleMap<K, V> {
         return null;
     }
 
-    /**
-     * Removes the key-value pair associated with the specified key.
-     * If the key does not exist, no action is taken.
-     *
-     * @param key the key to remove
-     */
-    public void remove(K key) {
-        entries.removeIf(entry -> entry.key.equals(key));
+    public boolean containsKey(K key) {
+        for (Entry<K, V> entry : entries) {
+            if (entry.key.equals(key)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

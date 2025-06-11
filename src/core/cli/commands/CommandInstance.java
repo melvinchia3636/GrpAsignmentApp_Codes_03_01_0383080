@@ -3,7 +3,9 @@ package core.cli.commands;
 import core.cli.arguments.ArgumentList;
 import core.cli.arguments.KeywordArgument;
 import core.cli.arguments.PositionalArgument;
+import core.manager.GlobalManager;
 import core.models.SimpleMap;
+import features.auth.UserManager;
 
 import java.util.ArrayList;
 
@@ -17,10 +19,12 @@ public abstract class CommandInstance {
     public final String description;
     public final String example;
     public final ArgumentList args;
-    public boolean hasSubCommands;
+    public final boolean hasSubCommands;
     public final CommandInstance[] subCommands;
-    public CommandInstance parentCommand = null;
     protected final Handler handler;
+    protected CommandInstance parentCommand = null;
+
+    public boolean authRequired = false;
 
     /**
      * Logic to construct a CommandInstance with the given parameters.
@@ -116,6 +120,12 @@ public abstract class CommandInstance {
     }
 
     public boolean isDisabled() {
+        if (authRequired) {
+            UserManager userManager = GlobalManager.getInstance().getUserManager();
+
+            return !userManager.isLoggedIn;
+        }
+
         return false;
     }
 
@@ -144,7 +154,10 @@ public abstract class CommandInstance {
             }
         }
 
-        return null;
+        throw new CommandError(
+            getFullPath(),
+            "Sub-command '" + name + "' not found in command: " + this.name
+        );
     }
 
     /**

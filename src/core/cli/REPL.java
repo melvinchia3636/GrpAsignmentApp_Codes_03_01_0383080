@@ -3,6 +3,7 @@ package core.cli;
 import core.cli.commands.CommandError;
 import core.cli.commands.CommandInstance;
 import core.cli.commands.CommandParser;
+import core.cli.commands.CommandRegistrar;
 import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 
@@ -23,7 +24,7 @@ public class REPL {
      */
     private static CommandParser.ParsedCommand promptAndParseCommand() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print(new Chalk("❯ ").bold().green());
+        System.out.print(new Chalk("\n❯ ").bold().green());
         String input = scanner.nextLine().trim();
 
         return CommandParser.parseFromRaw(input);
@@ -79,6 +80,7 @@ public class REPL {
             return;
         }
 
+        // If the sub-command has further sub-commands, we need to continue searching recursively.
         findAndDispatchCommand(parsedUserInput, subCommand);
     }
 

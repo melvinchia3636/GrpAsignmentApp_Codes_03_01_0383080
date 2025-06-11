@@ -234,7 +234,10 @@ public class CommandParser {
 
                 if (positionalArgs.dataType.isInvalid(input)) {
                     OutputUtils.printError(
-                            "Positional argument: \"" + positionalArgs.name + "\" has invalid type. Argument type should be: " + positionalArgs.dataType.type,
+                            "Positional argument: \"" +
+                                    positionalArgs.name +
+                                    "\" has invalid type. Argument type should be: " +
+                                    positionalArgs.dataType.type,
                             false
                     );
                     continue;
@@ -264,17 +267,24 @@ public class CommandParser {
     ) {
         // Check if the number of positional arguments matches the expected count
         if (positionalArgs.length != parsedCommand.positionalArgs.length) {
+            String expectedArgs = positionalArgs.length > 0 ?
+                    String.join(", ",
+                            Arrays.stream(positionalArgs)
+                                    .map(arg -> String.format(
+                                            "%s (%s)",
+                                            arg.name,
+                                            arg.dataType.type
+                                    ))
+                                    .toArray(String[]::new)
+                    ) : "none";
+
             throw new CommandError(
                     commandPath,
                     String.format(
                             "Expected %d positional arguments, but got %d. Expected arguments: %s",
                             positionalArgs.length,
                             parsedCommand.positionalArgs.length,
-                            Arrays.toString(
-                                    Arrays.stream(positionalArgs)
-                                            .map(arg -> arg.name)
-                                            .toArray()
-                            )
+                            expectedArgs
                     )
             );
         }

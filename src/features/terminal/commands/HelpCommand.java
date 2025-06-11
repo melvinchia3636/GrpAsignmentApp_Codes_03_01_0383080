@@ -14,7 +14,8 @@ public class HelpCommand extends CommandInstance {
                 "-c login",
                 new ArgumentList(
                         new KeywordArgument[]{
-                                new KeywordArgument("command", "c", "The command to get help for", ArgumentDataType.STRING, false)
+                                new KeywordArgument("command", "c", "The command to get help for", ArgumentDataType.STRING, false),
+                                new KeywordArgument("tree", "t", "Display all commands in a tree structure", ArgumentDataType.FLAG, false)
                         }
                 ),
                 new HelpHandler()
