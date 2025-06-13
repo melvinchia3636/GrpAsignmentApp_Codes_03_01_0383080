@@ -50,13 +50,35 @@ public class Password {
      * @param text the text to encrypt
      * @return the encrypted text
      */
-    public String xorCipher(String text) {
+    private String xorCipher(String text) {
         StringBuilder encrypted = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             char k = password.charAt(i % password.length());
             encrypted.append((char) (c ^ k));
         }
+
         return encrypted.toString();
+    }
+
+    public String encrypt(String text) {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException("Text to encrypt cannot be null or empty.");
+        }
+
+        text = "ABCDEFGH" + text;
+        return xorCipher(text);
+    }
+
+    public String decrypt(String encryptedText) {
+        if (encryptedText == null || encryptedText.isEmpty()) {
+            throw new IllegalArgumentException("Encrypted text cannot be null or empty.");
+        }
+
+        String decryptedText = xorCipher(encryptedText);
+        if (!decryptedText.startsWith("ABCDEFGH")) {
+            throw new IllegalArgumentException("Decrypted text does not have the expected prefix.");
+        }
+        return decryptedText.substring(8); // Remove the prefix added during encryption
     }
 }

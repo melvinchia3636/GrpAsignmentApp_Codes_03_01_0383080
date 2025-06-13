@@ -11,7 +11,7 @@ public class FootprintLogCommand extends CommandInstance {
         super(
                 "log",
                 "Log a new carbon footprint entry.",
-                " driving 8.7",
+                "driving 8.7",
                 new ArgumentList(
                         new PositionalArgument[]{
                                 new PositionalArgument(

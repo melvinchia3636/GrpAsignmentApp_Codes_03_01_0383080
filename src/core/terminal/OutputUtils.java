@@ -1,5 +1,8 @@
 package core.terminal;
 
+import core.manager.GlobalManager;
+import features.auth.UserManager;
+
 /**
  * Collection of utility methods for outputting stuff to the terminal.
  */
@@ -9,6 +12,8 @@ public class OutputUtils {
      * This includes the logo and a welcome message.
      */
     public static void printHeader() {
+        UserManager userManager = GlobalManager.getInstance().getUserManager();
+
         System.out.println("\n" +
                 new Chalk("__________").bold().green() + "                  ______________________\n" +
                 new Chalk("___  ____/___________").bold().green() + "       __  ____/__  /____  _/\n" +
@@ -16,10 +21,15 @@ public class OutputUtils {
                 new Chalk("_  /___  / /__ / /_/ /").bold().green() + "/_____/ /___  _  /____/ /   \n" +
                 new Chalk("/_____/  \\___/ \\____/").bold().green() + "       \\____/  /_____/___/   \n");
         System.out.println(("Welcome to the "
-                + new Chalk("Eco-CLI").bold().green()
+                + new Chalk("🌿Eco-CLI").bold().green()
                 + ", your comprehensive personal climate console!")
         );
-        System.out.println(new Chalk("Type 'help' for detailed usage.").yellow());
+        if (userManager.isLoggedIn) {
+            System.out.println("Logged in as: " + new Chalk(userManager.getUsername()).bold().cyan());
+        } else {
+            System.out.println(new Chalk("You are not logged in. Type 'login' or 'signup' to get started.").bold().yellow());
+        }
+        System.out.println(new Chalk("\nType 'help' for detailed usage.").yellow());
 
         // Check if user is using a real terminal
         // IDE-integrated consoles often has issues with ANSI escape codes and other terminal features
@@ -30,39 +40,31 @@ public class OutputUtils {
         }
     }
 
-    /**
-     * Prints an error message to the terminal in red.
-     * Also suggests typing 'help' for detailed usage.
-     *
-     * @param message The error message to print.
-     */
-    public static void printError(String message) {
-        System.err.println(new Chalk(message).red());
-        System.out.println(new Chalk("Type 'help' for detailed usage.").yellow());
+    public static void printSuccess(String message) {
+        System.out.println(new Chalk("✔ " + message).green());
     }
 
-    /**
-     * Prints an error message to the terminal in red.
-     * Provide an option to disable the help string suggestion.
-     *
-     * @param message         The error message to print.
-     * @param printHelpString Whether to print the help string or not.
-     */
+    public static void printError(String message) {
+        printError(message, true, null);
+    }
+
     public static void printError(String message, boolean printHelpString) {
-        System.err.println(new Chalk(message).red());
-        if (printHelpString) {
-            System.out.println(new Chalk("Type 'help' for detailed usage.").yellow());
-        }
+        printError(message, printHelpString, null);
     }
 
     public static void printError(String message, String commandName) {
-        System.err.println(new Chalk(message).red());
+        printError(message, true, commandName);
+    }
+
+    public static void printError(String message, boolean printHelpString, String commandName) {
+        System.err.println(new Chalk("✘ " + message).red());
+
+        if (!printHelpString) return;
 
         if (commandName == null || commandName.isEmpty()) {
             System.out.println(new Chalk("Type 'help' for detailed usage.").yellow());
-            return;
+        } else {
+            System.out.println(new Chalk("Type 'help -c " + commandName + "' for detailed usage.").yellow());
         }
-
-        System.out.println(new Chalk("Type 'help -c " + commandName + "' for detailed usage.").yellow());
     }
 }

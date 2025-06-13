@@ -2,6 +2,7 @@ package features.auth.handlers;
 
 import constants.Countries;
 import core.cli.commands.CommandInstance;
+import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import core.manager.GlobalManager;
 import features.auth.UserManager;
@@ -19,20 +20,21 @@ public class SignupHandler extends CommandInstance.Handler {
         String countryCode = argsMap.get("country");
 
         if (!Password.isValid(password)) {
-            throw new IllegalArgumentException("Invalid password. Password must:\n" +
+            OutputUtils.printError("Invalid password. Password must:\n" +
                     "    - Be at least 8 characters long\n" +
                     "    - Contain at least one uppercase letter\n" +
                     "    - Contain at least one lowercase letter\n" +
                     "    - Contain at least one digit\n" +
                     "    - Contain at least one special character\n" +
-                    "    - Not contain any whitespace characters");
+                    "    - Not contain any whitespace characters", false);
+            return;
         }
 
         if (countryCode != null) {
             String country = Countries.getCountryName(countryCode);
 
             if (country == null) {
-                throw new IllegalArgumentException("Invalid country code: " + countryCode);
+                OutputUtils.printError("Invalid country code: " + countryCode, false);
             }
         }
 
@@ -45,11 +47,18 @@ public class SignupHandler extends CommandInstance.Handler {
 
             if (password.equals(confirmPassword)) break;
 
-            OutputUtils.printError("Passwords do not match. Please try again.");
+            OutputUtils.printError("Passwords do not match. Please try again.", false);
             retryCount++;
+        }
+
+        if (retryCount == 3) {
+            OutputUtils.printError("Password confirmation failed after 3 attempts.", false);
+            return;
         }
 
         userManager.signup(username, password, countryCode);
         userManager.writeToFile();
+
+        OutputUtils.printSuccess("Signup successful for user: " + new Chalk(username).bold().cyan());
     }
 }

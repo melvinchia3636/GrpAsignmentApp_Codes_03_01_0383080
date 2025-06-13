@@ -39,7 +39,7 @@ public class CommandParser {
 
         parsed.positionalArgs = Arrays.copyOfRange(args, 1, indexOfFirstPositionalArg);
         args = Arrays.copyOfRange(args, indexOfFirstPositionalArg, args.length);
-        parsed.keywordArgs = parseKeywordArgs(args);
+        parsed.keywordArgs = parseKeywordArgs(args, parsed.command);
 
         return parsed;
     }
@@ -184,13 +184,16 @@ public class CommandParser {
      * @return A SimpleMap containing keyword argument names and their corresponding values.
      * @throws IllegalArgumentException if an argument does not start with '-' or '--'.
      */
-    private static SimpleMap<String, String> parseKeywordArgs(String[] args) {
+    private static SimpleMap<String, String> parseKeywordArgs(String[] args, String commandPath) {
         SimpleMap<String, String> keywordArguments = new SimpleMap<>();
 
         for (int i = 0; i < args.length; i++) {
             if (!args[i].startsWith("-")) {
-                throw new IllegalArgumentException("Invalid argument format: " + args[i] + ". " +
-                        "Keyword arguments should start with '-' or '--'.");
+                throw new CommandError(
+                        commandPath,
+                        "Invalid argument format: " + args[i] + ". " +
+                        "Keyword arguments should start with '-' or '--'."
+                );
             }
 
             String argName = args[i];
@@ -207,6 +210,14 @@ public class CommandParser {
                 argName = argName.substring(2);
             } else {
                 argName = argName.substring(1);
+                if (argName.length() > 1) {
+                    throw new CommandError(
+                            commandPath,
+                            "Invalid argument format: " + args[i] + ". " +
+                                    "Prefix '-' should only be used for single-character arguments. " +
+                                    "Do you mean to use '--" + argName + "'?"
+                    );
+                }
             }
 
             keywordArguments.put(argName, argValue);
@@ -229,7 +240,7 @@ public class CommandParser {
         Scanner scanner = new Scanner(System.in);
         for (PositionalArgument positionalArgs : allowedPositionalArgs) {
             while (true) {
-                System.out.print("Enter " + positionalArgs.name + ": ");
+                System.out.print(positionalArgs.promptText + " ");
                 String input = scanner.nextLine().trim();
 
                 if (positionalArgs.dataType.isInvalid(input)) {

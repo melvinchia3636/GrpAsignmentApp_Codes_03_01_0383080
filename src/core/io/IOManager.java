@@ -3,6 +3,7 @@ package core.io;
 import core.terminal.Chalk;
 import core.manager.GlobalManager;
 import core.models.JSONObject;
+import core.terminal.OutputUtils;
 import features.auth.UserManager;
 import features.auth.instances.Password;
 
@@ -37,7 +38,7 @@ public class IOManager {
                 throw new IOError(new IOException("Failed to create profiles directory: " + profilesDir));
             }
 
-            System.out.println("Profiles directory created: " + new Chalk(profilesDir.toString()).purple());
+            OutputUtils.printSuccess("Profiles directory created: " + new Chalk(profilesDir.toString()).purple());
         }
     }
 
@@ -56,7 +57,7 @@ public class IOManager {
 
         if (userProfileExists(username)) {
             if (throwIfExists) {
-                throw new Error("User profile already exists: " + userProfileFolder);
+                throw new Error("User profile already exists: " + username);
             }
             return;
         }
@@ -67,7 +68,7 @@ public class IOManager {
             throw new IOError(new IOException("Failed to create user profile file: " + userProfileFolder));
         }
 
-        System.out.println("User profile created: " + new Chalk(userProfileFolder.toString()).purple());
+        OutputUtils.printSuccess("User profile created: " + new Chalk(userProfileFolder.toString()).purple());
     }
 
     /**
@@ -86,12 +87,10 @@ public class IOManager {
 
         try {
             Password pwd = new Password(password);
-            decryptedJSON.parseFromString(pwd.xorCipher(data));
+            decryptedJSON.parseFromString(pwd.decrypt(data));
             return decryptedJSON;
         } catch (Exception e) {
-            throw new IOError(
-                    new IOException("Failed to decrypt data file: " + filename + ". Please check your password.", e)
-            );
+            throw new IllegalStateException("Failed to decrypt data file: " + filename + ". Please check your password.", e);
         }
     }
 
@@ -116,12 +115,10 @@ public class IOManager {
         JSONObject decryptedJSON = new JSONObject();
 
         try {
-            decryptedJSON.parseFromString(userManager.getPassword().xorCipher(data));
+            decryptedJSON.parseFromString(userManager.getPassword().decrypt(data));
             return decryptedJSON;
         } catch (Exception e) {
-            throw new IOError(
-                    new IOException("Failed to decrypt data file: " + filename + ". Please check your password.", e)
-            );
+            throw new IllegalStateException("Failed to decrypt data file: " + filename + ". Please check your password.", e);
         }
     }
 
@@ -146,7 +143,7 @@ public class IOManager {
             throw new IllegalStateException("User profile folder is not initialized. Call initUserProfile() first.");
         }
 
-        String encryptedContent = password.xorCipher(content.toString());
+        String encryptedContent = password.encrypt(content.toString());
 
         Path filePath = userProfileFolder.toPath().resolve(filename + ".bin");
         try {

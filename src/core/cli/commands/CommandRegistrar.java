@@ -1,6 +1,7 @@
 package core.cli.commands;
 
 import features.auth.commands.LoginCommand;
+import features.auth.commands.LogoutCommand;
 import features.auth.commands.ProfileCommand;
 import features.auth.commands.SignupCommand;
 
@@ -27,7 +28,8 @@ public class CommandRegistrar {
             new CommandNamespace("Authentication", new CommandInstance[]{
                     new LoginCommand(),
                     new SignupCommand(),
-                    new ProfileCommand()
+                    new ProfileCommand(),
+                    new LogoutCommand()
             }),
             new CommandNamespace("Modules", new CommandInstance[]{
                     new FootprintCommand()

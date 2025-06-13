@@ -77,11 +77,17 @@ public class GlobalHelpBuilder {
                     .filter(command -> !command.isDisabled())
                     .toArray(CommandInstance[]::new);
 
+            int maxCommandLength = Arrays.stream(filteredCommands)
+                    .mapToInt(command -> command.name.length())
+                    .max()
+                    .orElse(0);
+
             for (int i = 0; i < filteredCommands.length; i++) {
                 appendCommandsToMsg(
                         commandsMsg,
                         filteredCommands[i],
                         "  ",
+                        maxCommandLength,
                         i == filteredCommands.length - 1,
                         showTree
                 );

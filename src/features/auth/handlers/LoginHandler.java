@@ -3,6 +3,8 @@ package features.auth.handlers;
 import core.cli.commands.CommandInstance;
 import core.io.IOManager;
 import core.manager.GlobalManager;
+import core.terminal.Chalk;
+import core.terminal.OutputUtils;
 import features.auth.UserManager;
 
 public class LoginHandler extends CommandInstance.Handler {
@@ -19,6 +21,6 @@ public class LoginHandler extends CommandInstance.Handler {
         }
 
         userManager.login(username, password);
-        System.out.println("Login successful for user: " + username);
+        OutputUtils.printSuccess("Login successful for user: " + new Chalk(username).bold().cyan());
     }
 }

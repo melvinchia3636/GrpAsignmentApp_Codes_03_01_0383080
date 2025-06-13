@@ -38,7 +38,7 @@ public class CommandHelpBuilder {
         String usageMsg = String.format(
                 "%s\n  %s%s%s%s",
                 new Chalk("Usage:").yellow().bold(),
-                new Chalk(String.join(" ", fullCommandPath)).green(),
+                new Chalk(String.join(" ", fullCommandPath)).bold().green(),
                 commandInstance.hasSubCommands
                         ? " <sub-command>"
                         : "",
@@ -81,7 +81,7 @@ public class CommandHelpBuilder {
                 exampleMsg,
                 positionalArgsMsg,
                 keywordArgsMsg,
-                commandsMsg.replaceFirst("\n$", "")
+                commandsMsg
         };
 
         String output = String.join(
@@ -89,7 +89,7 @@ public class CommandHelpBuilder {
                 Arrays.stream(sections)
                         .filter(e -> !e.isEmpty())
                         .toArray(String[]::new)
-        );
+        ).replaceFirst("\n$", "");
 
         System.out.println(output);
     }
@@ -116,11 +116,17 @@ public class CommandHelpBuilder {
                 .filter(command -> !command.isDisabled())
                 .toArray(CommandInstance[]::new);
 
+        int maxCommandLength = Arrays.stream(filteredCommands)
+                .mapToInt(command -> command.name.length())
+                .max()
+                .orElse(0);
+
         for (int i = 0; i < filteredCommands.length; i++) {
             appendCommandsToMsg(
                     subCommandsMsg,
                     filteredCommands[i],
                     "",
+                    maxCommandLength,
                     i == filteredCommands.length - 1,
                     showTree
             );

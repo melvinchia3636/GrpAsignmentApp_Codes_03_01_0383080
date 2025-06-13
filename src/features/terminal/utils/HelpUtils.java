@@ -19,6 +19,7 @@ public class HelpUtils {
             StringBuilder commandsMsg,
             CommandInstance commandInstance,
             String prefix,
+            int maxCommandLength,
             boolean isLast,
             boolean showTree
     ) {
@@ -37,7 +38,7 @@ public class HelpUtils {
         }
 
         commandsMsg.append(new Chalk(commandInstance.name).bold().green())
-                .append("  ")
+                .append(String.format("%" + (maxCommandLength - commandInstance.name.length() + 6) + "s", " "))
                 .append(firstSentenceOfDescription)
                 .append("\n");
 
@@ -47,10 +48,15 @@ public class HelpUtils {
                 .filter(sub -> !sub.isDisabled())
                 .toArray(CommandInstance[]::new);
 
+        int _maxCommandLength = Arrays.stream(subCommands)
+                .mapToInt(sub -> sub.name.length())
+                .max()
+                .orElse(0);
+
         for (int i = 0; i < subCommands.length; i++) {
             boolean last = (i == subCommands.length - 1);
             String newPrefix = prefix + (isLast ? "    " : "│   ");
-            appendCommandsToMsg(commandsMsg, subCommands[i], newPrefix, last, true);
+            appendCommandsToMsg(commandsMsg, subCommands[i], newPrefix, _maxCommandLength, last, true);
         }
     }
 }
