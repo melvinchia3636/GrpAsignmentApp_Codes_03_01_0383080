@@ -4,6 +4,7 @@ import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
 import core.terminal.Chalk;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
+import features.modules.CarbonFootprintAnalyzer.instance.FootprintRecord;
 
 public class FootprintDataHistoryHandler extends CommandInstance.Handler {
     @Override
@@ -27,7 +28,7 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
         System.out.println(header);
         System.out.println(divider);
 
-        footprintManager.getRecords().forEach(record -> {
+        for (FootprintRecord record : footprintManager.getRecords()) {
             System.out.printf(
                     "║ %-18s ║ %-10.2f ║ %-6s ║ %-20s ║%n",
                     record.factor.activity,
@@ -35,7 +36,7 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
                     record.factor.perUnit,
                     record.timestamp
             );
-        });
+        }
 
         System.out.println(footer);
     }

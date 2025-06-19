@@ -2,7 +2,6 @@ package features.auth.commands;
 
 import core.cli.arguments.ArgumentDataType;
 import core.cli.arguments.ArgumentList;
-import core.cli.arguments.KeywordArgument;
 import core.cli.arguments.PositionalArgument;
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
