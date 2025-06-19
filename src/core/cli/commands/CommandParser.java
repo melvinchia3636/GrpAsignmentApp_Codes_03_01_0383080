@@ -5,7 +5,7 @@ import core.cli.arguments.ArgumentList;
 import core.cli.arguments.KeywordArgument;
 import core.cli.arguments.PositionalArgument;
 import core.terminal.OutputUtils;
-import core.models.SimpleMap;
+import core.instances.SimpleMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -242,13 +242,27 @@ public class CommandParser {
             while (true) {
                 System.out.print(positionalArgs.promptText + " ");
                 String input = scanner.nextLine().trim();
+                ArgumentDataType dataType = positionalArgs.dataType;
 
-                if (positionalArgs.dataType.isInvalid(input)) {
+                if (dataType.isInvalid(input)) {
+                    if (dataType.type.equals("enum")) {
+                        String options = String.join(", ", dataType.options);
+
+                        OutputUtils.printError(
+                                "Positional argument: \"" +
+                                        positionalArgs.name +
+                                        "\" has invalid type. Argument type should be one of: " +
+                                        options,
+                                false
+                        );
+                        continue;
+                    }
+
                     OutputUtils.printError(
                             "Positional argument: \"" +
                                     positionalArgs.name +
                                     "\" has invalid type. Argument type should be: " +
-                                    positionalArgs.dataType.type,
+                                    dataType.type,
                             false
                     );
                     continue;

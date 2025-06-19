@@ -3,7 +3,7 @@ package features.auth.handlers;
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
 import core.terminal.OutputUtils;
-import features.auth.UserManager;
+import features.auth.data.UserManager;
 
 public class LogoutHandler extends CommandInstance.Handler {
     @Override

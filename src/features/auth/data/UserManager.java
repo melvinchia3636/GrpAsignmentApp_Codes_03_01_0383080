@@ -1,8 +1,8 @@
-package features.auth;
+package features.auth.data;
 
 import core.io.IOManager;
 import core.manager.GlobalManager;
-import core.models.JSONObject;
+import core.instances.JSONObject;
 import features.auth.instances.Password;
 
 public class UserManager {
@@ -22,18 +22,22 @@ public class UserManager {
         this.username = username;
         this.country = country;
         isLoggedIn = true;
+
+        GlobalManager.getInstance().initModuleManagers();
     }
 
     public void login(String username, String password) {
         IOManager ioManager = GlobalManager.getInstance().getIOManager();
         ioManager.initUserProfile(username, false);
 
-        JSONObject data = ioManager.parseFromFile("profile", password);
+        JSONObject data = ioManager.parseStringFromFile("profile", password);
 
         this.password = new Password(password);
         this.username = username;
         this.country = data.getString("country");
         isLoggedIn = true;
+
+        GlobalManager.getInstance().initModuleManagers();
     }
 
     public void reset() {

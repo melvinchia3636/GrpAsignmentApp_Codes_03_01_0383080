@@ -5,7 +5,7 @@ import core.io.IOManager;
 import core.manager.GlobalManager;
 import core.terminal.Chalk;
 import core.terminal.OutputUtils;
-import features.auth.UserManager;
+import features.auth.data.UserManager;
 
 public class LoginHandler extends CommandInstance.Handler {
     @Override

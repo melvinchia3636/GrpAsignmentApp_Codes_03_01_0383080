@@ -1,7 +1,8 @@
 package core.manager;
 
 import core.io.IOManager;
-import features.auth.UserManager;
+import features.auth.data.UserManager;
+import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
 
 /**
  * GlobalManager is a singleton class that provides access to global instances
@@ -15,6 +16,7 @@ public class GlobalManager {
 
     private final UserManager userManager;
     private final IOManager ioManager;
+    private final FootprintManager footprintManager;
 
     /**
      * Private constructor to prevent instantiation from outside the class.
@@ -23,6 +25,7 @@ public class GlobalManager {
     private GlobalManager() {
         userManager = new UserManager();
         ioManager = new IOManager();
+        footprintManager = new FootprintManager();
     }
 
     /**
@@ -32,6 +35,13 @@ public class GlobalManager {
      */
     public static GlobalManager getInstance() {
         return INSTANCE;
+    }
+
+    /**
+     * Initializes the managers of each module after user login.
+     */
+    public void initModuleManagers() {
+        footprintManager.init();
     }
 
     /**
@@ -50,5 +60,14 @@ public class GlobalManager {
      */
     public IOManager getIOManager() {
         return ioManager;
+    }
+
+    /**
+     * Returns the FootprintManager instance.
+     *
+     * @return the FootprintManager instance
+     */
+    public FootprintManager getFootprintManager() {
+        return footprintManager;
     }
 }

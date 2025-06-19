@@ -1,4 +1,4 @@
-package core.models;
+package core.instances;
 
 /**
  * After some research, I found that there is no built-in JSON object in Java for some reason.

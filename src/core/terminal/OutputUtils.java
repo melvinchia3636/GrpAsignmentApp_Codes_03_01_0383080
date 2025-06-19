@@ -1,7 +1,7 @@
 package core.terminal;
 
 import core.manager.GlobalManager;
-import features.auth.UserManager;
+import features.auth.data.UserManager;
 
 /**
  * Collection of utility methods for outputting stuff to the terminal.

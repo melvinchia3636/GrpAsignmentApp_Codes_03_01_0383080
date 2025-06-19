@@ -6,7 +6,7 @@ import core.cli.arguments.KeywordArgument;
 import core.cli.arguments.PositionalArgument;
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
-import features.auth.UserManager;
+import features.auth.data.UserManager;
 import features.auth.handlers.SignupHandler;
 
 public class SignupCommand extends CommandInstance {
@@ -21,8 +21,7 @@ public class SignupCommand extends CommandInstance {
                                 new PositionalArgument("password", "Password for the new account", ArgumentDataType.STRING)
                         },
                         new KeywordArgument[]{
-                                new KeywordArgument("country", "c", "Country of the user (ISO 3166-1 alpha-2 code)", ArgumentDataType.STRING, false),
-                                new KeywordArgument("remember-me", "r", "Whether to remember the user for future logins", ArgumentDataType.FLAG, false)
+                                new KeywordArgument("country", "c", "Country of the user (ISO 3166-1 alpha-2 code, eg. MY, SG, etc.)", ArgumentDataType.STRING, false),
                         }
                 ),
                 new SignupHandler()

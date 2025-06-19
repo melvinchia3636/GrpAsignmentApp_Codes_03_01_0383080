@@ -5,7 +5,7 @@ import core.cli.commands.CommandInstance;
 import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import core.manager.GlobalManager;
-import features.auth.UserManager;
+import features.auth.data.UserManager;
 import features.auth.instances.Password;
 
 import java.util.Scanner;

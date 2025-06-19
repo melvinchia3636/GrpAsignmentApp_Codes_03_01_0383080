@@ -4,8 +4,8 @@ import core.cli.arguments.ArgumentList;
 import core.cli.arguments.KeywordArgument;
 import core.cli.arguments.PositionalArgument;
 import core.manager.GlobalManager;
-import core.models.SimpleMap;
-import features.auth.UserManager;
+import core.instances.SimpleMap;
+import features.auth.data.UserManager;
 
 import java.util.ArrayList;
 

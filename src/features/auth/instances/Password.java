@@ -62,8 +62,8 @@ public class Password {
     }
 
     public String encrypt(String text) {
-        if (text == null || text.isEmpty()) {
-            throw new IllegalArgumentException("Text to encrypt cannot be null or empty.");
+        if (text == null) {
+            throw new IllegalArgumentException("Text to encrypt cannot be null");
         }
 
         text = "ABCDEFGH" + text;
@@ -71,8 +71,8 @@ public class Password {
     }
 
     public String decrypt(String encryptedText) {
-        if (encryptedText == null || encryptedText.isEmpty()) {
-            throw new IllegalArgumentException("Encrypted text cannot be null or empty.");
+        if (encryptedText == null) {
+            throw new IllegalArgumentException("Encrypted text cannot be nul");
         }
 
         String decryptedText = xorCipher(encryptedText);

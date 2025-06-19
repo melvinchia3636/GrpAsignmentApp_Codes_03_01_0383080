@@ -1,5 +1,7 @@
 package core.cli.arguments;
 
+import java.util.Objects;
+
 /**
  * ArgumentDataType defines the data types that can be used for command arguments.
  * It includes methods to validate if a given value matches the expected data type.
@@ -13,9 +15,19 @@ public class ArgumentDataType {
     public static final ArgumentDataType FLAG = new ArgumentDataType("flag");
 
     public final String type;
+    public String[] options = null;
 
     private ArgumentDataType(String type) {
         this.type = type;
+    }
+
+    public ArgumentDataType(String type, String[] options) {
+        if (!type.equals("enum")) {
+            throw new IllegalArgumentException("Only 'enum' type can have options");
+        }
+
+        this.type = type;
+        this.options = options;
     }
 
     /**
@@ -33,10 +45,21 @@ public class ArgumentDataType {
             return value == null || !value.matches("^\\d+$");
         } else if (this == FLOAT) {
             // Float should be digits with a decimal point
-            return value == null || !value.matches("^\\d+\\.\\d+$");
+            return value == null || !value.matches("^\\d+(\\.\\d+)?$");
         } else if (this == FLAG) {
             // flag Should be null
             return value != null;
+        } else if (this.type.equals("enum")) {
+            // Enum should be one of the defined options
+            if (options == null || options.length == 0) {
+                throw new IllegalStateException("Enum type must have options defined");
+            }
+            for (String option : options) {
+                if (Objects.equals(option, value)) {
+                    return false; // Valid option found
+                }
+            }
+            return true; // No valid option found
         } else {
             return true;
         }

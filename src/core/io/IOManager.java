@@ -2,9 +2,9 @@ package core.io;
 
 import core.terminal.Chalk;
 import core.manager.GlobalManager;
-import core.models.JSONObject;
+import core.instances.JSONObject;
 import core.terminal.OutputUtils;
-import features.auth.UserManager;
+import features.auth.data.UserManager;
 import features.auth.instances.Password;
 
 import java.io.File;
@@ -81,7 +81,7 @@ public class IOManager {
      * @return a JSONObject parsed from the decrypted content of the file
      * @throws Error if decryption fails or if the file cannot be read
      */
-    public JSONObject parseFromFile(String filename, String password) {
+    public JSONObject parseStringFromFile(String filename, String password) {
         String data = readFromFile(filename);
         JSONObject decryptedJSON = new JSONObject();
 
@@ -104,7 +104,7 @@ public class IOManager {
      * @throws IllegalStateException if UserManager password is not set
      * @throws Error                 if decryption fails or if the file cannot be read
      */
-    public JSONObject parseFromFile(String filename) {
+    public String parseStringFromFile(String filename) {
         UserManager userManager = GlobalManager.getInstance().getUserManager();
 
         if (userManager.getPassword() == null) {
@@ -112,13 +112,28 @@ public class IOManager {
         }
 
         String data = readFromFile(filename);
-        JSONObject decryptedJSON = new JSONObject();
+        return userManager.getPassword().decrypt(data);
+    }
 
+    /**
+     * Writes a String content to a file with the given filename.
+     * The content is encrypted using the UserManager's password before writing.
+     *
+     * @param filename the name of the file to write
+     * @param content  the String content to write to the file
+     * @throws IllegalStateException if UserManager password is not set or if user profile folder is not initialized
+     * @throws IOError               if there is an error writing to the file
+     */
+    public void writeToFile(String filename, String content) {
+        String encryptedContent = getEncryptedString(content);
+
+        Path filePath = userProfileFolder.toPath().resolve(filename + ".bin");
         try {
-            decryptedJSON.parseFromString(userManager.getPassword().decrypt(data));
-            return decryptedJSON;
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to decrypt data file: " + filename + ". Please check your password.", e);
+            Files.write(filePath, encryptedContent.getBytes());
+        } catch (IOException e) {
+            throw new IOError(
+                    new IOException("Failed to write to file: " + filePath, e)
+            );
         }
     }
 
@@ -132,28 +147,9 @@ public class IOManager {
      * @throws IOError               if there is an error writing to the file
      */
     public void writeToFile(String filename, JSONObject content) {
-        UserManager userManager = GlobalManager.getInstance().getUserManager();
-        Password password = userManager.getPassword();
-
-        if (password == null) {
-            throw new IllegalStateException("UserManager password is not set. Please login first.");
-        }
-
-        if (userProfileFolder == null) {
-            throw new IllegalStateException("User profile folder is not initialized. Call initUserProfile() first.");
-        }
-
-        String encryptedContent = password.encrypt(content.toString());
-
-        Path filePath = userProfileFolder.toPath().resolve(filename + ".bin");
-        try {
-            Files.write(filePath, encryptedContent.getBytes());
-        } catch (IOException e) {
-            throw new IOError(
-                    new IOException("Failed to write to file: " + filePath, e)
-            );
-        }
+        writeToFile(filename, content.toString());
     }
+
 
     /**
      * Checks if a user profile exists for the given username.
@@ -175,7 +171,7 @@ public class IOManager {
      * @throws IllegalStateException if user profile folder is not initialized
      * @throws IOError               if there is an error reading from the file
      */
-    private String readFromFile(String filename) {
+    public String readFromFile(String filename) {
         if (userProfileFolder == null) {
             throw new IllegalStateException("User profile folder is not initialized. Call initUserProfile() first.");
         }
@@ -189,4 +185,31 @@ public class IOManager {
             );
         }
     }
+
+    public boolean existsFile(String filename) {
+        if (userProfileFolder == null) {
+            throw new IllegalStateException("User profile folder is not initialized. Call initUserProfile() first.");
+        }
+
+        Path filePath = userProfileFolder.toPath().resolve(filename + ".bin");
+        return Files.exists(filePath);
+    }
+
+
+    private String getEncryptedString(String content) {
+        UserManager userManager = GlobalManager.getInstance().getUserManager();
+        Password password = userManager.getPassword();
+
+        if (password == null) {
+            throw new IllegalStateException("UserManager password is not set. Please login first.");
+        }
+
+        if (userProfileFolder == null) {
+            throw new IllegalStateException("User profile folder is not initialized. Call initUserProfile() first.");
+        }
+
+        return password.encrypt(content);
+    }
+
+
 }
