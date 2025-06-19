@@ -3,34 +3,50 @@ package features.modules.CarbonFootprintAnalyzer.handlers.data;
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
 import core.terminal.Chalk;
+import core.terminal.OutputUtils;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
-import features.modules.CarbonFootprintAnalyzer.instance.FootprintRecord;
+import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
+
+import java.util.Arrays;
 
 public class FootprintDataHistoryHandler extends CommandInstance.Handler {
     @Override
     public void run() {
-        FootprintManager footprintManager = GlobalManager.getInstance().getFootprintManager();
+        String lastXDaysString = argsMap.get("last");
+        int lastXDays = lastXDaysString != null ? Integer.parseInt(lastXDaysString) : 7;
 
+        FootprintManager footprintManager = GlobalManager.getInstance().getFootprintManager();
         if (footprintManager.getRecords().isEmpty()) {
-            System.out.println("No carbon footprint records found.");
-            System.out.println(new Chalk("Log your first activity using the 'footprint log' command.").yellow().bold());
+            OutputUtils.printError("No carbon footprint records found.", false);
+            System.out.println(new Chalk("Log your first activity using the 'footprint log' command.").yellow());
             return;
         }
 
-        String separator = "╔════════════════════╦════════════╦════════╦══════════════════════╗";
-        String header    = "║ Activity           ║ Amount     ║ Unit   ║ Time                 ║";
-        String divider   = "╠════════════════════╬════════════╬════════╬══════════════════════╣";
-        String footer    = "╚════════════════════╩════════════╩════════╩══════════════════════╝";
+        FootprintRecord[] filteredRecords = footprintManager.getRecordsForLastXDays(lastXDays);
+
+        if (filteredRecords.length == 0) {
+            OutputUtils.printError("No records found for the specified period.", false);
+            return;
+        }
+
+        String separator = "╔═══════════════════════════╦════════════╦════════╦══════════════════════╗";
+        String header    = "║ Activity                  ║ Amount     ║ Unit   ║ Time                 ║";
+        String divider   = "╠═══════════════════════════╬════════════╬════════╬══════════════════════╣";
+        String footer    = "╚═══════════════════════════╩════════════╩════════╩══════════════════════╝";
 
         System.out.println();
-        System.out.println(new Chalk("🌿 Your Carbon Footprint History: \n").bold());
+        System.out.printf(new Chalk("🌿 Your Carbon Footprint History for the Last %d Days: \n").bold().toString(), lastXDays);
         System.out.println(separator);
         System.out.println(header);
         System.out.println(divider);
 
-        for (FootprintRecord record : footprintManager.getRecords()) {
+        FootprintRecord[] sortedRecords = Arrays.stream(filteredRecords)
+                .sorted((r1, r2) -> Long.compare(r2.timestamp.getTimestamp(), r1.timestamp.getTimestamp()))
+                .toArray(FootprintRecord[]::new);
+
+        for (FootprintRecord record : sortedRecords) {
             System.out.printf(
-                    "║ %-18s ║ %-10.2f ║ %-6s ║ %-20s ║%n",
+                    "║ %-25s ║ %-10.2f ║ %-6s ║ %-20s ║%n",
                     record.factor.activity,
                     record.amount,
                     record.factor.perUnit,

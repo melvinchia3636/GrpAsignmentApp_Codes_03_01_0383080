@@ -58,6 +58,27 @@ public class SimpleMap<K, V> {
         return false;
     }
 
+    public void sortByValue() {
+        entries.sort((e1, e2) -> {
+            if (e1.value instanceof Comparable && e2.value instanceof Comparable) {
+                return ((Comparable<V>) e1.value).compareTo(e2.value);
+            }
+
+            return 0; // If keys are not comparable, do not change order
+        });
+    }
+
+    public void reverse() {
+        ArrayList<Entry<K, V>> reversedEntries = new ArrayList<>();
+
+        for (int i = entries.size() - 1; i >= 0; i--) {
+            reversedEntries.add(entries.get(i));
+        }
+
+        entries.clear();
+        entries.addAll(reversedEntries);
+    }
+
     /**
      * Gets the number of key-value pairs in the map.
      *

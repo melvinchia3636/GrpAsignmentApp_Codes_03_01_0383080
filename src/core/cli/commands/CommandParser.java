@@ -245,26 +245,7 @@ public class CommandParser {
                 ArgumentDataType dataType = positionalArgs.dataType;
 
                 if (dataType.isInvalid(input)) {
-                    if (dataType.type.equals("enum")) {
-                        String options = String.join(", ", dataType.options);
-
-                        OutputUtils.printError(
-                                "Positional argument: \"" +
-                                        positionalArgs.name +
-                                        "\" has invalid type. Argument type should be one of: " +
-                                        options,
-                                false
-                        );
-                        continue;
-                    }
-
-                    OutputUtils.printError(
-                            "Positional argument: \"" +
-                                    positionalArgs.name +
-                                    "\" has invalid type. Argument type should be: " +
-                                    dataType.type,
-                            false
-                    );
+                    printPositionalArgsError(positionalArgs);
                     continue;
                 }
 
@@ -322,14 +303,7 @@ public class CommandParser {
             // Check if the argument value matches the expected data type
             ArgumentDataType targetDataType = positionalArgs[i].dataType;
             if (targetDataType.isInvalid(argValue)) {
-                throw new CommandError(
-                        commandPath,
-                        String.format(
-                                "Positional argument: \"%s\" has invalid type. Argument type should be: %s",
-                                argName,
-                                targetDataType.type
-                        )
-                );
+               printPositionalArgsError(positionalArgs[i]);
             }
 
             argsMap.put(argName, argValue);
@@ -429,6 +403,38 @@ public class CommandParser {
 
             argsMap.put(targetName, targetArg.value);
         }
+    }
+
+    /**
+     * Prints an error message for a positional argument that has an invalid type.
+     * It checks if the argument is of type "enum" and prints the valid options, or prints the expected type otherwise.
+     *
+     * @param positionalArgs The positional argument that has an invalid type.
+     */
+    private static void printPositionalArgsError(PositionalArgument positionalArgs) {
+        ArgumentDataType dataType = positionalArgs.dataType;
+
+        if (dataType.type.equals("enum")) {
+            String options = String.join(", ", dataType.options);
+
+            OutputUtils.printError(
+                    "Positional argument: \"" +
+                            positionalArgs.name +
+                            "\" has invalid type. Argument type should be one of: " +
+                            options,
+                    false
+            );
+
+            return;
+        }
+
+        OutputUtils.printError(
+                "Positional argument: \"" +
+                        positionalArgs.name +
+                        "\" has invalid type. Argument type should be: " +
+                        dataType.type,
+                false
+        );
     }
 
     /**

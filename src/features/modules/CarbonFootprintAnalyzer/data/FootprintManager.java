@@ -4,8 +4,8 @@ import core.instances.Timestamp;
 import core.io.CSVParser;
 import core.io.IOManager;
 import core.manager.GlobalManager;
-import features.modules.CarbonFootprintAnalyzer.instance.FootprintFactor;
-import features.modules.CarbonFootprintAnalyzer.instance.FootprintRecord;
+import features.modules.CarbonFootprintAnalyzer.instances.FootprintFactor;
+import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
 
 import java.util.ArrayList;
 public class FootprintManager {
@@ -62,6 +62,22 @@ public class FootprintManager {
 
     public ArrayList<FootprintRecord> getRecords() {
         return records;
+    }
+
+    public FootprintRecord[] getRecordsForLastXDays(int days) {
+        long startTimestamp = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L);
+
+        return records.stream()
+                .filter(record -> record.timestamp.getTimestamp() >= startTimestamp)
+                .toArray(FootprintRecord[]::new);
+    }
+
+    public FootprintRecord[] getRecordsForFactor(FootprintFactor factor, int days) {
+        long startTimestamp = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L);
+
+        return records.stream()
+                .filter(record -> record.factor.equals(factor) && record.timestamp.getTimestamp() >= startTimestamp)
+                .toArray(FootprintRecord[]::new);
     }
 
     public void clearRecords() {

@@ -1,9 +1,6 @@
 package core.cli.commands;
 
-import features.auth.commands.LoginCommand;
-import features.auth.commands.LogoutCommand;
-import features.auth.commands.ProfileCommand;
-import features.auth.commands.SignupCommand;
+import features.auth.commands.*;
 
 import features.modules.CarbonFootprintAnalyzer.commands.*;
 
@@ -28,6 +25,7 @@ public class CommandRegistrar {
             new CommandNamespace("Authentication", new CommandInstance[]{
                     new LoginCommand(),
                     new SignupCommand(),
+                    new ListProfiles(),
                     new ProfileCommand(),
                     new LogoutCommand()
             }),

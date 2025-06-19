@@ -1,10 +1,10 @@
-package features.modules.CarbonFootprintAnalyzer.commands.stats;
+package features.modules.CarbonFootprintAnalyzer.commands.goal;
 
 import core.cli.commands.CommandInstance;
 import features.modules.CarbonFootprintAnalyzer.handlers.stats.FootprintStatsStreakHandler;
 
-public class FootprintStatsStreakCommand extends CommandInstance {
-    public FootprintStatsStreakCommand() {
+public class FootprintGoalStreakCommand extends CommandInstance {
+    public FootprintGoalStreakCommand() {
         super(
                 "streak",
                 "Analyze your carbon footprint streaks",

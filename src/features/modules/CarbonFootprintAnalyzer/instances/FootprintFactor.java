@@ -1,4 +1,8 @@
-package features.modules.CarbonFootprintAnalyzer.instance;
+package features.modules.CarbonFootprintAnalyzer.instances;
+
+import core.terminal.Chalk;
+
+import java.util.Random;
 
 /**
  * Represents a carbon footprint factor for a specific activity.
@@ -29,5 +33,18 @@ public class FootprintFactor {
      */
     public double getEstimatedFootprint(double amount) {
         return factor * amount;
+    }
+
+    public void printTips() {
+        if (tips.length == 0) {
+            System.out.println("No tips available for this activity.");
+            return;
+        }
+
+        Random random = new Random();
+        int tipIndex = random.nextInt(tips.length);
+        String tip = tips[tipIndex];
+
+        System.out.println("🌿Tip: " + new Chalk(tip).green().bold());
     }
 }

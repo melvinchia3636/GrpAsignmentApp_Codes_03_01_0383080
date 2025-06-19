@@ -7,10 +7,8 @@ import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintFactors;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
-import features.modules.CarbonFootprintAnalyzer.instance.FootprintFactor;
-import features.modules.CarbonFootprintAnalyzer.instance.FootprintRecord;
-
-import java.util.Random;
+import features.modules.CarbonFootprintAnalyzer.instances.FootprintFactor;
+import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
 
 public class FootprintLogHandler extends CommandInstance.Handler {
     @Override
@@ -47,19 +45,6 @@ public class FootprintLogHandler extends CommandInstance.Handler {
                 String.format("%6f kg CO2e", record.factor.getEstimatedFootprint(record.amount))
         ).blue().bold());
         System.out.println();
-        printTips(record.factor);
-    }
-
-    private void printTips(FootprintFactor factor) {
-        if (factor.tips.length == 0) {
-            System.out.println("No tips available for this activity.");
-            return;
-        }
-
-        Random random = new Random();
-        int tipIndex = random.nextInt(factor.tips.length);
-        String tip = factor.tips[tipIndex];
-
-        System.out.println("🌿Tip: " + new Chalk(tip).green().bold());
+        record.factor.printTips();
     }
 }

@@ -195,6 +195,20 @@ public class IOManager {
         return Files.exists(filePath);
     }
 
+    public String[] listProfiles() {
+        File[] files = profilesDir.toFile().listFiles(File::isDirectory);
+        if (files == null) {
+            return new String[0];
+        }
+
+        String[] profileNames = new String[files.length];
+        for (int i = 0; i < files.length; i++) {
+            profileNames[i] = files[i].getName();
+        }
+
+        return profileNames;
+    }
+
 
     private String getEncryptedString(String content) {
         UserManager userManager = GlobalManager.getInstance().getUserManager();
@@ -210,6 +224,4 @@ public class IOManager {
 
         return password.encrypt(content);
     }
-
-
 }

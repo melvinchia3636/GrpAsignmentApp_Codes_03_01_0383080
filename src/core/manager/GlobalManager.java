@@ -44,6 +44,11 @@ public class GlobalManager {
         footprintManager.init();
     }
 
+    public void reset() {
+        userManager.reset();
+        footprintManager.clearRecords();
+    }
+
     /**
      * Returns the UserManager instance.
      *

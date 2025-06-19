@@ -1,13 +1,13 @@
-package features.modules.CarbonFootprintAnalyzer.instance;
+package features.modules.CarbonFootprintAnalyzer.instances;
 
 import core.instances.Timestamp;
 
 public class FootprintRecord {
     public final FootprintFactor factor;
-    public final float amount;
+    public final double amount;
     public final Timestamp timestamp;
 
-    public FootprintRecord(FootprintFactor factor, float amount, Timestamp timestamp) {
+    public FootprintRecord(FootprintFactor factor, double amount, Timestamp timestamp) {
         this.factor = factor;
         this.amount = amount;
         this.timestamp = timestamp;

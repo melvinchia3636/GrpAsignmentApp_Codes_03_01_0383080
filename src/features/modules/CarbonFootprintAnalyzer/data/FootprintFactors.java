@@ -1,6 +1,6 @@
 package features.modules.CarbonFootprintAnalyzer.data;
 
-import features.modules.CarbonFootprintAnalyzer.instance.FootprintFactor;
+import features.modules.CarbonFootprintAnalyzer.instances.FootprintFactor;
 
 /**
  * Contains predefined carbon footprint factors for various activities.
