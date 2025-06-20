@@ -26,7 +26,7 @@ public class CommandHelpBuilder {
      */
     public static void printCommandHelp(CommandInstance commandInstance, boolean showTree) {
         ArrayList<String> fullCommandPath = commandInstance.getFullPath();
-        String description = commandInstance.description;
+        String description = commandInstance.getDescription();
 
         // Split the description into the first sentence and the remaining description.
         int fullStopIndex = description.indexOf(".");
@@ -39,18 +39,18 @@ public class CommandHelpBuilder {
                 "%s\n  %s%s%s%s",
                 new Chalk("Usage:").yellow().bold(),
                 new Chalk(String.join(" ", fullCommandPath)).bold().green(),
-                commandInstance.hasSubCommands
+                commandInstance.isHasSubCommands()
                         ? " <sub-command>"
                         : "",
-                commandInstance.args.positionalArguments.length > 0 ?
+                commandInstance.getArgs().getPositionalArguments().length > 0 ?
                         " " + new Chalk(
                                 String.join(" ",
-                                        Arrays.stream(commandInstance.args.positionalArguments)
-                                                .map(e -> "<" + e.name + ">")
+                                        Arrays.stream(commandInstance.getArgs().getPositionalArguments())
+                                                .map(e -> "<" + e.getName() + ">")
                                                 .toArray(String[]::new)
                                 )
                         ).blue() : "",
-                commandInstance.args.keywordArguments.length > 0 ? " [--keyword-arguments]" : ""
+                commandInstance.getArgs().getKeywordArguments().length > 0 ? " [--keyword-arguments]" : ""
         );
 
         String descriptionMsg = String.format(
@@ -62,12 +62,12 @@ public class CommandHelpBuilder {
                         : "\n\n" + formatStringWithIndentation(remainingDescription)
         );
 
-        String exampleMsg = commandInstance.example != null
+        String exampleMsg = commandInstance.getExample() != null
                 ? String.format(
                 "%s\n  %s %s",
                 new Chalk("Example:").yellow().bold(),
                 new Chalk(String.join(" ", fullCommandPath)).bold().green(),
-                commandInstance.example
+                commandInstance.getExample()
         )
                 : "";
 
@@ -104,7 +104,7 @@ public class CommandHelpBuilder {
             CommandInstance commandInstance,
             boolean showTree
     ) {
-        if (!commandInstance.hasSubCommands) {
+        if (!commandInstance.isHasSubCommands()) {
             return "";
         }
 
@@ -112,12 +112,12 @@ public class CommandHelpBuilder {
                 new Chalk("Available Commands:").yellow().bold() + "\n"
         );
 
-        CommandInstance[] filteredCommands = Arrays.stream(commandInstance.subCommands)
+        CommandInstance[] filteredCommands = Arrays.stream(commandInstance.getSubCommands())
                 .filter(command -> !command.isDisabled())
                 .toArray(CommandInstance[]::new);
 
         int maxCommandLength = Arrays.stream(filteredCommands)
-                .mapToInt(command -> command.name.length())
+                .mapToInt(command -> command.getName().length())
                 .max()
                 .orElse(0);
 
@@ -145,26 +145,26 @@ public class CommandHelpBuilder {
             CommandInstance commandInstance
     ) {
         StringBuilder argsMsg = new StringBuilder();
-        PositionalArgument[] positionalArgs = commandInstance.args.positionalArguments;
+        PositionalArgument[] positionalArgs = commandInstance.getArgs().getPositionalArguments();
 
         if (positionalArgs.length == 0) {
             return "";
         }
 
         int maxTypeStringLength = ArgumentDataType.getMaxTypeStringLength();
-        int maxPositionalArgNameLength = commandInstance.args.getMaxPositionalArgumentNameLength();
+        int maxPositionalArgNameLength = commandInstance.getArgs().getMaxPositionalArgumentNameLength();
 
         argsMsg.append(new Chalk("Positional Arguments:").yellow().bold()).append("\n");
 
         for (PositionalArgument arg : positionalArgs) {
-            String argName = arg.name;
-            String argDescription = arg.description;
+            String argName = arg.getName();
+            String argDescription = arg.getDescription();
 
             argsMsg.append("  ")
                     .append(new Chalk(argName).bold().blue())
                     .append(String.format("%" + (maxPositionalArgNameLength - argName.length() + 4) + "s", ""))
-                    .append(new Chalk(String.format("[%s]", arg.dataType.type)).bold().purple())
-                    .append(String.format("%" + (maxTypeStringLength - arg.dataType.type.length() + 4) + "s", ""))
+                    .append(new Chalk(String.format("[%s]", arg.getDataType().getType())).bold().purple())
+                    .append(String.format("%" + (maxTypeStringLength - arg.getDataType().getType().length() + 4) + "s", ""))
                     .append(argDescription)
                     .append("\n");
         }
@@ -182,28 +182,28 @@ public class CommandHelpBuilder {
             CommandInstance commandInstance
     ) {
         StringBuilder argsMsg = new StringBuilder();
-        KeywordArgument[] keywordArgs = commandInstance.args.keywordArguments;
+        KeywordArgument[] keywordArgs = commandInstance.getArgs().getKeywordArguments();
 
         if (keywordArgs.length == 0) {
             return "";
         }
 
         int maxTypeStringLength = ArgumentDataType.getMaxTypeStringLength();
-        int maxKeywordArgNameLength = commandInstance.args.getMaxKeywordArgumentNameLength();
+        int maxKeywordArgNameLength = commandInstance.getArgs().getMaxKeywordArgumentNameLength();
 
         argsMsg.append(new Chalk("Keyword Arguments:").yellow().bold()).append("\n");
 
         for (KeywordArgument arg : keywordArgs) {
-            String argName = arg.name;
-            String argAbbreviation = arg.abbreviation;
-            String argDescription = arg.description;
+            String argName = arg.getName();
+            String argAbbreviation = arg.getAbbreviation();
+            String argDescription = arg.getDescription();
 
             argsMsg.append("  ")
                     .append(new Chalk(String.format("-%s, --%s", argAbbreviation, argName)).bold().blue())
                     .append(String.format("%" + (maxKeywordArgNameLength - argName.length() + 4) + "s", ""))
-                    .append(new Chalk(String.format("[%s]", arg.dataType.type)).bold().purple())
-                    .append(String.format("%" + (maxTypeStringLength - arg.dataType.type.length() + 4) + "s", ""))
-                    .append(arg.required ? new Chalk("(required)").bold().red() : new Chalk("(optional)").bold().green())
+                    .append(new Chalk(String.format("[%s]", arg.getDataType().getType())).bold().purple())
+                    .append(String.format("%" + (maxTypeStringLength - arg.getDataType().getType().length() + 4) + "s", ""))
+                    .append(arg.isRequired() ? new Chalk("(required)").bold().red() : new Chalk("(optional)").bold().green())
                     .append("    ")
                     .append(argDescription)
                     .append("\n");

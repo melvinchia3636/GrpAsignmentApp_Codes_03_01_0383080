@@ -40,7 +40,7 @@ public class HelpHandler extends CommandInstance.Handler {
         CommandInstance commandInstance =  CommandRegistrar.getCommandByName(splitCommandNames[0]);
 
         for (int i = 1; i < splitCommandNames.length; i++) {
-            if (!commandInstance.hasSubCommands) {
+            if (!commandInstance.isHasSubCommands()) {
                 throw new CommandError(
                         String.join(".", Arrays.copyOfRange(splitCommandNames, 0, i)),
                         String.format(

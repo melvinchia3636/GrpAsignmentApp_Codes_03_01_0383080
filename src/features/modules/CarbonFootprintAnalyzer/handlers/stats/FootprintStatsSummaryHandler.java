@@ -32,7 +32,7 @@ public class FootprintStatsSummaryHandler extends CommandInstance.Handler {
         }
 
         double[] amounts = Stream.of(filteredRecords)
-                .mapToDouble(record -> record.amount)
+                .mapToDouble(FootprintRecord::getAmount)
                 .toArray();
 
         DoubleSummaryStatistics statistics = Arrays.stream(amounts).summaryStatistics();

@@ -41,16 +41,16 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
         System.out.println(divider);
 
         FootprintRecord[] sortedRecords = Arrays.stream(filteredRecords)
-                .sorted((r1, r2) -> Long.compare(r2.timestamp.getTimestamp(), r1.timestamp.getTimestamp()))
+                .sorted((r1, r2) -> Long.compare(r2.getTimestamp().getTimestamp(), r1.getTimestamp().getTimestamp()))
                 .toArray(FootprintRecord[]::new);
 
         for (FootprintRecord record : sortedRecords) {
             System.out.printf(
                     "║ %-25s ║ %-10.2f ║ %-6s ║ %-20s ║%n",
-                    record.factor.activity,
-                    record.amount,
-                    record.factor.perUnit,
-                    record.timestamp
+                    record.getFactor().getActivity(),
+                    record.getAmount(),
+                    record.getFactor().getPerUnit(),
+                    record.getTimestamp()
             );
         }
 

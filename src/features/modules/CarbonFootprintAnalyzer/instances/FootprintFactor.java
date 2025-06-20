@@ -11,11 +11,11 @@ import java.util.Random;
  * and tips for reducing the carbon footprint associated with that activity.
  */
 public class FootprintFactor {
-    public final String activity;
-    public final String abbreviation;
-    public final double factor;
-    public final String perUnit;
-    public final String[] tips;
+    private final String activity;
+    private final String abbreviation;
+    private final double factor;
+    private final String perUnit;
+    private final String[] tips;
 
     public FootprintFactor(String activity, String abbreviation, double factor, String perUnit, String[] tips) {
         this.activity = activity;
@@ -32,19 +32,39 @@ public class FootprintFactor {
      * @return The estimated carbon footprint in kg CO2e.
      */
     public double getEstimatedFootprint(double amount) {
-        return factor * amount;
+        return getFactor() * amount;
     }
 
     public void printTips() {
-        if (tips.length == 0) {
+        if (getTips().length == 0) {
             System.out.println("No tips available for this activity.");
             return;
         }
 
         Random random = new Random();
-        int tipIndex = random.nextInt(tips.length);
-        String tip = tips[tipIndex];
+        int tipIndex = random.nextInt(getTips().length);
+        String tip = getTips()[tipIndex];
 
         System.out.println("🌿Tip: " + new Chalk(tip).green().bold());
+    }
+
+    public String getActivity() {
+        return activity;
+    }
+
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public double getFactor() {
+        return factor;
+    }
+
+    public String getPerUnit() {
+        return perUnit;
+    }
+
+    public String[] getTips() {
+        return tips;
     }
 }

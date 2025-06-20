@@ -16,13 +16,10 @@ public class SignupCommand extends CommandInstance {
                 "Create a new user account.",
                 "johndoe mypassword -c MY -r",
                 new ArgumentList(
-                        new PositionalArgument[]{
-                                new PositionalArgument("username", "Username for the new account", ArgumentDataType.STRING),
-                                new PositionalArgument("password", "Password for the new account", ArgumentDataType.STRING)
-                        },
-                        new KeywordArgument[]{
-                                new KeywordArgument("country", "c", "Country of the user (ISO 3166-1 alpha-2 code, eg. MY, SG, etc.)", ArgumentDataType.STRING, false),
-                        }
+                        new PositionalArgument("username", "Username for the new account", ArgumentDataType.STRING),
+                        new PositionalArgument("password", "Password for the new account", ArgumentDataType.STRING),
+                        new KeywordArgument("country", "c", "Country of the user (ISO 3166-1 alpha-2 code, eg. MY, SG, etc.)",
+                                ArgumentDataType.STRING, false)
                 ),
                 new SignupHandler()
         );

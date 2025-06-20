@@ -39,7 +39,7 @@ public class REPL {
     private static void findAndDispatchCommand(CommandParser.ParsedCommand parsedUserInput) {
         CommandInstance targetCommand = CommandRegistrar.getCommandByName(parsedUserInput.command);
 
-        if (!targetCommand.hasSubCommands) {
+        if (!targetCommand.isHasSubCommands()) {
             targetCommand.execute(parsedUserInput);
             return;
         }
@@ -62,7 +62,7 @@ public class REPL {
         if (parsedUserInput.positionalArgs.length == 0) {
             throw new CommandError(
                     fromCommand.getFullPath(),
-                    "Command: " + fromCommand.name + " requires a sub-command."
+                    "Command: " + fromCommand.getName() + " requires a sub-command."
             );
         }
 
@@ -75,7 +75,7 @@ public class REPL {
 
         CommandInstance subCommand = fromCommand.getSubCommandByName(parsedUserInput.command);
 
-        if (!subCommand.hasSubCommands) {
+        if (!subCommand.isHasSubCommands()) {
             subCommand.execute(parsedUserInput);
             return;
         }

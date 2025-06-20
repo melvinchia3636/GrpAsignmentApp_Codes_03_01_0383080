@@ -13,10 +13,8 @@ public class EditProfileCommand extends CommandInstance {
                 "Edit the current user's profile information.",
                 "country MY",
                 new ArgumentList(
-                        new PositionalArgument[] {
-                                new PositionalArgument("key", "The profile field to edit (e.g., country)", ArgumentDataType.STRING),
-                                new PositionalArgument("value", "The new value for the profile field", ArgumentDataType.STRING)
-                        }
+                        new PositionalArgument("key", "The profile field to edit (e.g., country)", ArgumentDataType.STRING),
+                        new PositionalArgument("value", "The new value for the profile field", ArgumentDataType.STRING)
                 ),
                 new EditProfileHandler()
         );

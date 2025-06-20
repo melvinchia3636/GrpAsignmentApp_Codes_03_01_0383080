@@ -14,8 +14,8 @@ public class ArgumentDataType {
     public static final ArgumentDataType FLOAT = new ArgumentDataType("float");
     public static final ArgumentDataType FLAG = new ArgumentDataType("flag");
 
-    public final String type;
-    public String[] options = null;
+    private final String type;
+    private String[] options = null;
 
     private ArgumentDataType(String type) {
         this.type = type;
@@ -49,12 +49,12 @@ public class ArgumentDataType {
         } else if (this == FLAG) {
             // flag Should be null
             return value != null;
-        } else if (this.type.equals("enum")) {
+        } else if (this.getType().equals("enum")) {
             // Enum should be one of the defined options
-            if (options == null || options.length == 0) {
+            if (getOptions() == null || getOptions().length == 0) {
                 throw new IllegalStateException("Enum type must have options defined");
             }
-            for (String option : options) {
+            for (String option : getOptions()) {
                 if (Objects.equals(option, value)) {
                     return false; // Valid option found
                 }
@@ -71,7 +71,15 @@ public class ArgumentDataType {
      * @return the maximum length of type strings
      */
     public static int getMaxTypeStringLength() {
-        return Math.max(Math.max(STRING.type.length(), INTEGER.type.length()),
-                Math.max(FLOAT.type.length(), FLAG.type.length()));
+        return Math.max(Math.max(STRING.getType().length(), INTEGER.getType().length()),
+                Math.max(FLOAT.getType().length(), FLAG.getType().length()));
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String[] getOptions() {
+        return options;
     }
 }

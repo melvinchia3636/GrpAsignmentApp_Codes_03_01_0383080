@@ -41,11 +41,11 @@ public class CommandRegistrar {
     static {
         ArrayList<String> commandNames = new ArrayList<>();
         for (CommandNamespace namespace : commandInstances) {
-            for (CommandInstance command : namespace.commands) {
-                if (commandNames.contains(command.name)) {
-                    throw new IllegalArgumentException("Duplicate command name found: " + command.name);
+            for (CommandInstance command : namespace.getCommands()) {
+                if (commandNames.contains(command.getName())) {
+                    throw new IllegalArgumentException("Duplicate command name found: " + command.getName());
                 }
-                commandNames.add(command.name);
+                commandNames.add(command.getName());
             }
         }
     }
@@ -60,8 +60,8 @@ public class CommandRegistrar {
      */
     public static CommandInstance getCommandByName(String name) {
         for (CommandNamespace commandNamespace : commandInstances) {
-            for (CommandInstance command : commandNamespace.commands) {
-                if (command.name.equalsIgnoreCase(name)) {
+            for (CommandInstance command : commandNamespace.getCommands()) {
+                if (command.getName().equalsIgnoreCase(name)) {
                     if (command.isDisabled()) {
                         throw new IllegalArgumentException("Command is not accessible: " + name);
                     }

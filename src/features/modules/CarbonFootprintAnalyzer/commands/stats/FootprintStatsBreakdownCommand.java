@@ -13,9 +13,7 @@ public class FootprintStatsBreakdownCommand extends CommandInstance {
                 "Analyze the breakdown of your carbon footprint by category",
                 "",
                 new ArgumentList(
-                        new KeywordArgument[]{
-                                new KeywordArgument("last", "l", "Display breakdown for the last N days", ArgumentDataType.INTEGER, false)
-                        }
+                        new KeywordArgument("last", "l", "Display breakdown for the last N days", ArgumentDataType.INTEGER, false)
                 ),
                 new FootprintStatsBreakdownHandler()
         );

@@ -23,7 +23,7 @@ public class HelpUtils {
             boolean isLast,
             boolean showTree
     ) {
-        String commandDescription = commandInstance.description;
+        String commandDescription = commandInstance.getDescription();
 
         String firstSentenceOfDescription = commandDescription.contains(".")
                 ? commandDescription.substring(0, commandDescription.indexOf(".") + 1)
@@ -37,19 +37,19 @@ public class HelpUtils {
             commandsMsg.append("  ");
         }
 
-        commandsMsg.append(new Chalk(commandInstance.name).bold().green())
-                .append(String.format("%" + (maxCommandLength - commandInstance.name.length() + 6) + "s", " "))
+        commandsMsg.append(new Chalk(commandInstance.getName()).bold().green())
+                .append(String.format("%" + (maxCommandLength - commandInstance.getName().length() + 6) + "s", " "))
                 .append(firstSentenceOfDescription)
                 .append("\n");
 
-        if (!commandInstance.hasSubCommands || !showTree) return;
+        if (!commandInstance.isHasSubCommands() || !showTree) return;
 
-        CommandInstance[] subCommands = Arrays.stream(commandInstance.subCommands)
+        CommandInstance[] subCommands = Arrays.stream(commandInstance.getSubCommands())
                 .filter(sub -> !sub.isDisabled())
                 .toArray(CommandInstance[]::new);
 
         int _maxCommandLength = Arrays.stream(subCommands)
-                .mapToInt(sub -> sub.name.length())
+                .mapToInt(sub -> sub.getName().length())
                 .max()
                 .orElse(0);
 

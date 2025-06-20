@@ -5,11 +5,8 @@ import core.terminal.Chalk;
 /**
  * PositionalArgument represents a positional argument for a command.
  */
-public class PositionalArgument {
-    public final String name;
-    public final String description;
-    public final ArgumentDataType dataType;
-    public final String promptText;
+public class PositionalArgument extends Argument {
+    private final String promptText;
 
     /**
      * Constructs a PositionalArgument with the given name and data type.
@@ -19,17 +16,20 @@ public class PositionalArgument {
      * @param dataType the expected data type
      */
     public PositionalArgument(String name, String description, ArgumentDataType dataType, String promptText) {
+        super(name, description, dataType);
+
         if (dataType == ArgumentDataType.FLAG) {
             throw new IllegalArgumentException("Positional arguments cannot be of type FLAG");
         }
 
-        this.name = name;
-        this.description = description;
-        this.dataType = dataType;
         this.promptText = promptText != null ? promptText : "Please enter a value for " + new Chalk(name).blue().bold() + ":";
     }
 
     public PositionalArgument(String name, String description, ArgumentDataType dataType) {
         this(name, description, dataType, null);
+    }
+
+    public String getPromptText() {
+        return promptText;
     }
 }

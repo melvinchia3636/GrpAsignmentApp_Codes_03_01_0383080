@@ -37,14 +37,14 @@ public class FootprintLogHandler extends CommandInstance.Handler {
     private void printResult(FootprintRecord record) {
         System.out.println();
         OutputUtils.printSuccess("Successfully logged the carbon footprint entry:");
-        System.out.printf("  - Activity: %s%n", record.factor.activity);
-        System.out.printf("  - Amount: %s %s%n", record.amount, record.factor.perUnit);
-        System.out.printf("  - Time: %s%n", record.timestamp);
+        System.out.printf("  - Activity: %s%n", record.getFactor().getActivity());
+        System.out.printf("  - Amount: %s %s%n", record.getAmount(), record.getFactor().getPerUnit());
+        System.out.printf("  - Time: %s%n", record.getTimestamp());
         System.out.println();
         System.out.println("🔥Estimated carbon footprint: " + new Chalk(
-                String.format("%6f kg CO2e", record.factor.getEstimatedFootprint(record.amount))
+                String.format("%6f kg CO2e", record.getFactor().getEstimatedFootprint(record.getAmount()))
         ).blue().bold());
         System.out.println();
-        record.factor.printTips();
+        record.getFactor().printTips();
     }
 }

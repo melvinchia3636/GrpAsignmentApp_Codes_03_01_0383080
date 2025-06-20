@@ -68,7 +68,7 @@ public class FootprintManager {
         long startTimestamp = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L);
 
         return records.stream()
-                .filter(record -> record.timestamp.getTimestamp() >= startTimestamp)
+                .filter(record -> record.getTimestamp().getTimestamp() >= startTimestamp)
                 .toArray(FootprintRecord[]::new);
     }
 
@@ -76,7 +76,7 @@ public class FootprintManager {
         long startTimestamp = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L);
 
         return records.stream()
-                .filter(record -> record.factor.equals(factor) && record.timestamp.getTimestamp() >= startTimestamp)
+                .filter(record -> record.getFactor().equals(factor) && record.getTimestamp().getTimestamp() >= startTimestamp)
                 .toArray(FootprintRecord[]::new);
     }
 

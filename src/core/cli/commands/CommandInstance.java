@@ -1,8 +1,6 @@
 package core.cli.commands;
 
 import core.cli.arguments.ArgumentList;
-import core.cli.arguments.KeywordArgument;
-import core.cli.arguments.PositionalArgument;
 import core.manager.GlobalManager;
 import core.instances.SimpleMap;
 import features.auth.data.UserManager;
@@ -15,16 +13,16 @@ import java.util.ArrayList;
  * It also supports nested subcommands and provides methods for executing the command and retrieving its full path.
  */
 public abstract class CommandInstance {
-    public final String name;
-    public final String description;
-    public final String example;
-    public final ArgumentList args;
-    public final boolean hasSubCommands;
-    public final CommandInstance[] subCommands;
-    protected final Handler handler;
-    protected CommandInstance parentCommand = null;
+    private final String name;
+    private final String description;
+    private final String example;
+    private final ArgumentList args;
+    private final boolean hasSubCommands;
+    private final CommandInstance[] subCommands;
+    private final Handler handler;
+    private CommandInstance parentCommand = null;
 
-    public boolean authRequired = false;
+    private boolean authRequired = false;
 
     /**
      * Logic to construct a CommandInstance with the given parameters.
@@ -44,11 +42,11 @@ public abstract class CommandInstance {
         this.example = example;
 
         if (subCommands != null) {
-            this.args = new ArgumentList(new PositionalArgument[0], new KeywordArgument[0]);
+            this.args = new ArgumentList();
             this.handler = null;
             this.subCommands = subCommands;
             for (CommandInstance subCommand : subCommands) {
-                subCommand.parentCommand = this; // Set the parent command for each subcommand
+                subCommand.setParentCommand(this); // Set the parent command for each subcommand
             }
 
             this.hasSubCommands = true;
@@ -70,7 +68,7 @@ public abstract class CommandInstance {
      * @param handler     the handler that will process the command
      */
     protected CommandInstance(String name, String description, String example, Handler handler) {
-        this(name, description, example, new ArgumentList(new PositionalArgument[0], new KeywordArgument[0]), handler, null);
+        this(name, description, example, new ArgumentList(), handler, null);
     }
 
     /**
@@ -94,7 +92,7 @@ public abstract class CommandInstance {
      * @param subCommands an array of subcommands associated with this command
      */
     protected CommandInstance(String name, String description, CommandInstance[] subCommands) {
-        this(name, description, null, new ArgumentList(new PositionalArgument[0], new KeywordArgument[0]), null, subCommands);
+        this(name, description, null, new ArgumentList(), null, subCommands);
     }
 
     /**
@@ -107,20 +105,20 @@ public abstract class CommandInstance {
     public void execute(CommandParser.ParsedCommand parsedCommand) {
         SimpleMap<String, String> argsMap = CommandParser.validateAndGenerateArgsMap(
                 parsedCommand,
-                this.args,
+                this.getArgs(),
                 String.join(".", getFullPath())
             );
 
-        if (handler == null) {
-            throw new IllegalStateException("Handler is not set for command: " + name);
+        if (getHandler() == null) {
+            throw new IllegalStateException("Handler is not set for command: " + getName());
         }
 
-        handler.argsMap = argsMap;
-        handler.run();
+        getHandler().argsMap = argsMap;
+        getHandler().run();
     }
 
     public boolean isDisabled() {
-        if (authRequired) {
+        if (isAuthRequired()) {
             UserManager userManager = GlobalManager.getInstance().getUserManager();
 
             return !userManager.isLoggedIn;
@@ -137,16 +135,16 @@ public abstract class CommandInstance {
      * @throws CommandError if this command does not have sub-commands
      */
     public CommandInstance getSubCommandByName(String name) {
-        if (!hasSubCommands) {
-            throw new CommandError(getFullPath(), "Command " + this.name + " does not have sub-commands.");
+        if (!isHasSubCommands()) {
+            throw new CommandError(getFullPath(), "Command " + this.getName() + " does not have sub-commands.");
         }
 
-        for (CommandInstance subCommand : subCommands) {
-            if (subCommand.name.equals(name)) {
+        for (CommandInstance subCommand : getSubCommands()) {
+            if (subCommand.getName().equals(name)) {
                 if (subCommand.isDisabled()) {
                     throw new CommandError(
                         subCommand.getFullPath(),
-                        "Command is not accessible: " + subCommand.name
+                        "Command is not accessible: " + subCommand.getName()
                     );
                 }
 
@@ -156,7 +154,7 @@ public abstract class CommandInstance {
 
         throw new CommandError(
             getFullPath(),
-            "Sub-command '" + name + "' not found in command: " + this.name
+            "Sub-command '" + name + "' not found in command: " + this.getName()
         );
     }
 
@@ -171,11 +169,55 @@ public abstract class CommandInstance {
         ArrayList<String> path = new ArrayList<>();
 
         while (currentCommand != null) {
-            path.add(0, currentCommand.name);
-            currentCommand = currentCommand.parentCommand;
+            path.add(0, currentCommand.getName());
+            currentCommand = currentCommand.getParentCommand();
         }
 
         return path;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getExample() {
+        return example;
+    }
+
+    public ArgumentList getArgs() {
+        return args;
+    }
+
+    public boolean isHasSubCommands() {
+        return hasSubCommands;
+    }
+
+    public CommandInstance[] getSubCommands() {
+        return subCommands;
+    }
+
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public CommandInstance getParentCommand() {
+        return parentCommand;
+    }
+
+    public void setParentCommand(CommandInstance parentCommand) {
+        this.parentCommand = parentCommand;
+    }
+
+    public boolean isAuthRequired() {
+        return authRequired;
+    }
+
+    public void setAuthRequired(boolean authRequired) {
+        this.authRequired = authRequired;
     }
 
     /**

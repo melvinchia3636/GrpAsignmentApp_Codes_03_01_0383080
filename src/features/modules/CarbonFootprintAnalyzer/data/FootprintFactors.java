@@ -55,7 +55,7 @@ public class FootprintFactors {
      */
     public static FootprintFactor getFactorByAbbreviation(String abbreviation) {
         for (FootprintFactor factor : FACTORS) {
-            if (factor.abbreviation.equalsIgnoreCase(abbreviation)) {
+            if (factor.getAbbreviation().equalsIgnoreCase(abbreviation)) {
                 return factor;
             }
         }

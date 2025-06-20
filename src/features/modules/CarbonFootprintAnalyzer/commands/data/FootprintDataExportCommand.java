@@ -11,10 +11,8 @@ public class FootprintDataExportCommand extends CommandInstance {
         super("export", "Exports your carbon footprint data to a CSV file.",
                 "-f my_footprint.csv",
                 new ArgumentList(
-                        new KeywordArgument[]{
-                                new KeywordArgument("f", "file", "The name of the file to export your carbon footprint data to.", ArgumentDataType.STRING, false),
-                                new KeywordArgument("d", "directory", "The directory where the file will be saved.", ArgumentDataType.STRING, false),
-                        }
+                        new KeywordArgument("f", "file", "The name of the file to export your carbon footprint data to.", ArgumentDataType.STRING, false),
+                        new KeywordArgument("d", "directory", "The directory where the file will be saved.", ArgumentDataType.STRING, false)
                 ),
                 new FootprintDataExportHandler()
         );

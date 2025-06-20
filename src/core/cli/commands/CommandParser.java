@@ -57,11 +57,11 @@ public class CommandParser {
             String commandPath
     ) {
         if (allowedArguments == null) {
-            allowedArguments = new ArgumentList(new PositionalArgument[0], new KeywordArgument[0]);
+            allowedArguments = new ArgumentList();
         }
 
-        PositionalArgument[] positionalArgs = allowedArguments.positionalArguments;
-        KeywordArgument[] keywordArgs = allowedArguments.keywordArguments;
+        PositionalArgument[] positionalArgs = allowedArguments.getPositionalArguments();
+        KeywordArgument[] keywordArgs = allowedArguments.getKeywordArguments();
 
         SimpleMap<String, String> argsMap = new SimpleMap<>();
         boolean positionalArgsNeedPrompting = false;
@@ -213,7 +213,7 @@ public class CommandParser {
                 if (argName.length() > 1) {
                     throw new CommandError(
                             commandPath,
-                            "Invalid argument format: " + args[i] + ". " +
+                            "Invalid argument format: -" + argName + ". " +
                                     "Prefix '-' should only be used for single-character arguments. " +
                                     "Do you mean to use '--" + argName + "'?"
                     );
@@ -240,16 +240,16 @@ public class CommandParser {
         Scanner scanner = new Scanner(System.in);
         for (PositionalArgument positionalArgs : allowedPositionalArgs) {
             while (true) {
-                System.out.print(positionalArgs.promptText + " ");
+                System.out.print(positionalArgs.getPromptText() + " ");
                 String input = scanner.nextLine().trim();
-                ArgumentDataType dataType = positionalArgs.dataType;
+                ArgumentDataType dataType = positionalArgs.getDataType();
 
                 if (dataType.isInvalid(input)) {
                     printPositionalArgsError(positionalArgs);
                     continue;
                 }
 
-                argsMap.put(positionalArgs.name, input);
+                argsMap.put(positionalArgs.getName(), input);
                 break;
             }
         }
@@ -278,8 +278,8 @@ public class CommandParser {
                             Arrays.stream(positionalArgs)
                                     .map(arg -> String.format(
                                             "%s (%s)",
-                                            arg.name,
-                                            arg.dataType.type
+                                            arg.getName(),
+                                            arg.getDataType().getType()
                                     ))
                                     .toArray(String[]::new)
                     ) : "none";
@@ -297,11 +297,11 @@ public class CommandParser {
 
         // Validate and map positional arguments
         for (int i = 0; i < positionalArgs.length; i++) {
-            String argName = positionalArgs[i].name;
+            String argName = positionalArgs[i].getName();
             String argValue = parsedCommand.positionalArgs[i];
 
             // Check if the argument value matches the expected data type
-            ArgumentDataType targetDataType = positionalArgs[i].dataType;
+            ArgumentDataType targetDataType = positionalArgs[i].getDataType();
             if (targetDataType.isInvalid(argValue)) {
                printPositionalArgsError(positionalArgs[i]);
             }
@@ -325,11 +325,11 @@ public class CommandParser {
     ) {
         for (SimpleMap.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
             boolean isValid = false;
-            String argName = arg.key;
+            String argName = arg.getKey();
 
             // Check if the argument is in the allowed arguments
             for (KeywordArgument allowedArg : keywordArgs) {
-                if (argName.equals(allowedArg.name) || argName.equals(allowedArg.abbreviation)) {
+                if (argName.equals(allowedArg.getName()) || argName.equals(allowedArg.getAbbreviation())) {
                     isValid = true;
                     break;
                 }
@@ -360,12 +360,12 @@ public class CommandParser {
         for (KeywordArgument requiredArgument : keywordArgs) {
             SimpleMap.Entry<String, String> targetArg = null;
 
-            String targetName = requiredArgument.name;
-            String targetAbbreviation = requiredArgument.abbreviation;
-            ArgumentDataType targetDataType = requiredArgument.dataType;
+            String targetName = requiredArgument.getName();
+            String targetAbbreviation = requiredArgument.getAbbreviation();
+            ArgumentDataType targetDataType = requiredArgument.getDataType();
 
             for (SimpleMap.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
-                String argName = arg.key;
+                String argName = arg.getKey();
 
                 // Check if the argument matches either the full name or the abbreviation
                 // If the argument has more than one character, we check the full name, otherwise the abbreviation
@@ -380,7 +380,7 @@ public class CommandParser {
             }
 
             if (targetArg == null) {
-                if (!requiredArgument.required) {
+                if (!requiredArgument.isRequired()) {
                     continue;
                 }
 
@@ -390,18 +390,18 @@ public class CommandParser {
                 );
             }
 
-            if (targetDataType.isInvalid(targetArg.value)) {
+            if (targetDataType.isInvalid(targetArg.getValue())) {
                 throw new CommandError(
                         commandPath,
-                        "Argument: \"" + targetArg.key + "\" has invalid type. " + (
+                        "Argument: \"" + targetArg.getKey() + "\" has invalid type. " + (
                                 targetDataType == ArgumentDataType.FLAG ?
                                         "It is a flag and hence should not have any value" :
-                                        "Argument type should be: " + targetDataType.type
+                                        "Argument type should be: " + targetDataType.getType()
                         )
                 );
             }
 
-            argsMap.put(targetName, targetArg.value);
+            argsMap.put(targetName, targetArg.getValue());
         }
     }
 
@@ -412,14 +412,14 @@ public class CommandParser {
      * @param positionalArgs The positional argument that has an invalid type.
      */
     private static void printPositionalArgsError(PositionalArgument positionalArgs) {
-        ArgumentDataType dataType = positionalArgs.dataType;
+        ArgumentDataType dataType = positionalArgs.getDataType();
 
-        if (dataType.type.equals("enum")) {
-            String options = String.join(", ", dataType.options);
+        if (dataType.getType().equals("enum")) {
+            String options = String.join(", ", dataType.getOptions());
 
             OutputUtils.printError(
                     "Positional argument: \"" +
-                            positionalArgs.name +
+                            positionalArgs.getName() +
                             "\" has invalid type. Argument type should be one of: " +
                             options,
                     false
@@ -430,9 +430,9 @@ public class CommandParser {
 
         OutputUtils.printError(
                 "Positional argument: \"" +
-                        positionalArgs.name +
+                        positionalArgs.getName() +
                         "\" has invalid type. Argument type should be: " +
-                        dataType.type,
+                        dataType.getType(),
                 false
         );
     }

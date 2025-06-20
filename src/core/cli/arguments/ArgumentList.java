@@ -1,41 +1,34 @@
 package core.cli.arguments;
 
+import java.util.ArrayList;
+
 /**
  * ArgumentList holds the definitions for positional and keyword arguments for a command.
  */
 public class ArgumentList {
-    public final PositionalArgument[] positionalArguments;
-    public final KeywordArgument[] keywordArguments;
+    private final PositionalArgument[] positionalArguments;
+    private final KeywordArgument[] keywordArguments;
 
     /**
-     * Constructs an ArgumentList with the given positional and keyword arguments.
+     * Constructs an ArgumentList with the given arguments.
+     * Automatically categorizes the arguments into positional and keyword arguments.
      *
-     * @param positionalArguments array of positional argument definitions
-     * @param keywordArguments array of keyword argument definitions
+     * @param arguments an array of arrays of KeywordArgument or PositionalArgument objects
      */
-    public ArgumentList(PositionalArgument[] positionalArguments, KeywordArgument[] keywordArguments) {
-        this.positionalArguments = positionalArguments;
-        this.keywordArguments = keywordArguments;
-    }
+    public ArgumentList(Argument... arguments) {
+        ArrayList<PositionalArgument> positionalArgs = new ArrayList<>();
+        ArrayList<KeywordArgument> keywordArgs = new ArrayList<>();
 
-    /**
-     * Constructs an ArgumentList with only positional arguments.
-     *
-     * @param positionalArguments array of positional argument definitions
-     */
-    public ArgumentList(PositionalArgument[] positionalArguments) {
-        this.positionalArguments = positionalArguments;
-        this.keywordArguments = new KeywordArgument[0]; // Initialize with empty keyword arguments
-    }
+        for (Argument arg : arguments) {
+            if (arg instanceof PositionalArgument) {
+                positionalArgs.add((PositionalArgument) arg);
+            } else if (arg instanceof KeywordArgument) {
+                keywordArgs.add((KeywordArgument) arg);
+            }
+        }
 
-    /**
-     * Constructs an ArgumentList with only keyword arguments.
-     *
-     * @param keywordArguments array of keyword argument definitions
-     */
-    public ArgumentList(KeywordArgument[] keywordArguments) {
-        this.keywordArguments = keywordArguments;
-        this.positionalArguments = new PositionalArgument[0]; // Initialize with empty positional arguments
+        this.positionalArguments = positionalArgs.toArray(new PositionalArgument[0]);
+        this.keywordArguments = keywordArgs.toArray(new KeywordArgument[0]);
     }
 
     /**
@@ -45,9 +38,9 @@ public class ArgumentList {
      */
     public int getMaxPositionalArgumentNameLength() {
         int maxLength = 0;
-        for (PositionalArgument arg : positionalArguments) {
-            if (arg.name.length() > maxLength) {
-                maxLength = arg.name.length();
+        for (PositionalArgument arg : getPositionalArguments()) {
+            if (arg.getName().length() > maxLength) {
+                maxLength = arg.getName().length();
             }
         }
         return maxLength;
@@ -60,11 +53,19 @@ public class ArgumentList {
      */
     public int getMaxKeywordArgumentNameLength() {
         int maxLength = 0;
-        for (KeywordArgument arg : keywordArguments) {
-            if (arg.name.length() > maxLength) {
-                maxLength = arg.name.length();
+        for (KeywordArgument arg : getKeywordArguments()) {
+            if (arg.getName().length() > maxLength) {
+                maxLength = arg.getName().length();
             }
         }
         return maxLength;
+    }
+
+    public PositionalArgument[] getPositionalArguments() {
+        return positionalArguments;
+    }
+
+    public KeywordArgument[] getKeywordArguments() {
+        return keywordArguments;
     }
 }

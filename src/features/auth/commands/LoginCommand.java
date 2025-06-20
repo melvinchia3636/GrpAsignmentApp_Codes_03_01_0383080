@@ -15,10 +15,8 @@ public class LoginCommand extends CommandInstance {
                 "Login to the system with your credentials.",
                 "johndoe mypassword -r",
                 new ArgumentList(
-                        new PositionalArgument[]{
-                                new PositionalArgument("username", "Username of the your profile", ArgumentDataType.STRING),
-                                new PositionalArgument("password", "Password of the your profile", ArgumentDataType.STRING)
-                        }
+                        new PositionalArgument("username", "Username of the your profile", ArgumentDataType.STRING),
+                        new PositionalArgument("password", "Password of the your profile", ArgumentDataType.STRING)
                 ),
                 new LoginHandler()
         );

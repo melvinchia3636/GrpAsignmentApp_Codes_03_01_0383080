@@ -66,19 +66,19 @@ public class GlobalHelpBuilder {
         for (CommandNamespace commandNamespace : CommandRegistrar.commandInstances) {
             if (commandNamespace.isDisabled()) continue;
 
-            if (commandNamespace.name != null) {
+            if (commandNamespace.getName() != null) {
                 commandsMsg
                         .append("\n  ")
-                        .append(new Chalk(commandNamespace.name).underline().bold().yellow())
+                        .append(new Chalk(commandNamespace.getName()).underline().bold().yellow())
                         .append("\n");
             }
 
-            CommandInstance[] filteredCommands = Arrays.stream(commandNamespace.commands)
+            CommandInstance[] filteredCommands = Arrays.stream(commandNamespace.getCommands())
                     .filter(command -> !command.isDisabled())
                     .toArray(CommandInstance[]::new);
 
             int maxCommandLength = Arrays.stream(filteredCommands)
-                    .mapToInt(command -> command.name.length())
+                    .mapToInt(command -> command.getName().length())
                     .max()
                     .orElse(0);
 

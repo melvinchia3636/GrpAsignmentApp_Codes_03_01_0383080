@@ -13,9 +13,7 @@ public class FootprintStatsSummaryCommand extends CommandInstance {
                 "Displays a summary of your carbon footprint analysis.",
                 "",
                 new ArgumentList(
-                        new KeywordArgument[]{
-                                new KeywordArgument("last", "l", "Display summary for the last N days", ArgumentDataType.INTEGER, false)
-                        }
+                        new KeywordArgument("last", "l", "Display summary for the last N days", ArgumentDataType.INTEGER, false)
                 ),
                 new FootprintStatsSummaryHandler()
         );

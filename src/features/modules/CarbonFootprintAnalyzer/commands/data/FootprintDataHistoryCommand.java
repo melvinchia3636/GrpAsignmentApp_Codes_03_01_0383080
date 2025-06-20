@@ -13,9 +13,7 @@ public class FootprintDataHistoryCommand extends CommandInstance {
                 "View your carbon footprint history as a table",
                 "",
                 new ArgumentList(
-                        new KeywordArgument[]{
-                                new KeywordArgument("last", "l", "Display history for the last N days", ArgumentDataType.INTEGER, false),
-                        }
+                        new KeywordArgument("last", "l", "Display history for the last N days", ArgumentDataType.INTEGER, false)
                 ),
                 new FootprintDataHistoryHandler()
         );

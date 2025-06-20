@@ -25,8 +25,8 @@ public class SimpleMap<K, V> {
      */
     public void put(K key, V value) {
         for (Entry<K, V> entry : entries) {
-            if (entry.key.equals(key)) {
-                entry.value = value;
+            if (entry.getKey().equals(key)) {
+                entry.setValue(value);
                 return;
             }
         }
@@ -42,8 +42,8 @@ public class SimpleMap<K, V> {
      */
     public V get(K key) {
         for (Entry<K, V> entry : entries) {
-            if (entry.key.equals(key)) {
-                return entry.value;
+            if (entry.getKey().equals(key)) {
+                return entry.getValue();
             }
         }
         return null;
@@ -51,17 +51,18 @@ public class SimpleMap<K, V> {
 
     public boolean containsKey(K key) {
         for (Entry<K, V> entry : entries) {
-            if (entry.key.equals(key)) {
+            if (entry.getKey().equals(key)) {
                 return true;
             }
         }
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     public void sortByValue() {
         entries.sort((e1, e2) -> {
-            if (e1.value instanceof Comparable && e2.value instanceof Comparable) {
-                return ((Comparable<V>) e1.value).compareTo(e2.value);
+            if (e1.getValue() instanceof Comparable && e2.getValue() instanceof Comparable) {
+                return ((Comparable<V>) e1.getValue()).compareTo(e2.getValue());
             }
 
             return 0; // If keys are not comparable, do not change order
@@ -100,7 +101,7 @@ public class SimpleMap<K, V> {
     public ArrayList<K> keys() {
         ArrayList<K> keys = new ArrayList<>();
         for (Entry<K, V> entry : entries) {
-            keys.add(entry.key);
+            keys.add(entry.getKey());
         }
 
         return keys;
@@ -111,7 +112,7 @@ public class SimpleMap<K, V> {
         V[] values = (V[]) new Object[entries.size()];
 
         for (int i = 0; i < entries.size(); i++) {
-            values[i] = entries.get(i).value;
+            values[i] = entries.get(i).getValue();
         }
 
         return values;
@@ -124,8 +125,8 @@ public class SimpleMap<K, V> {
      * @param <V> the type of mapped values
      */
     public static class Entry<K, V> {
-        public final K key;
-        public V value;
+        private final K key;
+        private V value;
 
         /**
          * Constructs a new entry with the specified key and value.
@@ -135,6 +136,18 @@ public class SimpleMap<K, V> {
          */
         Entry(K key, V value) {
             this.key = key;
+            this.value = value;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
+
+        public void setValue(V value) {
             this.value = value;
         }
     }

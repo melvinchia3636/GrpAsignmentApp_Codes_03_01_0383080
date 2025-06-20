@@ -3,9 +3,9 @@ package features.modules.CarbonFootprintAnalyzer.instances;
 import core.instances.Timestamp;
 
 public class FootprintRecord {
-    public final FootprintFactor factor;
-    public final double amount;
-    public final Timestamp timestamp;
+    private final FootprintFactor factor;
+    private final double amount;
+    private final Timestamp timestamp;
 
     public FootprintRecord(FootprintFactor factor, double amount, Timestamp timestamp) {
         this.factor = factor;
@@ -16,13 +16,25 @@ public class FootprintRecord {
     @Override
     public String toString() {
         return "FootprintRecord{" +
-                "activity='" + factor + '\'' +
-                ", amount=" + amount +
-                ", timestamp=" + timestamp +
+                "activity='" + getFactor() + '\'' +
+                ", amount=" + getAmount() +
+                ", timestamp=" + getTimestamp() +
                 '}';
     }
 
     public String[] toArray() {
-        return new String[]{factor.abbreviation, String.valueOf(amount), String.valueOf(timestamp.getTimestamp())};
+        return new String[]{getFactor().getAbbreviation(), String.valueOf(getAmount()), String.valueOf(getTimestamp().getTimestamp())};
+    }
+
+    public FootprintFactor getFactor() {
+        return factor;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 }

@@ -11,13 +11,11 @@ public class FootprintGoalSetCommand extends CommandInstance {
         super("set", "Set your everyday carbon footprint goal",
                 "4.5",
                 new ArgumentList(
-                        new PositionalArgument[]{
-                                new PositionalArgument(
-                                        "goal",
-                                        "The target carbon footprint per day in kg CO2e",
-                                        ArgumentDataType.FLOAT
-                                )
-                        }
+                        new PositionalArgument(
+                                "goal",
+                                "The target carbon footprint per day in kg CO2e",
+                                ArgumentDataType.FLOAT
+                        )
                 ),
                 new FootprintGoalSetHandler()
         );

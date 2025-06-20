@@ -15,6 +15,6 @@ public class FootprintCommand extends CommandInstance {
                 }
         );
 
-        this.authRequired = true;
+        this.setAuthRequired(true);
     }
 }

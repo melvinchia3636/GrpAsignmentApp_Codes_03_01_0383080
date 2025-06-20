@@ -15,6 +15,6 @@ public class ProfileCommand extends CommandInstance {
                 }
         );
 
-        this.authRequired = true;
+        this.setAuthRequired(true);
     }
 }

@@ -12,6 +12,6 @@ public class LogoutCommand extends CommandInstance {
                 new LogoutHandler()
         );
 
-        this.authRequired = true;
+        this.setAuthRequired(true);
     }
 }
