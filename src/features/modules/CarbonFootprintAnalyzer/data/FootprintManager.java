@@ -8,6 +8,8 @@ import features.modules.CarbonFootprintAnalyzer.instances.FootprintFactor;
 import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+
 public class FootprintManager {
     private ArrayList<FootprintRecord> records;
 
@@ -22,10 +24,13 @@ public class FootprintManager {
         }
 
         String csvString = ioManager.parseStringFromFile("footprint_records");
-        ArrayList<String[]> csvData = CSVParser.parseCSVString(csvString);
+        Object[] csvData = CSVParser.parseCSVString(csvString).stream().sorted(
+                Comparator.comparingLong(a -> Long.parseLong(a[2]))
+        ).toArray();
         records = new ArrayList<>();
 
-        for (String[] row : csvData) {
+        for (int i = 0; i < csvData.length; i++) {
+            String[] row = (String[]) csvData[i];
             if (row.length < 3) continue; // Skip invalid rows
 
             String activity = row[0];
@@ -42,22 +47,19 @@ public class FootprintManager {
                 continue; // Skip rows with invalid number formats
             }
 
-            FootprintRecord record = new FootprintRecord(factor, amount, timestamp);
+            FootprintRecord record = new FootprintRecord(i, factor, amount, timestamp);
             records.add(record);
         }
     }
 
-    public void addRecord(FootprintRecord record) {
-        records.add(record);
-
-        IOManager ioManager = GlobalManager.getInstance().getIOManager();
-        ArrayList<String[]> csvData = new ArrayList<>();
-        for (FootprintRecord rec : records) {
-            csvData.add(rec.toArray());
+    public FootprintRecord getRecordByIndex(int index) {
+        for (FootprintRecord record : records) {
+            if (record.getIndex() == index) {
+                return record;
+            }
         }
 
-        String csvString = CSVParser.toCSVString(csvData);
-        ioManager.writeToFile("footprint_records", csvString);
+        return null;
     }
 
     public ArrayList<FootprintRecord> getRecords() {
@@ -80,7 +82,44 @@ public class FootprintManager {
                 .toArray(FootprintRecord[]::new);
     }
 
+    public void addRecord(FootprintRecord record) {
+        records.add(record);
+        writeRecordsToFile();
+    }
+
+    public void removeRecord(FootprintRecord record) {
+        records.remove(record);
+        writeRecordsToFile();
+    }
+
+    public void clearRecords(boolean wipeData) {
+        records.clear();
+        if (wipeData) writeRecordsToFile();
+    }
+
     public void clearRecords() {
         records.clear();
+    }
+
+    public void exportRecords() {
+        String csvString = toCSVString();
+        IOManager ioManager = GlobalManager.getInstance().getIOManager();
+        ioManager.exportToFile("footprint_records_export.csv", csvString);
+    }
+
+    private void writeRecordsToFile() {
+        IOManager ioManager = GlobalManager.getInstance().getIOManager();
+
+        String csvString = toCSVString();
+        ioManager.writeToFile("footprint_records", csvString);
+    }
+
+    private String toCSVString() {
+        ArrayList<String[]> csvData = new ArrayList<>();
+        for (FootprintRecord record : records) {
+            csvData.add(record.toArray());
+        }
+
+        return CSVParser.toCSVString(csvData);
     }
 }

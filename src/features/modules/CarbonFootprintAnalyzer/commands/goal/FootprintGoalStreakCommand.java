@@ -1,7 +1,7 @@
 package features.modules.CarbonFootprintAnalyzer.commands.goal;
 
 import core.cli.commands.CommandInstance;
-import features.modules.CarbonFootprintAnalyzer.handlers.stats.FootprintStatsStreakHandler;
+import features.modules.CarbonFootprintAnalyzer.handlers.goal.FootprintGoalStreakHandler;
 
 public class FootprintGoalStreakCommand extends CommandInstance {
     public FootprintGoalStreakCommand() {
@@ -9,7 +9,7 @@ public class FootprintGoalStreakCommand extends CommandInstance {
                 "streak",
                 "Analyze your carbon footprint streaks",
                 "Show your longest streak of days with reduced carbon footprint",
-                new FootprintStatsStreakHandler()
+                new FootprintGoalStreakHandler()
         );
     }
 }

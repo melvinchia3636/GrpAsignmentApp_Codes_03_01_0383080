@@ -41,7 +41,7 @@ public class OutputUtils {
     }
 
     public static void printSuccess(String message) {
-        System.out.println(new Chalk("✔ " + message).green());
+        System.out.println(new Chalk("✔ ").green() + message);
     }
 
     public static void printError(String message) {

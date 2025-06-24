@@ -29,10 +29,10 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
             return;
         }
 
-        String separator = "╔═══════════════════════════╦════════════╦════════╦══════════════════════╗";
-        String header    = "║ Activity                  ║ Amount     ║ Unit   ║ Time                 ║";
-        String divider   = "╠═══════════════════════════╬════════════╬════════╬══════════════════════╣";
-        String footer    = "╚═══════════════════════════╩════════════╩════════╩══════════════════════╝";
+        String separator = "╔═══════╦═══════════════════════════╦════════════╦════════╦══════════════════════╗";
+        String header    = "║ Index ║ Activity                  ║ Amount     ║ Unit   ║ Time                 ║";
+        String divider   = "╠═══════╬═══════════════════════════╬════════════╬════════╬══════════════════════╣";
+        String footer    = "╚═══════╩═══════════════════════════╩════════════╩════════╩══════════════════════╝";
 
         System.out.println();
         System.out.printf(new Chalk("🌿 Your Carbon Footprint History for the Last %d Days: \n").bold().toString(), lastXDays);
@@ -46,7 +46,8 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
 
         for (FootprintRecord record : sortedRecords) {
             System.out.printf(
-                    "║ %-25s ║ %-10.2f ║ %-6s ║ %-20s ║%n",
+                    "║ %-5s ║ %-25s ║ %-10.2f ║ %-6s ║ %-20s ║%n",
+                    record.getIndex(),
                     record.getFactor().getActivity(),
                     record.getAmount(),
                     record.getFactor().getPerUnit(),

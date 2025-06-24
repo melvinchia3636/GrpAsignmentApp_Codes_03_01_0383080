@@ -209,6 +209,28 @@ public class IOManager {
         return profileNames;
     }
 
+    public void exportToFile(String filename, String content) {
+        if (userProfileFolder == null) {
+            throw new IllegalStateException("User profile folder is not initialized. Call initUserProfile() first.");
+        }
+
+        Path exportDir = userProfileFolder.toPath().resolve("exports");
+        if (!Files.exists(exportDir) || !Files.isDirectory(exportDir)) {
+            try {
+                Files.createDirectory(exportDir);
+            } catch (IOException e) {
+                throw new IOError(new IOException("Failed to create exports directory: " + exportDir, e));
+            }
+        }
+
+        Path filePath = exportDir.resolve(filename);
+        try {
+            Files.write(filePath, content.getBytes());
+            OutputUtils.printSuccess("Data exported to: " + new Chalk(filePath.toString()).purple());
+        } catch (IOException e) {
+            throw new IOError(new IOException("Failed to write to file: " + filePath, e));
+        }
+    }
 
     private String getEncryptedString(String content) {
         UserManager userManager = GlobalManager.getInstance().getUserManager();
