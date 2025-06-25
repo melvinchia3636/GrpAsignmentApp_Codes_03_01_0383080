@@ -9,6 +9,7 @@ public class UserManager {
     private String username;
     private Password password;
     private String country;
+    private double footprintGoal = 0.0;
     public boolean isLoggedIn = false;
 
     public void signup(String username, String password, String country) {
@@ -16,8 +17,7 @@ public class UserManager {
         ioManager.initUserProfile(username, true);
 
         // The validation is done inside the Password constructor
-        // which means if the password object is created successfully,
-        // we can assume the password is valid.
+        // which means if the password object is created successfully, we can assume the password is valid.
         this.password = new Password(password);
         this.username = username;
         this.country = country;
@@ -35,6 +35,7 @@ public class UserManager {
         this.password = new Password(password);
         this.username = username;
         this.country = data.getString("country");
+        this.footprintGoal = data.getDouble("footprintGoal");
         isLoggedIn = true;
 
         GlobalManager.getInstance().initModuleManagers();
@@ -59,6 +60,10 @@ public class UserManager {
         return country;
     }
 
+    public double getFootprintGoal() {
+        return footprintGoal;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -69,6 +74,11 @@ public class UserManager {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public void setFootprintGoal(double footprintGoal) {
+        this.footprintGoal = footprintGoal;
+        writeToFile();
     }
 
     public void writeToFile() {
@@ -88,6 +98,7 @@ public class UserManager {
 
         JSONObject JSONObject = new JSONObject();
         JSONObject.put("country", country);
+        JSONObject.put("footprintGoal", footprintGoal);
 
         return JSONObject;
     }

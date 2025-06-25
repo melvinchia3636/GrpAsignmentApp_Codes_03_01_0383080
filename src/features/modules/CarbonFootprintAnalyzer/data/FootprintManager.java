@@ -8,6 +8,7 @@ import features.modules.CarbonFootprintAnalyzer.instances.FootprintFactor;
 import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 
 public class FootprintManager {
@@ -66,12 +67,43 @@ public class FootprintManager {
         return records;
     }
 
+    public FootprintRecord[] getRecordsByDate(Timestamp date) {
+        return records.stream()
+                .filter(record -> record.getTimestamp().getYear() == date.getYear() &&
+                        record.getTimestamp().getMonth() == date.getMonth() &&
+                        record.getTimestamp().getDay() == date.getDay())
+                .toArray(FootprintRecord[]::new);
+    }
+
     public FootprintRecord[] getRecordsForLastXDays(int days) {
         long startTimestamp = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L);
 
         return records.stream()
                 .filter(record -> record.getTimestamp().getTimestamp() >= startTimestamp)
                 .toArray(FootprintRecord[]::new);
+    }
+    
+    public FootprintRecord[][] getRecordsGroupedByWeekDay() {
+        FootprintRecord[][] allRecords = new FootprintRecord[7][];
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        while (c.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+            c.add(Calendar.DATE, -1);
+        }
+        for (int i = 0; i < 7; i++) {
+            Timestamp startOfDay = new Timestamp(c.getTimeInMillis());
+            c.add(Calendar.DATE, 1);
+            Timestamp endOfDay = new Timestamp(c.getTimeInMillis());
+            FootprintRecord[] records = getRecordsForPeriod(startOfDay, endOfDay);
+            allRecords[i] = records;
+        }
+        
+        return allRecords;
     }
 
     public FootprintRecord[] getRecordsForFactor(FootprintFactor factor, int days) {
@@ -84,6 +116,15 @@ public class FootprintManager {
 
     public void addRecord(FootprintRecord record) {
         records.add(record);
+        writeRecordsToFile();
+    }
+
+    public void updateRecord(FootprintRecord record, FootprintFactor factor, double amount) {
+        int index = records.indexOf(record);
+        if (index == -1) {
+            throw new IllegalArgumentException("Record not found in the list.");
+        }
+        records.set(index, new FootprintRecord(record.getIndex(), factor, amount, record.getTimestamp()));
         writeRecordsToFile();
     }
 
@@ -121,5 +162,13 @@ public class FootprintManager {
         }
 
         return CSVParser.toCSVString(csvData);
+    }
+    
+    private FootprintRecord[] getRecordsForPeriod(Timestamp start, Timestamp end) {
+        return records.stream()
+                .filter(record ->
+                        record.getTimestamp().getTimestamp() >= start.getTimestamp()
+                                && record.getTimestamp().getTimestamp() <= end.getTimestamp())
+                .toArray(FootprintRecord[]::new);
     }
 }

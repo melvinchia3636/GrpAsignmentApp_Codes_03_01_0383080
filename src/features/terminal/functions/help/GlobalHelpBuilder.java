@@ -22,6 +22,7 @@ public class GlobalHelpBuilder {
         );
 
     private static final String noteMsg = new Chalk("Notes:").yellow().bold() + "\n" +
+            "  - Module commands are only available when user is logged in.\n" +
             "  - Type " + new Chalk("'help -c <command>'").bold().green() + " to get detailed help for a specific command.\n" +
             "  - Type " + new Chalk("'help -c <command>.<sub-command>.[...]'").bold().green() + " to get detailed help for a specific sub-command.\n" +
             "  - If no positional arguments are provided, you will be prompted to enter them interactively.";
@@ -29,7 +30,8 @@ public class GlobalHelpBuilder {
     private static final String examplesMsg = new Chalk("Examples:").yellow().bold() + "\n" +
             "  " + new Chalk("login").bold().green() + " johndoe 12345678 --save-session\n" +
             "  " + new Chalk("help").bold().green() + " -c login\n" +
-            "  " + new Chalk("footprint log").bold().green() + " driving 1.5";
+            "  " + new Chalk("footprint log").bold().green() + " driving 1.5\n" +
+            "  " + new Chalk("footprint goal set ").bold().green() + "8.7\n";
 
     /**
      * Will be called when the user types 'help' without specifying a command.

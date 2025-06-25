@@ -12,8 +12,8 @@ public class FootprintStatsCommand extends CommandInstance {
                 "View your carbon footprint statistics",
                 new CommandInstance[]{
                         new FootprintStatsSummaryCommand(),
+                        new FootprintStatsChartCommand(),
                         new FootprintStatsBreakdownCommand(),
-                        new FootprintStatsChartCommand()
                 }
         );
     }

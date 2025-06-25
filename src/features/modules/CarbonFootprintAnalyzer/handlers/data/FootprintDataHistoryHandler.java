@@ -23,7 +23,6 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
         }
 
         FootprintRecord[] filteredRecords = footprintManager.getRecordsForLastXDays(lastXDays);
-
         if (filteredRecords.length == 0) {
             OutputUtils.printError("No records found for the specified period.", false);
             return;
@@ -40,15 +39,11 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
         System.out.println(header);
         System.out.println(divider);
 
-        FootprintRecord[] sortedRecords = Arrays.stream(filteredRecords)
-                .sorted((r1, r2) -> Long.compare(r2.getTimestamp().getTimestamp(), r1.getTimestamp().getTimestamp()))
-                .toArray(FootprintRecord[]::new);
-
-        for (FootprintRecord record : sortedRecords) {
+        for (FootprintRecord record : filteredRecords) {
             System.out.printf(
                     "║ %-5s ║ %-25s ║ %-10.2f ║ %-6s ║ %-20s ║%n",
                     record.getIndex(),
-                    record.getFactor().getActivity(),
+                    record.getFactor().getName(),
                     record.getAmount(),
                     record.getFactor().getPerUnit(),
                     record.getTimestamp()
@@ -56,5 +51,11 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
         }
 
         System.out.println(footer);
+
+        System.out.printf("\nTotal records found: %d\n", filteredRecords.length);
+        System.out.printf("Total carbon footprint for the last %d days: %.2f kg CO2e\n",
+                lastXDays,
+                Arrays.stream(filteredRecords).mapToDouble(FootprintRecord::getEstimatedFootprint).sum()
+        );
     }
 }

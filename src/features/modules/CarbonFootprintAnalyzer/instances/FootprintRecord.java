@@ -40,6 +40,10 @@ public class FootprintRecord {
         return amount;
     }
 
+    public double getEstimatedFootprint() {
+        return factor.getEstimatedFootprint(amount);
+    }
+
     public Timestamp getTimestamp() {
         return timestamp;
     }

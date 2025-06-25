@@ -34,7 +34,7 @@ public class FootprintStatsBreakdownHandler extends CommandInstance.Handler {
         }
 
         double totalAmount = Arrays.stream(filteredRecords)
-                .mapToDouble(FootprintRecord::getAmount)
+                .mapToDouble(FootprintRecord::getEstimatedFootprint)
                 .sum();
 
         System.out.println();
@@ -46,7 +46,7 @@ public class FootprintStatsBreakdownHandler extends CommandInstance.Handler {
             FootprintRecord[] recordsForFactor = footprintManager.getRecordsForFactor(factor, lastXDays);
 
             double totalAmountForFactor = Arrays.stream(recordsForFactor)
-                    .mapToDouble(FootprintRecord::getAmount)
+                    .mapToDouble(FootprintRecord::getEstimatedFootprint)
                     .sum();
 
             activityBreakdown.put(factor, totalAmountForFactor);
@@ -56,12 +56,15 @@ public class FootprintStatsBreakdownHandler extends CommandInstance.Handler {
         activityBreakdown.reverse();
 
         for (SimpleMap.Entry<FootprintFactor, Double> activity : activityBreakdown.entries()) {
-            String activityName = activity.getKey().getActivity();
+            String activityName = activity.getKey().getName();
             double amount = activity.getValue();
 
             double percentage = (amount / totalAmount) * 100;
 
-            System.out.printf("  - %-25s:    %.2f kg CO2e    (%.2f%%)\n", activityName, amount, percentage);
+            System.out.printf("  - %-25s:    %-10s kg CO2e    (%.2f%%)\n",
+                    activityName,
+                    String.format("%.2f", amount),
+                    percentage);
         }
 
         System.out.println();

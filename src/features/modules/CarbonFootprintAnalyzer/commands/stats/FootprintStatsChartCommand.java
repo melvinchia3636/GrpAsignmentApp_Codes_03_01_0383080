@@ -7,7 +7,7 @@ public class FootprintStatsChartCommand extends CommandInstance {
     public FootprintStatsChartCommand() {
         super(
                 "chart",
-                "Generates a chart of your carbon footprint over time.",
+                "View a chart of your weekly carbon footprint emissions",
                 "",
                 new FootprintStatsChartHandler()
         );

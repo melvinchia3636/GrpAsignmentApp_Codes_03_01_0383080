@@ -95,6 +95,50 @@ public abstract class CommandInstance {
         this(name, description, null, new ArgumentList(), null, subCommands);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getExample() {
+        return example;
+    }
+
+    public ArgumentList getArgs() {
+        return args;
+    }
+
+    public boolean isHasSubCommands() {
+        return hasSubCommands;
+    }
+
+    public CommandInstance[] getSubCommands() {
+        return subCommands;
+    }
+
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public CommandInstance getParentCommand() {
+        return parentCommand;
+    }
+
+    public void setParentCommand(CommandInstance parentCommand) {
+        this.parentCommand = parentCommand;
+    }
+
+    public boolean isAuthRequired() {
+        return authRequired;
+    }
+
+    public void setAuthRequired(boolean authRequired) {
+        this.authRequired = authRequired;
+    }
+
     /**
      * This function will validate the parsed command arguments, then turn them into a map
      * This map will then be assigned to the handler's argsMap field that can be used inside the handler.
@@ -174,50 +218,6 @@ public abstract class CommandInstance {
         }
 
         return path;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getExample() {
-        return example;
-    }
-
-    public ArgumentList getArgs() {
-        return args;
-    }
-
-    public boolean isHasSubCommands() {
-        return hasSubCommands;
-    }
-
-    public CommandInstance[] getSubCommands() {
-        return subCommands;
-    }
-
-    public Handler getHandler() {
-        return handler;
-    }
-
-    public CommandInstance getParentCommand() {
-        return parentCommand;
-    }
-
-    public void setParentCommand(CommandInstance parentCommand) {
-        this.parentCommand = parentCommand;
-    }
-
-    public boolean isAuthRequired() {
-        return authRequired;
-    }
-
-    public void setAuthRequired(boolean authRequired) {
-        this.authRequired = authRequired;
     }
 
     /**

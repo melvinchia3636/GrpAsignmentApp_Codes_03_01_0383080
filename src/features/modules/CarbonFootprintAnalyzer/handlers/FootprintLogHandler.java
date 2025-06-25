@@ -22,6 +22,11 @@ public class FootprintLogHandler extends CommandInstance.Handler {
         // No need to catch exception, as the ArgumentDataType will ensure it's a valid float
         float amount = Float.parseFloat(amountStr);
 
+        if (amount <= 0) {
+            OutputUtils.printError("The amount must be a positive non-zero number.");
+            return;
+        }
+
         FootprintManager footprintManager = GlobalManager.getInstance().getFootprintManager();
 
         FootprintRecord record = new FootprintRecord(
@@ -39,7 +44,7 @@ public class FootprintLogHandler extends CommandInstance.Handler {
     private void printResult(FootprintRecord record) {
         System.out.println();
         OutputUtils.printSuccess("Successfully logged the carbon footprint entry:");
-        System.out.printf("  - Activity: %s%n", record.getFactor().getActivity());
+        System.out.printf("  - Activity: %s%n", record.getFactor().getName());
         System.out.printf("  - Amount: %2f %s%n", record.getAmount(), record.getFactor().getPerUnit());
         System.out.printf("  - Time: %s%n", record.getTimestamp());
         System.out.println();

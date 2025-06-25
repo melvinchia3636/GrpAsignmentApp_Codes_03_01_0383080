@@ -95,6 +95,7 @@ public class REPL {
 
         // noinspection InfiniteLoopStatement - This is a REPL loop and the user is expected to exit manually.
         while (true) {
+            // noinspection CatchMayIgnoreException
             try {
                 CommandParser.ParsedCommand parsedUserInput = promptAndParseCommand();
 
@@ -108,6 +109,10 @@ public class REPL {
             } catch (CommandError e) {
                 OutputUtils.printError(e.getMessage(), e.getCommand());
             } catch (Throwable e) {
+                if (e.getMessage() == null || e.getMessage().isEmpty()) {
+                   continue;
+                }
+
                 OutputUtils.printError(e.getMessage());
             }
         }

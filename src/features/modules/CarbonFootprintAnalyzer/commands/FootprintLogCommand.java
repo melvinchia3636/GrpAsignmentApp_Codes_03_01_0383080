@@ -33,7 +33,7 @@ public class FootprintLogCommand extends CommandInstance {
                                                         String.format(
                                                                 "  - %s %s (per %s)",
                                                                 new Chalk("[" + e.getAbbreviation() + "]").blue().bold(),
-                                                                e.getActivity(),
+                                                                e.getName(),
                                                                 e.getPerUnit()
                                                         )
                                                 )

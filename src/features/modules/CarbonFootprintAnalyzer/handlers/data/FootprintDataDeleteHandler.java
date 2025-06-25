@@ -23,12 +23,12 @@ public class FootprintDataDeleteHandler extends CommandInstance.Handler {
         }
 
         OutputUtils.printSuccess("Found carbon footprint record at index " + index + ":");
-        System.out.printf("  - Activity: %s%n", record.getFactor().getActivity());
+        System.out.printf("  - Activity: %s%n", record.getFactor().getName());
         System.out.printf("  - Amount: %2f %s%n", record.getAmount(), record.getFactor().getPerUnit());
         System.out.printf("  - Time: %s%n", record.getTimestamp());
 
         Scanner sc = new Scanner(System.in);
-        System.out.print("\nAre you sure you want to delete this carbon footprint record? This action cannot be undone (yes/no): ");
+        System.out.print(new Chalk("\nAre you sure you want to delete this carbon footprint record? This action cannot be undone (yes/no): ").red());
         String confirmation = sc.nextLine().trim().toLowerCase();
 
         if ("yes".equals(confirmation)) {

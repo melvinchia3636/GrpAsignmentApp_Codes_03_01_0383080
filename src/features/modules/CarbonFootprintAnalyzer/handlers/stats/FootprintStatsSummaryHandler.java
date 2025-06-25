@@ -32,7 +32,7 @@ public class FootprintStatsSummaryHandler extends CommandInstance.Handler {
         }
 
         double[] amounts = Stream.of(filteredRecords)
-                .mapToDouble(FootprintRecord::getAmount)
+                .mapToDouble(FootprintRecord::getEstimatedFootprint)
                 .toArray();
 
         DoubleSummaryStatistics statistics = Arrays.stream(amounts).summaryStatistics();
@@ -45,10 +45,10 @@ public class FootprintStatsSummaryHandler extends CommandInstance.Handler {
         System.out.println();
         System.out.println(new Chalk("📊 Carbon Footprint Summary for the Last " + lastXDays + " Days:").bold());
         System.out.println();
-        System.out.printf("Total Amount: %.4f kg CO2e%n", totalAmount);
-        System.out.printf("Average Amount: %.4f kg CO2e%n", averageAmount);
-        System.out.printf("Highest Amount: %.4f kg CO2e%n", highestAmount);
-        System.out.printf("Lowest Amount: %.4f kg CO2e%n", lowestAmount);
+        System.out.printf("Total Amount:      %.4f kg CO2e%n", totalAmount);
+        System.out.printf("Average Amount:    %.4f kg CO2e%n", averageAmount);
+        System.out.printf("Highest Amount:    %.4f kg CO2e%n", highestAmount);
+        System.out.printf("Lowest Amount:     %.4f kg CO2e%n", lowestAmount);
         System.out.println();
         System.out.println("🧠Tip: Setting a daily goal helps you stay consistent!");
     }
