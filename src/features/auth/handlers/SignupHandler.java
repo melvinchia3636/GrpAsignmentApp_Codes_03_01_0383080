@@ -17,7 +17,6 @@ public class SignupHandler extends CommandInstance.Handler {
 
         String username = argsMap.get("username").trim();
         String password = argsMap.get("password");
-        String countryCode = argsMap.get("country");
 
         if (!Password.isValid(password)) {
             OutputUtils.printError("Invalid password. Password must:\n" +
@@ -30,14 +29,6 @@ public class SignupHandler extends CommandInstance.Handler {
             return;
         }
 
-        if (countryCode != null) {
-            String country = Countries.getCountryName(countryCode);
-
-            if (country == null) {
-                OutputUtils.printError("Invalid country code: " + countryCode, false);
-            }
-        }
-
         int retryCount = 0;
 
         try (Scanner scanner = new Scanner(System.in)) {
@@ -45,7 +36,8 @@ public class SignupHandler extends CommandInstance.Handler {
                 System.out.print("Enter your password again for confirmation: ");
                 String confirmPassword = scanner.nextLine();
 
-                if (password.equals(confirmPassword)) break;                OutputUtils.printError("Passwords do not match. Please try again.", false);
+                if (password.equals(confirmPassword)) break;
+                OutputUtils.printError("Passwords do not match. Please try again.", false);
                 retryCount++;
             }
 
@@ -53,9 +45,9 @@ public class SignupHandler extends CommandInstance.Handler {
                 OutputUtils.printError("Password confirmation failed after 3 attempts.", false);
                 return;
             }
-        } // Close try-with-resources for Scanner
+        }
 
-        userManager.signup(username, password, countryCode);
+        userManager.signup(username, password);
         userManager.writeToFile();
 
         OutputUtils.printSuccess("Signup successful for user: " + new Chalk(username).bold().cyan());

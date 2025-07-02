@@ -94,14 +94,14 @@ public class OutputUtils {
      * Prints a data row with consistent formatting
      */
     public static void printDataRow(String label, String value) {
-        System.out.printf("  %-20s %s%n", label + ":", value);
+        System.out.printf("  %-25s %s%n", label + ":", value);
     }
 
     /**
      * Prints a data row with colored value
      */
     public static void printDataRow(String label, Chalk valueColor) {
-        System.out.printf("  %-20s %s%n", label + ":", valueColor.toString());
+        System.out.printf("  %-25s %s%n", label + ":", valueColor.toString());
     }
 
     /**
@@ -212,24 +212,6 @@ public class OutputUtils {
         
         System.out.printf("%-8s | %s %.2f%n", label, 
             new Chalk(bar.toString()).green(), value);
-    }
-
-    /**
-     * Generates a progress bar string
-     */
-    private static String generateProgressBar(int current, int total, int width) {
-        int filled = (int) Math.round((double) current / total * width);
-        StringBuilder bar = new StringBuilder("[");
-        
-        for (int i = 0; i < filled; i++) {
-            bar.append("█");
-        }
-        for (int i = filled; i < width; i++) {
-            bar.append("░");
-        }
-        bar.append("]");
-        
-        return new Chalk(bar.toString()).green().toString();
     }
 
     /**

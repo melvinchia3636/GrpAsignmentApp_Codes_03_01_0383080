@@ -8,12 +8,11 @@ import features.auth.instances.Password;
 public class UserManager {
     private String username;
     private Password password;
-    private String country;
     private double footprintGoal = 0.0;
     private String todayChallengeId = "";
     public boolean isLoggedIn = false;
 
-    public void signup(String username, String password, String country) {
+    public void signup(String username, String password) {
         IOManager ioManager = GlobalManager.getInstance().getIOManager();
         ioManager.initUserProfile(username, true);
 
@@ -21,7 +20,6 @@ public class UserManager {
         // which means if the password object is created successfully, we can assume the password is valid.
         this.password = new Password(password);
         this.username = username;
-        this.country = country;
         isLoggedIn = true;
 
         GlobalManager.getInstance().initModuleManagers();
@@ -35,7 +33,6 @@ public class UserManager {
 
         this.password = new Password(password);
         this.username = username;
-        this.country = data.getString("country");
         this.footprintGoal = data.getDouble("footprintGoal");
         String challengeId = data.getString("todayChallengeId");
         this.todayChallengeId = challengeId != null ? challengeId : "";
@@ -47,7 +44,6 @@ public class UserManager {
     public void reset() {
         username = null;
         password = null;
-        country = null;
         todayChallengeId = "";
         isLoggedIn = false;
     }
@@ -60,9 +56,6 @@ public class UserManager {
         return password;
     }
 
-    public String getCountry() {
-        return country;
-    }
 
     public double getFootprintGoal() {
         return footprintGoal;
@@ -70,18 +63,6 @@ public class UserManager {
 
     public String getTodayChallengeId() {
         return todayChallengeId;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(Password password) {
-        this.password = password;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public void setFootprintGoal(double footprintGoal) {
@@ -110,7 +91,6 @@ public class UserManager {
         }
 
         JSONObject JSONObject = new JSONObject();
-        JSONObject.put("country", country);
         JSONObject.put("footprintGoal", footprintGoal);
         JSONObject.put("todayChallengeId", todayChallengeId);
 

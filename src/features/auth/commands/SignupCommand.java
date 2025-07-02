@@ -2,7 +2,6 @@ package features.auth.commands;
 
 import core.cli.arguments.ArgumentDataType;
 import core.cli.arguments.ArgumentList;
-import core.cli.arguments.KeywordArgument;
 import core.cli.arguments.PositionalArgument;
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
@@ -14,12 +13,10 @@ public class SignupCommand extends CommandInstance {
         super(
                 "signup",
                 "Create a new user account.",
-                "johndoe mypassword -c MY -r",
+                "johndoe mypassword",
                 new ArgumentList(
                         new PositionalArgument("username", "Username for the new account", ArgumentDataType.STRING),
-                        new PositionalArgument("password", "Password for the new account", ArgumentDataType.STRING),
-                        new KeywordArgument("country", "c", "Country of the user (ISO 3166-1 alpha-2 code, eg. MY, SG, etc.)",
-                                ArgumentDataType.STRING, false)
+                        new PositionalArgument("password", "Password for the new account", ArgumentDataType.STRING)
                 ),
                 new SignupHandler()
         );

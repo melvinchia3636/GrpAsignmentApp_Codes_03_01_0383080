@@ -13,7 +13,7 @@ public class LoginCommand extends CommandInstance {
         super(
                 "login",
                 "Login to the system with your credentials.",
-                "johndoe mypassword -r",
+                "johndoe mypassword",
                 new ArgumentList(
                         new PositionalArgument("username", "Username of the your profile", ArgumentDataType.STRING),
                         new PositionalArgument("password", "Password of the your profile", ArgumentDataType.STRING)
