@@ -45,7 +45,6 @@ public class ChallengeSkipHandler extends CommandInstance.Handler {
         if (!response.equalsIgnoreCase("yes")) {
             OutputUtils.printSuccess("Skip cancelled. Your challenge is still active!");
             OutputUtils.printEncouragement("You've got this! 💪");
-            scanner.close();
             return;
         }
 
@@ -55,7 +54,5 @@ public class ChallengeSkipHandler extends CommandInstance.Handler {
         OutputUtils.printSectionHeader("⏭️", "Challenge Skipped");
         OutputUtils.printEncouragement("Don't worry! Tomorrow brings a new opportunity to make a difference. 🌱");
         OutputUtils.printTip("Remember: Every small action counts towards a greener future!");
-        
-        scanner.close();
     }
 }

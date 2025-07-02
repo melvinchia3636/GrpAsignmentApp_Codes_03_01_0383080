@@ -42,6 +42,5 @@ public class ChallengeRefreshHandler extends CommandInstance.Handler {
         } else {
             OutputUtils.printWarning("Refresh cancelled. Your current challenge remains active.");
         }
-        scanner.close();
     }
 }

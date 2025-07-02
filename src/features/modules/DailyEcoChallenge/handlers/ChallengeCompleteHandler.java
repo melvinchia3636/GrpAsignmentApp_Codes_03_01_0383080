@@ -29,18 +29,19 @@ public class ChallengeCompleteHandler extends CommandInstance.Handler {
         OutputUtils.printDataRow("Difficulty", new Chalk(todaysChallenge.getDifficulty()).bold());
         
         String notes;
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.print("Did you complete this challenge? (yes/no): ");
-            String response = scanner.nextLine().trim().toLowerCase();
-            
-            if (!response.equalsIgnoreCase("yes")) {
-                OutputUtils.printWarning("No problem! Try again tomorrow or use 'challenge skip' if you need to.");
-                return;
-            }
 
-            System.out.print("Any notes about your completion (optional): ");
-            notes = scanner.nextLine().trim();
-        } // Close try-with-resources for Scanner
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Did you complete this challenge? (yes/no): ");
+        String response = scanner.nextLine().trim().toLowerCase();
+        
+        if (!response.equalsIgnoreCase("yes")) {
+            OutputUtils.printWarning("No problem! Try again tomorrow or use 'challenge skip' if you need to.");
+            return;
+        }
+
+        System.out.print("Any notes about your completion (optional): ");
+        notes = scanner.nextLine().trim();
 
         challengeManager.recordChallenge(todaysChallenge, "completed", notes);
 

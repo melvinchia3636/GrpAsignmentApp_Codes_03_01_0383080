@@ -356,6 +356,5 @@ public class HabitManager {
      */
     public void clearRecords() {
         records.clear();
-        saveRecords();
     }
 }

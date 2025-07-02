@@ -31,20 +31,20 @@ public class SignupHandler extends CommandInstance.Handler {
 
         int retryCount = 0;
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (retryCount < 3) {
-                System.out.print("Enter your password again for confirmation: ");
-                String confirmPassword = scanner.nextLine();
+        Scanner scanner = new Scanner(System.in);
 
-                if (password.equals(confirmPassword)) break;
-                OutputUtils.printError("Passwords do not match. Please try again.", false);
-                retryCount++;
-            }
+        while (retryCount < 3) {
+            System.out.print("Enter your password again for confirmation: ");
+            String confirmPassword = scanner.nextLine();
 
-            if (retryCount == 3) {
-                OutputUtils.printError("Password confirmation failed after 3 attempts.", false);
-                return;
-            }
+            if (password.equals(confirmPassword)) break;
+            OutputUtils.printError("Passwords do not match. Please try again.", false);
+            retryCount++;
+        }
+
+        if (retryCount == 3) {
+            OutputUtils.printError("Password confirmation failed after 3 attempts.", false);
+            return;
         }
 
         userManager.signup(username, password);

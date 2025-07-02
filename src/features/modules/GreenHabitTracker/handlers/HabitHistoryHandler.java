@@ -29,8 +29,10 @@ public class HabitHistoryHandler extends CommandInstance.Handler {
         }
 
         System.out.print("> ");
+
+        Scanner scanner = new Scanner(System.in);
         
-        try (Scanner scanner = new Scanner(System.in)) {
+        try {
             int habitId = Integer.parseInt(scanner.nextLine().trim());
             
             Habit habit = habitManager.getHabitById(habitId);
