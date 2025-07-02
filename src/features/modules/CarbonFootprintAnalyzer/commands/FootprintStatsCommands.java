@@ -5,8 +5,8 @@ import features.modules.CarbonFootprintAnalyzer.commands.stats.FootprintStatsBre
 import features.modules.CarbonFootprintAnalyzer.commands.stats.FootprintStatsChartCommand;
 import features.modules.CarbonFootprintAnalyzer.commands.stats.FootprintStatsSummaryCommand;
 
-public class FootprintStatsCommand extends CommandInstance {
-    public FootprintStatsCommand() {
+public class FootprintStatsCommands extends CommandInstance {
+    public FootprintStatsCommands() {
         super(
                 "stats",
                 "View your carbon footprint statistics",

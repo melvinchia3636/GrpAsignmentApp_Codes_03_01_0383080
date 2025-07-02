@@ -1,7 +1,7 @@
 package features.auth.handlers;
 
-import constants.Countries;
 import core.cli.commands.CommandInstance;
+import core.constants.Countries;
 import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import core.manager.GlobalManager;

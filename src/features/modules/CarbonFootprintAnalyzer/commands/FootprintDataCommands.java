@@ -3,8 +3,8 @@ package features.modules.CarbonFootprintAnalyzer.commands;
 import core.cli.commands.CommandInstance;
 import features.modules.CarbonFootprintAnalyzer.commands.data.*;
 
-public class FootprintDataCommand extends CommandInstance {
-    public FootprintDataCommand() {
+public class FootprintDataCommands extends CommandInstance {
+    public FootprintDataCommands() {
         super(
                 "data",
                 "Manage your carbon footprint data",

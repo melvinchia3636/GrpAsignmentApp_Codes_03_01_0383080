@@ -22,4 +22,13 @@ public class Argument {
     public ArgumentDataType getDataType() {
         return dataType;
     }
+
+    @Override
+    public String toString() {
+        return "Argument{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", dataType=" + dataType +
+                '}';
+    }
 }

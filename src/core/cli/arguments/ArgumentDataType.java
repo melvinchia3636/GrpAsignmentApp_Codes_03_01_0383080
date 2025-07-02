@@ -82,4 +82,22 @@ public class ArgumentDataType {
     public String[] getOptions() {
         return options;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ArgumentDataType{");
+        sb.append("type='").append(type).append('\'');
+        if (options != null) {
+            sb.append(", options=[");
+            for (int i = 0; i < options.length; i++) {
+                sb.append(options[i]);
+                if (i < options.length - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append(']');
+        }
+        sb.append('}');
+        return sb.toString();
+    }
 }

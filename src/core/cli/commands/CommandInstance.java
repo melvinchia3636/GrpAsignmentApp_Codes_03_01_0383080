@@ -229,4 +229,18 @@ public abstract class CommandInstance {
 
         public abstract void run();
     }
+
+    @Override
+    public String toString() {
+        return "CommandInstance{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", example='" + example + '\'' +
+                ", args=" + args +
+                ", hasSubCommands=" + hasSubCommands +
+                ", subCommands=" + subCommands.length +
+                ", handler=" + (handler != null ? handler.getClass().getSimpleName() : "null") +
+                ", authRequired=" + authRequired +
+                '}';
+    }
 }

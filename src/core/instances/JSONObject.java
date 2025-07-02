@@ -132,6 +132,9 @@ public class JSONObject {
                 newMap.put(key, Integer.parseInt(value));
             } else if (value.matches("-?\\d+(\\.\\d+)?")) {
                 newMap.put(key, Double.parseDouble(value));
+            } else if (value.matches("[a-zA-Z0-9_]+")) {
+                // Handle unquoted alphanumeric strings (like challenge IDs)
+                newMap.put(key, value);
             } else {
                 throw new IllegalArgumentException("Unsupported value type: " + value);
             }
@@ -154,7 +157,18 @@ public class JSONObject {
                 sb.append(", ");
             }
 
-            sb.append("\"").append(key).append("\": ").append(map.get(key));
+            Object value = map.get(key);
+            sb.append("\"").append(key).append("\": ");
+            
+            // Properly format values based on their type
+            if (value instanceof String) {
+                sb.append("\"").append(value).append("\"");
+            } else if (value == null) {
+                sb.append("null");
+            } else {
+                sb.append(value);
+            }
+            
             first = false;
         }
         sb.append("}");

@@ -5,8 +5,8 @@ import features.modules.CarbonFootprintAnalyzer.commands.goal.FootprintGoalSetCo
 import features.modules.CarbonFootprintAnalyzer.commands.goal.FootprintGoalStreakCommand;
 import features.modules.CarbonFootprintAnalyzer.commands.goal.FootprintGoalViewCommand;
 
-public class FootprintGoalCommand extends CommandInstance {
-    public FootprintGoalCommand() {
+public class FootprintGoalCommands extends CommandInstance {
+    public FootprintGoalCommands() {
         super(
                 "goal",
                 "Set or view your carbon footprint goal",

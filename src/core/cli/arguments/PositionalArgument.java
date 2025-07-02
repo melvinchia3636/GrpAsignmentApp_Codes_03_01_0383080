@@ -32,4 +32,14 @@ public class PositionalArgument extends Argument {
     public String getPromptText() {
         return promptText;
     }
+
+    @Override
+    public String toString() {
+        return "PositionalArgument{" +
+                "name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", dataType=" + getDataType() +
+                ", promptText='" + promptText + '\'' +
+                '}' + "\n";
+    }
 }

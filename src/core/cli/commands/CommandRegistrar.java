@@ -4,6 +4,7 @@ import features.auth.commands.*;
 
 import features.modules.CarbonFootprintAnalyzer.commands.*;
 
+import features.modules.DailyEcoChallenge.commands.ChallengeCommands;
 import features.terminal.commands.ClearScreenCommand;
 import features.terminal.commands.ExitCommand;
 import features.terminal.commands.HelpCommand;
@@ -30,7 +31,8 @@ public class CommandRegistrar {
                     new LogoutCommand()
             }),
             new CommandNamespace("Modules", new CommandInstance[]{
-                    new FootprintCommand()
+                    new FootprintCommands(),
+                    new ChallengeCommands()
             })
     };
 

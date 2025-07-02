@@ -151,4 +151,18 @@ public class SimpleMap<K, V> {
             this.value = value;
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SimpleMap{");
+        for (Entry<K, V> entry : entries) {
+            sb.append(entry.getKey()).append("=").append(entry.getValue()).append(", ");
+        }
+        if (sb.length() > 10) { // Remove trailing comma and space
+            sb.setLength(sb.length() - 2);
+        }
+        sb.append('}');
+        return sb.toString();
+    }
 }

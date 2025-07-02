@@ -68,4 +68,19 @@ public class ArgumentList {
     public KeywordArgument[] getKeywordArguments() {
         return keywordArguments;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ArgumentList{");
+        sb.append("positionalArguments=[");
+        for (PositionalArgument arg : positionalArguments) {
+            sb.append(arg.toString()).append(", ");
+        }
+        sb.append("], keywordArguments=[");
+        for (KeywordArgument arg : keywordArguments) {
+            sb.append(arg.toString()).append(", ");
+        }
+        sb.append("]}");
+        return sb.toString();
+    }
 }

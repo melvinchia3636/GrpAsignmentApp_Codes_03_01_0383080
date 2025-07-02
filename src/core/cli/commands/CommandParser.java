@@ -443,5 +443,14 @@ public class CommandParser {
         public String command;
         public String[] positionalArgs;
         public SimpleMap<String, String> keywordArgs;
+
+        @Override
+        public String toString() {
+            return "ParsedCommand{" +
+                    "command='" + command + '\'' +
+                    ", positionalArgs=" + Arrays.toString(positionalArgs) +
+                    ", keywordArgs=" + keywordArgs +
+                    '}';
+        }
     }
 }

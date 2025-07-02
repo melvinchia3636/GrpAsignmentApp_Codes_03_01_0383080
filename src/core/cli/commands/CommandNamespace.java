@@ -30,4 +30,20 @@ public class CommandNamespace {
     public CommandInstance[] getCommands() {
         return commands;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CommandNamespace{")
+          .append("name='").append(name).append('\'')
+          .append(", commands=[");
+        for (CommandInstance command : commands) {
+            sb.append(command.toString()).append(", ");
+        }
+        if (commands.length > 0) {
+            sb.setLength(sb.length() - 2); // Remove trailing comma and space
+        }
+        sb.append("]}");
+        return sb.toString();
+    }
 }

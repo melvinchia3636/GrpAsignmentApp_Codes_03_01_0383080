@@ -30,4 +30,15 @@ public class KeywordArgument extends Argument {
     public boolean isRequired() {
         return required;
     }
+
+    @Override
+    public String toString() {
+        return "KeywordArgument{" +
+                "name='" + getName() + '\'' +
+                ", abbreviation='" + abbreviation + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", dataType=" + getDataType() +
+                ", required=" + required +
+                '}';
+    }
 }
