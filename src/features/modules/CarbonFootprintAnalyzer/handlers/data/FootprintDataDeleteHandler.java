@@ -22,10 +22,12 @@ public class FootprintDataDeleteHandler extends CommandInstance.Handler {
             return;
         }
 
-        OutputUtils.printSuccess("Found carbon footprint record at index " + index + ":");
-        System.out.printf("  - Activity: %s%n", record.getFactor().getName());
-        System.out.printf("  - Amount: %2f %s%n", record.getAmount(), record.getFactor().getPerUnit());
-        System.out.printf("  - Time: %s%n", record.getTimestamp());
+        OutputUtils.printSectionHeader("🗑️", "Delete Carbon Footprint Record");
+        OutputUtils.printInfo("Found carbon footprint record at index " + index + ":");
+        
+        OutputUtils.printDataRow("Activity", record.getFactor().getName());
+        OutputUtils.printDataRow("Amount", String.format("%.2f %s", record.getAmount(), record.getFactor().getPerUnit()));
+        OutputUtils.printDataRow("Time", record.getTimestamp().toString());
 
         Scanner sc = new Scanner(System.in);
         System.out.print(new Chalk("\nAre you sure you want to delete this carbon footprint record? This action cannot be undone (yes/no): ").red());
@@ -33,9 +35,11 @@ public class FootprintDataDeleteHandler extends CommandInstance.Handler {
 
         if ("yes".equals(confirmation)) {
             footprintManager.removeRecord(record);
-            System.out.println(new Chalk("Carbon footprint record at index " + index + " has been deleted.").yellow());
+            OutputUtils.printSuccess("Carbon footprint record at index " + index + " has been deleted.");
         } else {
-            OutputUtils.printError("Operation cancelled. No data was deleted.");
+            OutputUtils.printInfo("Operation cancelled. No data was deleted.");
         }
+        
+        sc.close();
     }
 }

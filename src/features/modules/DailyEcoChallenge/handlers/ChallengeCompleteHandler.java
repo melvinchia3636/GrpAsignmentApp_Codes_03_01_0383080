@@ -3,6 +3,7 @@ package features.modules.DailyEcoChallenge.handlers;
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
 import core.terminal.Chalk;
+import core.terminal.OutputUtils;
 import features.modules.DailyEcoChallenge.data.ChallengeManager;
 import features.modules.DailyEcoChallenge.instances.Challenge;
 
@@ -14,47 +15,48 @@ public class ChallengeCompleteHandler extends CommandInstance.Handler {
         ChallengeManager challengeManager = GlobalManager.getInstance().getChallengeManager();
         
         if (challengeManager.hasCompletedChallengeToday()) {
-            System.out.println("\n🎉 " + new Chalk("You've already completed a challenge today!").green().bold());
-            System.out.println("═══════════════════════════════════════");
-            System.out.println("Great job! Come back tomorrow for a new challenge. 🌱");
-            System.out.println("You can check your progress with 'challenge streak' or 'challenge history'.");
+            OutputUtils.printSectionHeader("🎉", "Already Completed Today!");
+            OutputUtils.printSuccess("You've already completed a challenge today!");
+            OutputUtils.printInfo("Great job! Come back tomorrow for a new challenge. 🌱");
+            OutputUtils.printTip("Check your progress with 'challenge streak' or 'challenge history'.");
             return;
         }
         
         Challenge todaysChallenge = challengeManager.getTodaysChallenge();
         
-        System.out.println("\n🌱 Complete Today's Challenge");
-        System.out.println("═══════════════════════════════════════");
-        System.out.println("Challenge: " + todaysChallenge.getDescription());
-        System.out.println("Difficulty: " + new Chalk(todaysChallenge.getDifficulty()).bold());
-        System.out.println("═══════════════════════════════════════");
+        OutputUtils.printSectionHeader("🌱", "Complete Today's Challenge");
+        OutputUtils.printDataRow("Challenge", todaysChallenge.getDescription());
+        OutputUtils.printDataRow("Difficulty", new Chalk(todaysChallenge.getDifficulty()).bold());
         
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Did you complete this challenge? (yes/no): ");
-        String response = scanner.nextLine().trim().toLowerCase();
-        
-        if (!response.equalsIgnoreCase("yes")) {
-            System.out.println("\n" + new Chalk("No problem! Try again tomorrow or use 'challenge skip' if you need to.").yellow());
-            return;
-        }
+        String notes;
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Did you complete this challenge? (yes/no): ");
+            String response = scanner.nextLine().trim().toLowerCase();
+            
+            if (!response.equalsIgnoreCase("yes")) {
+                OutputUtils.printWarning("No problem! Try again tomorrow or use 'challenge skip' if you need to.");
+                return;
+            }
 
-        System.out.print("Any notes about your completion (optional): ");
-        String notes = scanner.nextLine().trim();
+            System.out.print("Any notes about your completion (optional): ");
+            notes = scanner.nextLine().trim();
+        } // Close try-with-resources for Scanner
 
         challengeManager.recordChallenge(todaysChallenge, "completed", notes);
 
         int streak = challengeManager.getCurrentStreak();
-        System.out.println("\n🎉 " + new Chalk("Congratulations! Challenge completed!").green().bold());
-        System.out.println("🔥 Current streak: " + new Chalk(String.valueOf(streak)).yellow().bold() + " days");
+        
+        OutputUtils.printSectionHeader("🎉", "Congratulations! Challenge Completed!");
+        OutputUtils.printStatistic("🔥", "Current streak", streak + " days", "yellow");
 
         if (streak == 1) {
-            System.out.println(new Chalk("✨ Great start! Keep up the momentum!").purple());
+            OutputUtils.printEncouragement("✨ Great start! Keep up the momentum!");
         } else if (streak == 7) {
-            System.out.println(new Chalk("🌟 Amazing! You've completed a full week!").purple());
+            OutputUtils.printEncouragement("🌟 Amazing! You've completed a full week!");
         } else if (streak == 30) {
-            System.out.println(new Chalk("🏆 Incredible! A full month of eco-friendly actions!").purple());
+            OutputUtils.printEncouragement("🏆 Incredible! A full month of eco-friendly actions!");
         } else if (streak % 10 == 0) {
-            System.out.println(new Chalk("🚀 Outstanding dedication to the environment!").purple());
+            OutputUtils.printEncouragement("🚀 Outstanding dedication to the environment!");
         }
     }
 }

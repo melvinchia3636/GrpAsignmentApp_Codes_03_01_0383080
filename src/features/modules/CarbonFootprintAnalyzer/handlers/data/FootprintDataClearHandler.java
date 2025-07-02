@@ -11,6 +11,9 @@ import java.util.Scanner;
 public class FootprintDataClearHandler extends CommandInstance.Handler {
     @Override
     public void run() {
+        OutputUtils.printSectionHeader("🗑️", "Clear All Carbon Footprint Data");
+        OutputUtils.printWarning("This will permanently delete all your carbon footprint records!");
+        
         Scanner sc = new Scanner(System.in);
         System.out.print(new Chalk("Are you sure you want to clear all carbon footprint data? This action cannot be undone (yes/no): ").red());
         String confirmation = sc.nextLine().trim().toLowerCase();
@@ -18,9 +21,12 @@ public class FootprintDataClearHandler extends CommandInstance.Handler {
         if ("yes".equals(confirmation)) {
             FootprintManager footprintManager = GlobalManager.getInstance().getFootprintManager();
             footprintManager.clearRecords(true);
-            System.out.println(new Chalk("All carbon footprint data has been cleared.").yellow());
+            OutputUtils.printSuccess("All carbon footprint data has been cleared.");
+            OutputUtils.printTip("You can start fresh by logging new activities with 'footprint log'.");
         } else {
-            OutputUtils.printError("Operation cancelled. No data was cleared.");
+            OutputUtils.printInfo("Operation cancelled. No data was cleared.");
         }
+        
+        sc.close();
     }
 }

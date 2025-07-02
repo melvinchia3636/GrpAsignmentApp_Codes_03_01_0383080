@@ -2,7 +2,6 @@ package features.modules.CarbonFootprintAnalyzer.handlers.stats;
 
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
-import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
 import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
@@ -20,7 +19,7 @@ public class FootprintStatsSummaryHandler extends CommandInstance.Handler {
         FootprintManager footprintManager = GlobalManager.getInstance().getFootprintManager();
         if (footprintManager.getRecords().isEmpty()) {
             OutputUtils.printError("No carbon footprint records found.", false);
-            System.out.println(new Chalk("Log your first activity using the 'footprint log' command.").yellow());
+            OutputUtils.printTip("Log your first activity using the 'footprint log' command.");
             return;
         }
 
@@ -42,14 +41,14 @@ public class FootprintStatsSummaryHandler extends CommandInstance.Handler {
         double highestAmount = statistics.getMax();
         double lowestAmount = statistics.getMin();
 
-        System.out.println();
-        System.out.println(new Chalk("📊 Carbon Footprint Summary for the Last " + lastXDays + " Days:").bold());
-        System.out.println();
-        System.out.printf("Total Amount:      %.4f kg CO2e%n", totalAmount);
-        System.out.printf("Average Amount:    %.4f kg CO2e%n", averageAmount);
-        System.out.printf("Highest Amount:    %.4f kg CO2e%n", highestAmount);
-        System.out.printf("Lowest Amount:     %.4f kg CO2e%n", lowestAmount);
-        System.out.println();
-        System.out.println("🧠Tip: Setting a daily goal helps you stay consistent!");
+        String[][] summaryStats = {
+            {"Total Amount", String.format("%.4f kg CO2e", totalAmount), "red"},
+            {"Average Amount", String.format("%.4f kg CO2e", averageAmount), "blue"},
+            {"Highest Amount", String.format("%.4f kg CO2e", highestAmount), "yellow"},
+            {"Lowest Amount", String.format("%.4f kg CO2e", lowestAmount), "green"}
+        };
+
+        OutputUtils.printSummaryBox("Carbon Footprint Summary for the Last " + lastXDays + " Days", summaryStats);
+        OutputUtils.printTip("Setting a daily goal helps you stay consistent!");
     }
 }

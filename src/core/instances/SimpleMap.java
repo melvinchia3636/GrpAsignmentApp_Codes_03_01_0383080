@@ -65,7 +65,7 @@ public class SimpleMap<K, V> {
                 return ((Comparable<V>) e1.getValue()).compareTo(e2.getValue());
             }
 
-            return 0; // If keys are not comparable, do not change order
+            return 0; // If values are not comparable, do not change order
         });
     }
 

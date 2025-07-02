@@ -7,6 +7,10 @@ import features.auth.data.UserManager;
  * Collection of utility methods for outputting stuff to the terminal.
  */
 public class OutputUtils {
+    // Standardized styling constants
+    private static final String SEPARATOR_HEAVY = "═══════════════════════════════════════";
+    private static final String SEPARATOR_LIGHT = "───────────────────────────────────────";
+
     /**
      * Prints the header of the application to the terminal.
      * This includes the logo and a welcome message.
@@ -66,5 +70,185 @@ public class OutputUtils {
         } else {
             System.out.println(new Chalk("Type 'help -c " + commandName + "' for detailed usage.").yellow());
         }
+    }
+
+    // Enhanced styling methods for consistent formatting
+
+    /**
+     * Prints a section header with emoji and heavy separator
+     */
+    public static void printSectionHeader(String emoji, String title) {
+        System.out.println("\n" + emoji + " " + new Chalk(title).bold());
+        System.out.println(SEPARATOR_HEAVY);
+    }
+
+    /**
+     * Prints a subsection header with light separator
+     */
+    public static void printSubsectionHeader(String emoji, String title) {
+        System.out.println("\n" + emoji + " " + new Chalk(title).bold());
+        System.out.println(SEPARATOR_LIGHT);
+    }
+
+    /**
+     * Prints a data row with consistent formatting
+     */
+    public static void printDataRow(String label, String value) {
+        System.out.printf("  %-20s %s%n", label + ":", value);
+    }
+
+    /**
+     * Prints a data row with colored value
+     */
+    public static void printDataRow(String label, Chalk valueColor) {
+        System.out.printf("  %-20s %s%n", label + ":", valueColor.toString());
+    }
+
+    /**
+     * Prints a status with appropriate color coding
+     */
+    public static void printStatus(String status, String description) {
+        String emoji;
+        Chalk statusColor;
+        
+        switch (status.toLowerCase()) {
+            case "completed":
+                emoji = "✅";
+                statusColor = new Chalk(status).green().bold();
+                break;
+            case "skipped":
+                emoji = "⏭️";
+                statusColor = new Chalk(status).yellow().bold();
+                break;
+            case "failed":
+            case "missed":
+                emoji = "❌";
+                statusColor = new Chalk(status).red().bold();
+                break;
+            case "in-progress":
+            case "active":
+                emoji = "🔄";
+                statusColor = new Chalk(status).blue().bold();
+                break;
+            default:
+                emoji = "ℹ️";
+                statusColor = new Chalk(status).white().bold();
+        }
+        
+        System.out.println(emoji + " " + statusColor + " - " + description);
+    }
+
+    /**
+     * Prints a statistic with icon and colored value
+     */
+    public static void printStatistic(String icon, String label, String value, String color) {
+        Chalk coloredValue;
+        switch (color.toLowerCase()) {
+            case "green":
+                coloredValue = new Chalk(value).green().bold();
+                break;
+            case "yellow":
+                coloredValue = new Chalk(value).yellow().bold();
+                break;
+            case "red":
+                coloredValue = new Chalk(value).red().bold();
+                break;
+            case "blue":
+                coloredValue = new Chalk(value).blue().bold();
+                break;
+            case "cyan":
+                coloredValue = new Chalk(value).cyan().bold();
+                break;
+            case "purple":
+                coloredValue = new Chalk(value).purple().bold();
+                break;
+            default:
+                coloredValue = new Chalk(value).white().bold();
+        }
+        System.out.println(icon + " " + label + ": " + coloredValue);
+    }
+
+    /**
+     * Prints an info message with standard formatting
+     */
+    public static void printInfo(String message) {
+        System.out.println(new Chalk("ℹ️ " + message).blue());
+    }
+
+    /**
+     * Prints a warning message with standard formatting
+     */
+    public static void printWarning(String message) {
+        System.out.println(new Chalk("⚠️ " + message).yellow());
+    }
+
+    /**
+     * Prints a tip/suggestion with standard formatting
+     */
+    public static void printTip(String message) {
+        System.out.println(new Chalk("💡 Tip: " + message).cyan());
+    }
+
+    /**
+     * Prints an encouragement message with standard formatting
+     */
+    public static void printEncouragement(String message) {
+        System.out.println(new Chalk("🌟 " + message).purple());
+    }
+
+    /**
+     * Prints a chart bar for data visualization
+     */
+    public static void printChartBar(String label, double value, double maxValue, int width) {
+        int barLength = (int) Math.round((value / maxValue) * width);
+        
+        StringBuilder bar = new StringBuilder();
+        for (int i = 0; i < barLength; i++) {
+            bar.append("█");
+        }
+        for (int i = barLength; i < width; i++) {
+            bar.append(" ");
+        }
+        
+        System.out.printf("%-8s | %s %.2f%n", label, 
+            new Chalk(bar.toString()).green(), value);
+    }
+
+    /**
+     * Generates a progress bar string
+     */
+    private static String generateProgressBar(int current, int total, int width) {
+        int filled = (int) Math.round((double) current / total * width);
+        StringBuilder bar = new StringBuilder("[");
+        
+        for (int i = 0; i < filled; i++) {
+            bar.append("█");
+        }
+        for (int i = filled; i < width; i++) {
+            bar.append("░");
+        }
+        bar.append("]");
+        
+        return new Chalk(bar.toString()).green().toString();
+    }
+
+    /**
+     * Prints a summary box with statistics
+     */
+    public static void printSummaryBox(String title, String[][] stats) {
+        printSubsectionHeader("📊", title);
+        for (String[] stat : stats) {
+            if (stat.length >= 2) {
+                String color = stat.length > 2 ? stat[2] : "white";
+                printStatistic("", stat[0], stat[1], color);
+            }
+        }
+    }
+
+    /**
+     * Prints a closing message with spacing
+     */
+    public static void printClosingMessage(String message) {
+        System.out.println("\n" + new Chalk(message).green() + "\n");
     }
 }

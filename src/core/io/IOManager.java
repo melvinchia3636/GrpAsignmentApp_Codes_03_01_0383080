@@ -186,6 +186,13 @@ public class IOManager {
         }
     }
 
+    /**
+     * Checks if a file with the given filename exists in the user profile folder.
+     *
+     * @param filename the name of the file to check (without extension)
+     * @return true if the file exists, false otherwise
+     * @throws IllegalStateException if user profile folder is not initialized
+     */
     public boolean existsFile(String filename) {
         if (userProfileFolder == null) {
             throw new IllegalStateException("User profile folder is not initialized. Call initUserProfile() first.");
@@ -195,6 +202,11 @@ public class IOManager {
         return Files.exists(filePath);
     }
 
+    /**
+     * Lists all user profiles in the profiles directory.
+     *
+     * @return an array of profile names (directory names)
+     */
     public String[] listProfiles() {
         File[] files = profilesDir.toFile().listFiles(File::isDirectory);
         if (files == null) {
@@ -209,6 +221,15 @@ public class IOManager {
         return profileNames;
     }
 
+    /**
+     * Exports data to a file in the user's profile folder.
+     * If the exports directory does not exist, it creates it.
+     *
+     * @param filename the name of the file to export (without extension)
+     * @param content  the content to write to the file
+     * @throws IllegalStateException if user profile folder is not initialized
+     * @throws IOError               if there is an error writing to the file
+     */
     public void exportToFile(String filename, String content) {
         if (userProfileFolder == null) {
             throw new IllegalStateException("User profile folder is not initialized. Call initUserProfile() first.");
@@ -232,6 +253,14 @@ public class IOManager {
         }
     }
 
+    /**
+     * Encrypts the given content using the UserManager's password.
+     * This method is used to ensure that sensitive data is stored securely.
+     *
+     * @param content the content to encrypt
+     * @return the encrypted content as a String
+     * @throws IllegalStateException if UserManager password is not set or if user profile folder is not initialized
+     */
     private String getEncryptedString(String content) {
         UserManager userManager = GlobalManager.getInstance().getUserManager();
         Password password = userManager.getPassword();

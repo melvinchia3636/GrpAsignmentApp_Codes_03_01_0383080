@@ -3,7 +3,6 @@ package features.modules.CarbonFootprintAnalyzer.handlers.stats;
 import core.cli.commands.CommandInstance;
 import core.instances.SimpleMap;
 import core.manager.GlobalManager;
-import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintFactors;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
@@ -22,7 +21,7 @@ public class FootprintStatsBreakdownHandler extends CommandInstance.Handler {
 
         if (footprintManager.getRecords().isEmpty()) {
             OutputUtils.printError("No carbon footprint records found.", false);
-            System.out.println(new Chalk("Log your first activity using the 'footprint log' command.").yellow());
+            OutputUtils.printTip("Log your first activity using the 'footprint log' command.");
             return;
         }
 
@@ -37,8 +36,7 @@ public class FootprintStatsBreakdownHandler extends CommandInstance.Handler {
                 .mapToDouble(FootprintRecord::getEstimatedFootprint)
                 .sum();
 
-        System.out.println();
-        System.out.println("\uD83E\uDDFEEmission Breakdown by Activity Type for the Last " + lastXDays + " Days:\n");
+        OutputUtils.printSectionHeader("🧾", "Emission Breakdown by Activity Type for the Last " + lastXDays + " Days");
 
         SimpleMap<FootprintFactor, Double> activityBreakdown = new SimpleMap<>();
 
@@ -58,16 +56,15 @@ public class FootprintStatsBreakdownHandler extends CommandInstance.Handler {
         for (SimpleMap.Entry<FootprintFactor, Double> activity : activityBreakdown.entries()) {
             String activityName = activity.getKey().getName();
             double amount = activity.getValue();
-
             double percentage = (amount / totalAmount) * 100;
 
-            System.out.printf("  - %-25s:    %-10s kg CO2e    (%.2f%%)\n",
-                    activityName,
-                    String.format("%.2f", amount),
-                    percentage);
+            OutputUtils.printDataRow(activityName, 
+                String.format("%.2f kg CO2e (%.2f%%)", amount, percentage));
         }
 
         System.out.println();
-        activityBreakdown.entries().get(0).getKey().printTips();
+        if (!activityBreakdown.entries().isEmpty()) {
+            activityBreakdown.entries().get(0).getKey().printTips();
+        }
     }
 }

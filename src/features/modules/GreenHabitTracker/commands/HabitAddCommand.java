@@ -13,7 +13,12 @@ public class HabitAddCommand extends CommandInstance {
                   "Add a new green habit",
                   "'Use reusable shopping bag'",
                   new ArgumentList(
-                          new PositionalArgument("habit", "The green habit to add", ArgumentDataType.STRING)
+                          new PositionalArgument(
+                              "habit", 
+                              "The green habit to add", 
+                              ArgumentDataType.STRING, 
+                              "Enter the name of the habit to track:"
+                          )
                   ),
                   new HabitAddHandler()
           );

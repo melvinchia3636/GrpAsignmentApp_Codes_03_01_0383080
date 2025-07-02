@@ -39,22 +39,21 @@ public class SignupHandler extends CommandInstance.Handler {
         }
 
         int retryCount = 0;
-        Scanner scanner = new Scanner(System.in);
 
-        while (retryCount < 3) {
-            System.out.print("Enter your password again for confirmation: ");
-            String confirmPassword = scanner.nextLine();
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (retryCount < 3) {
+                System.out.print("Enter your password again for confirmation: ");
+                String confirmPassword = scanner.nextLine();
 
-            if (password.equals(confirmPassword)) break;
+                if (password.equals(confirmPassword)) break;                OutputUtils.printError("Passwords do not match. Please try again.", false);
+                retryCount++;
+            }
 
-            OutputUtils.printError("Passwords do not match. Please try again.", false);
-            retryCount++;
-        }
-
-        if (retryCount == 3) {
-            OutputUtils.printError("Password confirmation failed after 3 attempts.", false);
-            return;
-        }
+            if (retryCount == 3) {
+                OutputUtils.printError("Password confirmation failed after 3 attempts.", false);
+                return;
+            }
+        } // Close try-with-resources for Scanner
 
         userManager.signup(username, password, countryCode);
         userManager.writeToFile();

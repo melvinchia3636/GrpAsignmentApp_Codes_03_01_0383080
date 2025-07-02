@@ -1,7 +1,7 @@
 package features.modules.GreenHabitTracker.commands;
 
 import core.cli.commands.CommandInstance;
-import features.modules.GreenHabitTracker.handlers.HabitLogHandler;
+import features.modules.GreenHabitTracker.handlers.HabitTodayHandler;
 
 public class HabitTodayCommand extends CommandInstance {
       public HabitTodayCommand() {
@@ -9,7 +9,7 @@ public class HabitTodayCommand extends CommandInstance {
                     "today",
                     "See the completion status of your habits for today",
                     "",
-                    new HabitLogHandler()
+                    new HabitTodayHandler()
           );
       }
 }

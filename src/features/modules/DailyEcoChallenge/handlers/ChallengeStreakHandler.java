@@ -3,7 +3,7 @@ package features.modules.DailyEcoChallenge.handlers;
 import core.cli.commands.CommandInstance;
 import core.instances.SimpleMap;
 import core.manager.GlobalManager;
-import core.terminal.Chalk;
+import core.terminal.OutputUtils;
 import features.modules.DailyEcoChallenge.data.ChallengeManager;
 import features.modules.DailyEcoChallenge.instances.ChallengeRecord;
 
@@ -18,35 +18,32 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
         
         ChallengeRecord[] recentRecords = challengeManager.getRecordsForLastXDays(7);
         
-        System.out.println("🔥 Your Eco Challenge Streak");
-        System.out.println("═══════════════════════════════════════");
-        System.out.println("Current Streak: " + new Chalk(String.valueOf(currentStreak)).yellow().bold() + " days");
+        OutputUtils.printSectionHeader("🔥", "Your Eco Challenge Streak");
+        OutputUtils.printStatistic("", "Current Streak", currentStreak + " days", "yellow");
         
         if (currentStreak == 0) {
-            System.out.println("💡 " + new Chalk("Start your streak today!").cyan());
+            OutputUtils.printTip("Start your streak today!");
         } else if (currentStreak == 1) {
-            System.out.println("🌱 " + new Chalk("Great start! Keep it going!").green());
+            OutputUtils.printEncouragement("🌱 Great start! Keep it going!");
         } else if (currentStreak < 7) {
-            System.out.println("🚀 " + new Chalk("Building momentum!").green());
+            OutputUtils.printEncouragement("🚀 Building momentum!");
         } else if (currentStreak < 30) {
-            System.out.println("⭐ " + new Chalk("Fantastic consistency!").green().bold());
+            OutputUtils.printEncouragement("⭐ Fantastic consistency!");
         } else {
-            System.out.println("🏆 " + new Chalk("Environmental champion!").green().bold());
+            OutputUtils.printEncouragement("🏆 Environmental champion!");
         }
         
-        System.out.println("\n📊 Overall Statistics:");
-        System.out.println("───────────────────────────────────────");
-        System.out.println("Total Challenges: " + stats[0]);
-        System.out.println("✅ Completed: " + new Chalk(String.valueOf(stats[1])).green() + 
-                          (stats[0] > 0 ? String.format(" (%.1f%%)", (stats[1] * 100.0 / stats[0])) : ""));
-        System.out.println("⏭️  Skipped: " + new Chalk(String.valueOf(stats[2])).yellow() + 
-                          (stats[0] > 0 ? String.format(" (%.1f%%)", (stats[2] * 100.0 / stats[0])) : ""));
-        System.out.println("❌ Failed: " + new Chalk(String.valueOf(stats[3])).red() + 
-                          (stats[0] > 0 ? String.format(" (%.1f%%)", (stats[3] * 100.0 / stats[0])) : ""));
+        String[][] overallStats = {
+            {"Total Challenges", String.valueOf(stats[0]), "blue"},
+            {"Completed", stats[1] + (stats[0] > 0 ? String.format(" (%.1f%%)", (stats[1] * 100.0 / stats[0])) : ""), "green"},
+            {"Skipped", stats[2] + (stats[0] > 0 ? String.format(" (%.1f%%)", (stats[2] * 100.0 / stats[0])) : ""), "yellow"},
+            {"Failed", stats[3] + (stats[0] > 0 ? String.format(" (%.1f%%)", (stats[3] * 100.0 / stats[0])) : ""), "red"}
+        };
+        
+        OutputUtils.printSummaryBox("Overall Statistics", overallStats);
         
         if (recentRecords.length > 0) {
-            System.out.println("\n📅 Last 7 Days Activity:");
-            System.out.println("───────────────────────────────────────");
+            OutputUtils.printSubsectionHeader("📅", "Last 7 Days Activity");
             
             // Group by date and show activity
             SimpleMap<String, String> dailyActivity = getDailyActivity(recentRecords);
@@ -65,11 +62,11 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
                     activity = "No activity";
                 }
 
-                System.out.println(date + ": " + activity);
+                OutputUtils.printDataRow(date, activity);
             }
         }
         
-        System.out.println("\n💪 Keep pushing forward! Every action makes a difference! 🌍");
+        OutputUtils.printClosingMessage("💪 Keep pushing forward! Every action makes a difference! 🌍");
     }
 
     private static SimpleMap<String, String> getDailyActivity(ChallengeRecord[] recentRecords) {

@@ -3,7 +3,6 @@ package features.modules.CarbonFootprintAnalyzer.handlers;
 import core.cli.commands.CommandInstance;
 import core.instances.Timestamp;
 import core.manager.GlobalManager;
-import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintFactors;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
@@ -42,15 +41,15 @@ public class FootprintLogHandler extends CommandInstance.Handler {
     }
 
     private void printResult(FootprintRecord record) {
-        System.out.println();
-        OutputUtils.printSuccess("Successfully logged the carbon footprint entry:");
-        System.out.printf("  - Activity: %s%n", record.getFactor().getName());
-        System.out.printf("  - Amount: %2f %s%n", record.getAmount(), record.getFactor().getPerUnit());
-        System.out.printf("  - Time: %s%n", record.getTimestamp());
-        System.out.println();
-        System.out.println("🔥Estimated carbon footprint: " + new Chalk(
-                String.format("%6f kg CO2e", record.getFactor().getEstimatedFootprint(record.getAmount()))
-        ).blue().bold());
+        OutputUtils.printSectionHeader("✅", "Carbon Footprint Entry Logged");
+        
+        OutputUtils.printDataRow("Activity", record.getFactor().getName());
+        OutputUtils.printDataRow("Amount", String.format("%.2f %s", record.getAmount(), record.getFactor().getPerUnit()));
+        OutputUtils.printDataRow("Time", record.getTimestamp().toString());
+        
+        double footprint = record.getFactor().getEstimatedFootprint(record.getAmount());
+        OutputUtils.printStatistic("🔥", "Estimated carbon footprint", String.format("%.6f kg CO2e", footprint), "blue");
+        
         System.out.println();
         record.getFactor().printTips();
     }

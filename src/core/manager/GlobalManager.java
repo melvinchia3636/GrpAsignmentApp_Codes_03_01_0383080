@@ -4,6 +4,7 @@ import core.io.IOManager;
 import features.auth.data.UserManager;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
 import features.modules.DailyEcoChallenge.data.ChallengeManager;
+import features.modules.GreenHabitTracker.data.HabitManager;
 
 /**
  * GlobalManager is a singleton class that provides access to global instances
@@ -19,6 +20,7 @@ public class GlobalManager {
     private final IOManager ioManager;
     private final FootprintManager footprintManager;
     private final ChallengeManager challengeManager;
+    private final HabitManager habitManager;
 
     /**
      * Private constructor to prevent instantiation from outside the class.
@@ -29,6 +31,7 @@ public class GlobalManager {
         ioManager = new IOManager();
         footprintManager = new FootprintManager();
         challengeManager = new ChallengeManager();
+        habitManager = new HabitManager();
     }
 
     /**
@@ -46,12 +49,14 @@ public class GlobalManager {
     public void initModuleManagers() {
         footprintManager.init();
         challengeManager.init();
+        habitManager.init();
     }
 
     public void reset() {
         userManager.reset();
         footprintManager.clearRecords();
         challengeManager.clearRecords();
+        habitManager.clearRecords();
     }
 
     /**
@@ -88,5 +93,14 @@ public class GlobalManager {
      */
     public ChallengeManager getChallengeManager() {
         return challengeManager;
+    }
+
+    /**
+     * Returns the HabitManager instance.
+     *
+     * @return the HabitManager instance
+     */
+    public HabitManager getHabitManager() {
+        return habitManager;
     }
 }

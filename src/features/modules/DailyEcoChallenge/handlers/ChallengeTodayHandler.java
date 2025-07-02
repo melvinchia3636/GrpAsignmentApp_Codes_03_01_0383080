@@ -3,6 +3,7 @@ package features.modules.DailyEcoChallenge.handlers;
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
 import core.terminal.Chalk;
+import core.terminal.OutputUtils;
 import features.modules.DailyEcoChallenge.data.ChallengeManager;
 import features.modules.DailyEcoChallenge.instances.Challenge;
 
@@ -12,23 +13,22 @@ public class ChallengeTodayHandler extends CommandInstance.Handler {
         ChallengeManager challengeManager = GlobalManager.getInstance().getChallengeManager();
         Challenge todaysChallenge = challengeManager.getTodaysChallenge();
         
-        System.out.println("🌱 Today's Eco Challenge:");
-        System.out.println("═══════════════════════════════════════");
-        System.out.println("Challenge ID: " + todaysChallenge.getId());
-        System.out.println("Difficulty: " + todaysChallenge.getDifficulty());
-        System.out.println("Description: " + todaysChallenge.getDescription());
-        System.out.println("═══════════════════════════════════════");
+        OutputUtils.printSectionHeader("🌱", "Today's Eco Challenge");
+        
+        OutputUtils.printDataRow("Challenge ID", todaysChallenge.getId());
+        OutputUtils.printDataRow("Difficulty", new Chalk(todaysChallenge.getDifficulty()).bold());
+        OutputUtils.printDataRow("Description", todaysChallenge.getDescription());
         
         if (challengeManager.hasCompletedChallengeToday()) {
-            System.out.println("Status: " + new Chalk("✅ COMPLETED TODAY!").green().bold());
-            System.out.println("🎉 Amazing work! Come back tomorrow for a new challenge!");
+            OutputUtils.printStatus("completed", "COMPLETED TODAY!");
+            OutputUtils.printEncouragement("🎉 Amazing work! Come back tomorrow for a new challenge!");
         } else if (challengeManager.hasSkippedChallengeToday()) {
-            System.out.println("Status: " + new Chalk("⏭️ Skipped today").yellow().bold());
-            System.out.println("💪 Tomorrow is a new opportunity!");
+            OutputUtils.printStatus("skipped", "Skipped today");
+            OutputUtils.printEncouragement("💪 Tomorrow is a new opportunity!");
         } else {
-            System.out.println("Status: " + new Chalk("⏳ Pending").cyan().bold());
-            System.out.println("Ready to make a difference? 💪");
-            System.out.println("\nUse 'challenge complete' when you're done!");
+            OutputUtils.printStatus("in-progress", "Pending");
+            OutputUtils.printEncouragement("Ready to make a difference? 💪");
+            OutputUtils.printTip("Use 'challenge complete' when you're done!");
         }
     }
 }

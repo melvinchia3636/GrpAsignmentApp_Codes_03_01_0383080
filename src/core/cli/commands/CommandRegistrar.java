@@ -5,6 +5,7 @@ import features.auth.commands.*;
 import features.modules.CarbonFootprintAnalyzer.commands.*;
 
 import features.modules.DailyEcoChallenge.commands.ChallengeCommands;
+import features.modules.GreenHabitTracker.commands.HabitCommands;
 import features.terminal.commands.ClearScreenCommand;
 import features.terminal.commands.ExitCommand;
 import features.terminal.commands.HelpCommand;
@@ -32,7 +33,8 @@ public class CommandRegistrar {
             }),
             new CommandNamespace("Modules", new CommandInstance[]{
                     new FootprintCommands(),
-                    new ChallengeCommands()
+                    new ChallengeCommands(),
+                    new HabitCommands()
             })
     };
 

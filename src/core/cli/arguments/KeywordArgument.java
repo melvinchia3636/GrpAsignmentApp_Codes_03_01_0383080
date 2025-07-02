@@ -23,14 +23,29 @@ public class KeywordArgument extends Argument {
         this.required = required;
     }
 
+    /**
+     * Gets the abbreviation (short form) of this keyword argument.
+     *
+     * @return the argument abbreviation
+     */
     public String getAbbreviation() {
         return abbreviation;
     }
 
+    /**
+     * Checks if this keyword argument is required.
+     *
+     * @return true if the argument is required, false otherwise
+     */
     public boolean isRequired() {
         return required;
     }
 
+    /**
+     * Returns a string representation of this keyword argument.
+     *
+     * @return a string containing all properties of the keyword argument
+     */
     @Override
     public String toString() {
         return "KeywordArgument{" +

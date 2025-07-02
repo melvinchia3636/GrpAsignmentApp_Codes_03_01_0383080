@@ -61,14 +61,29 @@ public class ArgumentList {
         return maxLength;
     }
 
+    /**
+     * Gets all positional arguments in this argument list.
+     *
+     * @return an array of positional arguments
+     */
     public PositionalArgument[] getPositionalArguments() {
         return positionalArguments;
     }
 
+    /**
+     * Gets all keyword arguments in this argument list.
+     *
+     * @return an array of keyword arguments
+     */
     public KeywordArgument[] getKeywordArguments() {
         return keywordArguments;
     }
 
+    /**
+     * Returns a string representation of this argument list.
+     *
+     * @return a string containing all positional and keyword arguments
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("ArgumentList{");

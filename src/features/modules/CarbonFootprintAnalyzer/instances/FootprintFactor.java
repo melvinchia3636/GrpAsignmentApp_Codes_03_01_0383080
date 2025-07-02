@@ -17,6 +17,15 @@ public class FootprintFactor {
     private final String perUnit;
     private final String[] tips;
 
+    /**
+     * Constructs a new FootprintFactor with the specified parameters.
+     *
+     * @param name         the name of the activity
+     * @param abbreviation a short abbreviation for the activity
+     * @param factor       the emission factor (kg CO2e per unit)
+     * @param perUnit      the unit of measurement for this activity
+     * @param tips         an array of tips for reducing emissions from this activity
+     */
     public FootprintFactor(String name, String abbreviation, double factor, String perUnit, String[] tips) {
         this.name = name;
         this.abbreviation = abbreviation;
@@ -35,6 +44,10 @@ public class FootprintFactor {
         return getFactor() * amount;
     }
 
+    /**
+     * Prints a random tip for reducing the carbon footprint of this activity.
+     * If no tips are available, prints a message indicating so.
+     */
     public void printTips() {
         if (getTips().length == 0) {
             System.out.println("No tips available for this activity.");
@@ -48,22 +61,47 @@ public class FootprintFactor {
         System.out.println("🌿Tip: " + new Chalk(tip).bold());
     }
 
+    /**
+     * Gets the name of this activity.
+     *
+     * @return the activity name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the abbreviation of this activity.
+     *
+     * @return the activity abbreviation
+     */
     public String getAbbreviation() {
         return abbreviation;
     }
 
+    /**
+     * Gets the emission factor for this activity.
+     *
+     * @return the emission factor in kg CO2e per unit
+     */
     public double getFactor() {
         return factor;
     }
 
+    /**
+     * Gets the unit of measurement for this activity.
+     *
+     * @return the unit description
+     */
     public String getPerUnit() {
         return perUnit;
     }
 
+    /**
+     * Gets the array of tips for reducing emissions from this activity.
+     *
+     * @return an array of tip strings
+     */
     public String[] getTips() {
         return tips;
     }

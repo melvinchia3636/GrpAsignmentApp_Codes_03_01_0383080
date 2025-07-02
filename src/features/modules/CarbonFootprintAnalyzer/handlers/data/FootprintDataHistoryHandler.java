@@ -2,7 +2,6 @@ package features.modules.CarbonFootprintAnalyzer.handlers.data;
 
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
-import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
 import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
@@ -18,7 +17,7 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
         FootprintManager footprintManager = GlobalManager.getInstance().getFootprintManager();
         if (footprintManager.getRecords().isEmpty()) {
             OutputUtils.printError("No carbon footprint records found.", false);
-            System.out.println(new Chalk("Log your first activity using the 'footprint log' command.").yellow());
+            OutputUtils.printTip("Log your first activity using the 'footprint log' command.");
             return;
         }
 
@@ -28,13 +27,13 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
             return;
         }
 
+        OutputUtils.printSectionHeader("🌿", "Your Carbon Footprint History for the Last " + lastXDays + " Days");
+        
         String separator = "╔═══════╦═══════════════════════════╦════════════╦════════╦══════════════════════╗";
         String header    = "║ Index ║ Activity                  ║ Amount     ║ Unit   ║ Time                 ║";
         String divider   = "╠═══════╬═══════════════════════════╬════════════╬════════╬══════════════════════╣";
         String footer    = "╚═══════╩═══════════════════════════╩════════════╩════════╩══════════════════════╝";
 
-        System.out.println();
-        System.out.printf(new Chalk("🌿 Your Carbon Footprint History for the Last %d Days: \n").bold().toString(), lastXDays);
         System.out.println(separator);
         System.out.println(header);
         System.out.println(divider);
@@ -52,10 +51,13 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
 
         System.out.println(footer);
 
-        System.out.printf("\nTotal records found: %d\n", filteredRecords.length);
-        System.out.printf("Total carbon footprint for the last %d days: %.2f kg CO2e\n",
-                lastXDays,
-                Arrays.stream(filteredRecords).mapToDouble(FootprintRecord::getEstimatedFootprint).sum()
-        );
+        double totalFootprint = Arrays.stream(filteredRecords).mapToDouble(FootprintRecord::getEstimatedFootprint).sum();
+        
+        String[][] summaryStats = {
+            {"Total records found", String.valueOf(filteredRecords.length), "blue"},
+            {"Total carbon footprint", String.format("%.2f kg CO2e", totalFootprint), "red"}
+        };
+        
+        OutputUtils.printSummaryBox("Summary", summaryStats);
     }
 }

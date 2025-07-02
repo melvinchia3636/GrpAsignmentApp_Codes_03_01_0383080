@@ -2,7 +2,6 @@ package features.modules.CarbonFootprintAnalyzer.handlers.goal;
 
 import core.cli.commands.CommandInstance;
 import core.manager.GlobalManager;
-import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import features.auth.data.UserManager;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
@@ -19,7 +18,7 @@ public class FootprintGoalViewHandler extends CommandInstance.Handler {
 
         if (goal == 0.0) {
             OutputUtils.printError("You have not set a carbon footprint goal yet.", false);
-            System.out.println(new Chalk("Use the command 'footprint goal set <goal>' to set your carbon footprint goal.").yellow());
+            OutputUtils.printTip("Use the command 'footprint goal set <goal>' to set your carbon footprint goal.");
             return;
         }
 
@@ -29,21 +28,21 @@ public class FootprintGoalViewHandler extends CommandInstance.Handler {
                 .average()
                 .orElse(0.0);
 
-        System.out.println("🎯Your current carbon footprint goal is " + new Chalk(
-                String.format("%6f kg CO2e", goal)
-        ).blue().bold() + ".");
+        OutputUtils.printSectionHeader("🎯", "Your Carbon Footprint Goal");
+        OutputUtils.printStatistic("🎯", "Goal", String.format("%.6f kg CO2e", goal), "blue");
 
         if (last7DaysRecords.length == 0) {
             OutputUtils.printError("No carbon footprint records found for the last 7 days.", false);
-            System.out.println(new Chalk("Log your first activity using the 'footprint log' command.").yellow());
+            OutputUtils.printTip("Log your first activity using the 'footprint log' command.");
         } else {
-            System.out.printf("\n📉Your average carbon footprint for the last 7 days is %s\n",
-                    new Chalk(String.format("%.4f kg CO2e", averageFootprint)).blue().bold());
+            OutputUtils.printStatistic("📉", "7-day average", String.format("%.4f kg CO2e", averageFootprint), "blue");
 
             if (averageFootprint > goal) {
-                System.out.println(new Chalk("⚠️ You are exceeding your carbon footprint goal!").yellow().bold());
+                OutputUtils.printWarning("You are exceeding your carbon footprint goal!");
+                OutputUtils.printTip("Consider reducing high-impact activities to meet your goal.");
             } else {
-                OutputUtils.printSuccess(new Chalk("You are within your carbon footprint goal!").green().bold().toString());
+                OutputUtils.printSuccess("You are within your carbon footprint goal!");
+                OutputUtils.printEncouragement("Keep up the great work! 🌱");
             }
         }
     }

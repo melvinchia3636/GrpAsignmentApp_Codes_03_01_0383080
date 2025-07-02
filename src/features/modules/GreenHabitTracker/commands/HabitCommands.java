@@ -10,8 +10,9 @@ public class HabitCommands extends CommandInstance {
             new HabitRemoveCommand(),
             new HabitLogCommand(),
             new HabitTodayCommand(),
-            new HabitStatsCommand(),
             new HabitHistoryCommand()
         });
+        
+        this.setAuthRequired(true);
     }
 }
