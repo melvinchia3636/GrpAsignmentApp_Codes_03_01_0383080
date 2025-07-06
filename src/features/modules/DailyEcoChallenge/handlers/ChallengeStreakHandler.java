@@ -55,7 +55,7 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
                 String date = String.format("%04d-%02d-%02d", 
                     t.getYear(),
                     t.getMonth(),
-                    t.getYear());
+                    t.getDay());
                 
                 String activity = dailyActivity.get(date);
                 if (activity == null) {
