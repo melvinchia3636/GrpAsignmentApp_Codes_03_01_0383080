@@ -22,7 +22,7 @@ public class FootprintDataDeleteHandler extends CommandInstance.Handler {
             return;
         }
 
-        OutputUtils.printSectionHeader("🗑️", "Delete Carbon Footprint Record");
+        OutputUtils.printSectionHeader("Delete Carbon Footprint Record");
         OutputUtils.printInfo("Found carbon footprint record at index " + index + ":");
         
         OutputUtils.printDataRow("Activity", record.getFactor().getName());
@@ -37,7 +37,7 @@ public class FootprintDataDeleteHandler extends CommandInstance.Handler {
             footprintManager.removeRecord(record);
             OutputUtils.printSuccess("Carbon footprint record at index " + index + " has been deleted.");
         } else {
-            OutputUtils.printInfo("Operation cancelled. No data was deleted.");
+            OutputUtils.printError("Operation cancelled. No data was deleted.", false);
         }
         
         sc.close();

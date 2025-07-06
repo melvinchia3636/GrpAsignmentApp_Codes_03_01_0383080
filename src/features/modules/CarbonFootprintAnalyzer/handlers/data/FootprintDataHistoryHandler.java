@@ -27,7 +27,7 @@ public class FootprintDataHistoryHandler extends CommandInstance.Handler {
             return;
         }
 
-        OutputUtils.printSectionHeader("🌿", "Your Carbon Footprint History for the Last " + lastXDays + " Days");
+        OutputUtils.printSectionHeader("Your Carbon Footprint History for the Last " + lastXDays + " Days");
         
         String separator = "╔═══════╦═══════════════════════════╦════════════╦════════╦══════════════════════╗";
         String header    = "║ Index ║ Activity                  ║ Amount     ║ Unit   ║ Time                 ║";

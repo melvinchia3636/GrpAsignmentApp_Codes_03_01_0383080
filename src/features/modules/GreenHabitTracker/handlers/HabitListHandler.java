@@ -19,7 +19,7 @@ public class HabitListHandler extends CommandInstance.Handler {
             return;
         }
 
-        OutputUtils.printSectionHeader("🌱", "Tracked Green Habits");
+        OutputUtils.printSectionHeader("Tracked Green Habits");
 
         for (Habit habit : habits) {
             System.out.printf("%d. %s%n", habit.getId(), habit.getName());

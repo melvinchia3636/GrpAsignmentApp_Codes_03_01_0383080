@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class FootprintDataClearHandler extends CommandInstance.Handler {
     @Override
     public void run() {
-        OutputUtils.printSectionHeader("🗑️", "Clear All Carbon Footprint Data");
+        OutputUtils.printSectionHeader("Clear All Carbon Footprint Data");
         OutputUtils.printWarning("This will permanently delete all your carbon footprint records!");
         
         Scanner sc = new Scanner(System.in);

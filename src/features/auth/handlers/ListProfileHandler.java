@@ -19,7 +19,7 @@ public class ListProfileHandler extends CommandInstance.Handler {
         }
 
         System.out.println();
-        System.out.printf(new Chalk("\uD83D\uDC64Found %d profile(s):%n%n").bold().toString(), profiles.length);
+        System.out.printf(new Chalk("Found %d profile(s):%n%n").bold().toString(), profiles.length);
         for (String profile : profiles) {
             System.out.println("  - " + profile);
         }

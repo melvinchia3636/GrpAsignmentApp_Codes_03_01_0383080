@@ -47,9 +47,9 @@ public class HabitLogHandler extends CommandInstance.Handler {
             boolean success = habitManager.logHabitCompletion(habitId);
             if (success) {
                 Timestamp today = new Timestamp(System.currentTimeMillis());
-                System.out.printf("✅ Habit '%s' marked as completed for today (%s)%n", 
-                    habit.getName(), 
-                    String.format("%04d-%02d-%02d", today.getYear(), today.getMonth(), today.getDay()));
+                OutputUtils.printSuccess(String.format("Habit '%s' marked as completed for today (%s)%n",
+                        habit.getName(),
+                        String.format("%04d-%02d-%02d", today.getYear(), today.getMonth(), today.getDay())));
             } else {
                 OutputUtils.printError("Failed to log habit completion.");
             }

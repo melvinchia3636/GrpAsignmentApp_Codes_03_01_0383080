@@ -58,7 +58,7 @@ public class FootprintFactor {
         int tipIndex = random.nextInt(getTips().length);
         String tip = getTips()[tipIndex];
 
-        System.out.println("🌿Tip: " + new Chalk(tip).bold());
+        System.out.println("[TIP] " + new Chalk(tip).bold());
     }
 
     /**

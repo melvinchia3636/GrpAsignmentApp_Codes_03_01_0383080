@@ -15,7 +15,7 @@ public class ChallengeCompleteHandler extends CommandInstance.Handler {
         ChallengeManager challengeManager = GlobalManager.getInstance().getChallengeManager();
         
         if (challengeManager.hasCompletedChallengeToday()) {
-            OutputUtils.printSectionHeader("🎉", "Already Completed Today!");
+            OutputUtils.printSectionHeader("Already Completed Today!");
             OutputUtils.printSuccess("You've already completed a challenge today!");
             OutputUtils.printInfo("Great job! Come back tomorrow for a new challenge. 🌱");
             OutputUtils.printTip("Check your progress with 'challenge streak' or 'challenge history'.");
@@ -24,7 +24,7 @@ public class ChallengeCompleteHandler extends CommandInstance.Handler {
         
         Challenge todaysChallenge = challengeManager.getTodaysChallenge();
         
-        OutputUtils.printSectionHeader("🌱", "Complete Today's Challenge");
+        OutputUtils.printSectionHeader("Complete Today's Challenge");
         OutputUtils.printDataRow("Challenge", todaysChallenge.getDescription());
         OutputUtils.printDataRow("Difficulty", new Chalk(todaysChallenge.getDifficulty()).bold());
         
@@ -47,17 +47,17 @@ public class ChallengeCompleteHandler extends CommandInstance.Handler {
 
         int streak = challengeManager.getCurrentStreak();
         
-        OutputUtils.printSectionHeader("🎉", "Congratulations! Challenge Completed!");
-        OutputUtils.printStatistic("🔥", "Current streak", streak + " days", "yellow");
+        OutputUtils.printSectionHeader("Congratulations! Challenge Completed!");
+        OutputUtils.printStatistic("Current streak", streak + " days", "yellow");
 
         if (streak == 1) {
-            OutputUtils.printEncouragement("✨ Great start! Keep up the momentum!");
+            OutputUtils.printEncouragement("Great start! Keep up the momentum!");
         } else if (streak == 7) {
-            OutputUtils.printEncouragement("🌟 Amazing! You've completed a full week!");
+            OutputUtils.printEncouragement("Amazing! You've completed a full week!");
         } else if (streak == 30) {
-            OutputUtils.printEncouragement("🏆 Incredible! A full month of eco-friendly actions!");
+            OutputUtils.printEncouragement("Incredible! A full month of eco-friendly actions!");
         } else if (streak % 10 == 0) {
-            OutputUtils.printEncouragement("🚀 Outstanding dedication to the environment!");
+            OutputUtils.printEncouragement("Outstanding dedication to the environment!");
         }
     }
 }

@@ -3,6 +3,7 @@ package features.modules.DailyEcoChallenge.handlers;
 import core.cli.commands.CommandInstance;
 import core.instances.SimpleMap;
 import core.manager.GlobalManager;
+import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import features.modules.DailyEcoChallenge.data.ChallengeManager;
 import features.modules.DailyEcoChallenge.instances.ChallengeRecord;
@@ -18,19 +19,19 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
         
         ChallengeRecord[] recentRecords = challengeManager.getRecordsForLastXDays(7);
         
-        OutputUtils.printSectionHeader("🔥", "Your Eco Challenge Streak");
-        OutputUtils.printStatistic("", "Current Streak", currentStreak + " days", "yellow");
+        OutputUtils.printSectionHeader("Your Eco Challenge Streak");
+        OutputUtils.printStatistic("Current Streak", currentStreak + " days", "yellow");
         
         if (currentStreak == 0) {
             OutputUtils.printTip("Start your streak today!");
         } else if (currentStreak == 1) {
-            OutputUtils.printEncouragement("🌱 Great start! Keep it going!");
+            OutputUtils.printEncouragement("Great start! Keep it going!");
         } else if (currentStreak < 7) {
-            OutputUtils.printEncouragement("🚀 Building momentum!");
+            OutputUtils.printEncouragement("Building momentum!");
         } else if (currentStreak < 30) {
-            OutputUtils.printEncouragement("⭐ Fantastic consistency!");
+            OutputUtils.printEncouragement("Fantastic consistency!");
         } else {
-            OutputUtils.printEncouragement("🏆 Environmental champion!");
+            OutputUtils.printEncouragement("Environmental champion!");
         }
         
         String[][] overallStats = {
@@ -43,7 +44,7 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
         OutputUtils.printSummaryBox("Overall Statistics", overallStats);
         
         if (recentRecords.length > 0) {
-            OutputUtils.printSubsectionHeader("📅", "Last 7 Days Activity");
+            OutputUtils.printSubsectionHeader("Last 7 Days Activity");
             
             // Group by date and show activity
             SimpleMap<String, String> dailyActivity = getDailyActivity(recentRecords);
@@ -78,10 +79,22 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
                 record.getTimestamp().getDay());
 
             String status = record.getStatus();
-            String emoji = status.equals("completed") ? "✅" :
-                          status.equals("skipped") ? "⏭️" : "❌";
 
-            dailyActivity.put(date, emoji + " " + status);
+            switch (status) {
+                case "completed":
+                    status = new Chalk("[COMPLETED]").green().bold().toString();
+                    break;
+                case "skipped":
+                    status = new Chalk("[SKIPPED]").yellow().bold().toString();
+                    break;
+                case "failed":
+                    status = new Chalk("[FAILED]").red().bold().toString();
+                    break;
+                default:
+                    status = new Chalk("[UNKNOWN]").white().bold().toString();
+            }
+
+            dailyActivity.put(date, status);
         }
         return dailyActivity;
     }

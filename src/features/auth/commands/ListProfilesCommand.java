@@ -5,8 +5,8 @@ import core.manager.GlobalManager;
 import features.auth.data.UserManager;
 import features.auth.handlers.ListProfileHandler;
 
-public class ListProfiles extends CommandInstance {
-    public ListProfiles() {
+public class ListProfilesCommand extends CommandInstance {
+    public ListProfilesCommand() {
         super(
                 "list-profiles",
                 "Lists all profiles in the system.",

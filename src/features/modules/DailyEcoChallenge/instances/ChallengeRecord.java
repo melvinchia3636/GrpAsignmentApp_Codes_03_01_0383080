@@ -31,19 +31,7 @@ public class ChallengeRecord {
         this.notes = notes != null ? notes : "";
     }
 
-    /**
-     * Creates a new ChallengeRecord instance without notes.
-     *
-     * @param index The unique index for this record
-     * @param challenge The challenge that was attempted
-     * @param status The completion status
-     * @param timestamp When the challenge was recorded
-     */
-    public ChallengeRecord(int index, Challenge challenge, String status, Timestamp timestamp) {
-        this(index, challenge, status, timestamp, "");
-    }
-
-    /**
+       /**
      * Converts the record to a string array for CSV storage.
      *
      * @return String array containing [challengeId, status, timestamp, notes]
@@ -55,15 +43,6 @@ public class ChallengeRecord {
                 String.valueOf(getTimestamp().getTimestamp()),
                 getNotes()
         };
-    }
-
-    /**
-     * Gets the unique index of this record.
-     *
-     * @return The record index
-     */
-    public int getIndex() {
-        return index;
     }
 
     /**
@@ -118,15 +97,6 @@ public class ChallengeRecord {
      */
     public boolean isSkipped() {
         return "skipped".equalsIgnoreCase(status);
-    }
-
-    /**
-     * Checks if the challenge was failed.
-     *
-     * @return true if status is "failed", false otherwise
-     */
-    public boolean isFailed() {
-        return "failed".equalsIgnoreCase(status);
     }
 
     /**

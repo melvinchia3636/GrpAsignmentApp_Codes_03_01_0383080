@@ -28,14 +28,14 @@ public class FootprintGoalViewHandler extends CommandInstance.Handler {
                 .average()
                 .orElse(0.0);
 
-        OutputUtils.printSectionHeader("🎯", "Your Carbon Footprint Goal");
-        OutputUtils.printStatistic("🎯", "Goal", String.format("%.6f kg CO2e", goal), "blue");
+        OutputUtils.printSectionHeader("Your Carbon Footprint Goal");
+        OutputUtils.printStatistic("Goal", String.format("%.6f kg CO2e", goal), "blue");
 
         if (last7DaysRecords.length == 0) {
             OutputUtils.printError("No carbon footprint records found for the last 7 days.", false);
             OutputUtils.printTip("Log your first activity using the 'footprint log' command.");
         } else {
-            OutputUtils.printStatistic("📉", "7-day average", String.format("%.4f kg CO2e", averageFootprint), "blue");
+            OutputUtils.printStatistic("7-day average", String.format("%.4f kg CO2e", averageFootprint), "blue");
 
             if (averageFootprint > goal) {
                 OutputUtils.printWarning("You are exceeding your carbon footprint goal!");

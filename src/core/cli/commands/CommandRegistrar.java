@@ -27,8 +27,7 @@ public class CommandRegistrar {
             new CommandNamespace("Authentication", new CommandInstance[]{
                     new LoginCommand(),
                     new SignupCommand(),
-                    new ListProfiles(),
-                    new ProfileCommand(),
+                    new ListProfilesCommand(),
                     new LogoutCommand()
             }),
             new CommandNamespace("Modules", new CommandInstance[]{

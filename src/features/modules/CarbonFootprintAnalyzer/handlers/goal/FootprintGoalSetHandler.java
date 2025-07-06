@@ -35,7 +35,7 @@ public class FootprintGoalSetHandler extends CommandInstance.Handler {
                     String.format("%6f kg CO2e", userManager.getFootprintGoal())
             ).blue().bold() + ".");
         } else {
-            OutputUtils.printError("Operation cancelled. No changes were made to your carbon footprint goal.");
+            OutputUtils.printError("Operation cancelled. No changes were made to your carbon footprint goal.", false);
         }
     }
 }

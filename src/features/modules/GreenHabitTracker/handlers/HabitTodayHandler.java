@@ -23,7 +23,7 @@ public class HabitTodayHandler extends CommandInstance.Handler {
         
         for (Habit habit : habits) {
             boolean completed = habitManager.isHabitCompletedToday(habit.getId());
-            String status = completed ? "✓" : " ";
+            String status = completed ? "v" : " ";
             System.out.printf("[%s] %s%n", status, habit.getName());
         }
     }

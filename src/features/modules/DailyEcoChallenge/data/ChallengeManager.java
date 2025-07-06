@@ -105,20 +105,6 @@ public class ChallengeManager {
     }
 
     /**
-     * Assigns a specific challenge for today.
-     *
-     * @param challengeId The ID of the challenge to assign
-     * @return The assigned challenge
-     * @throws IllegalArgumentException if the challenge ID is invalid
-     */
-    public Challenge setTodaysChallenge(String challengeId) {
-        Challenge challenge = Challenges.getChallengeById(challengeId); // Validates the ID
-        UserManager userManager = GlobalManager.getInstance().getUserManager();
-        userManager.setTodayChallengeId(challengeId);
-        return challenge;
-    }
-
-    /**
      * Records the completion of a challenge.
      *
      * @param challenge The challenge that was completed
@@ -131,31 +117,6 @@ public class ChallengeManager {
         ChallengeRecord record = new ChallengeRecord(newIndex, challenge, status, timestamp, notes);
         records.add(record);
         writeRecordsToFile();
-    }
-
-    /**
-     * Records the completion of a challenge without notes.
-     *
-     * @param challenge The challenge that was completed
-     * @param status The completion status
-     */
-    public void recordChallenge(Challenge challenge, String status) {
-        recordChallenge(challenge, status, "");
-    }
-
-    /**
-     * Gets a challenge record by its index.
-     *
-     * @param index The index of the record
-     * @return The challenge record, or null if not found
-     */
-    public ChallengeRecord getRecordByIndex(int index) {
-        for (ChallengeRecord record : records) {
-            if (record.getIndex() == index) {
-                return record;
-            }
-        }
-        return null;
     }
 
     /**
@@ -264,39 +225,10 @@ public class ChallengeManager {
     }
 
     /**
-     * Removes a challenge record.
-     *
-     * @param record The record to remove
-     */
-    public void removeRecord(ChallengeRecord record) {
-        records.remove(record);
-        writeRecordsToFile();
-    }
-
-    /**
-     * Clears all challenge records.
-     *
-     * @param wipeData Whether to also delete the data from file
-     */
-    public void clearRecords(boolean wipeData) {
-        records.clear();
-        if (wipeData) writeRecordsToFile();
-    }
-
-    /**
      * Clears all challenge records from memory only.
      */
     public void clearRecords() {
         records.clear();
-    }
-
-    /**
-     * Exports challenge records to a CSV file.
-     */
-    public void exportRecords() {
-        String csvString = toCSVString();
-        IOManager ioManager = GlobalManager.getInstance().getIOManager();
-        ioManager.exportToFile("challenge_records_export.csv", csvString);
     }
 
     /**
@@ -373,16 +305,5 @@ public class ChallengeManager {
             }
         }
         return false;
-    }
-
-    /**
-     * Checks if the user has any activity (completed, skipped, or failed) for today's challenge.
-     *
-     * @return true if there's any record for today, false otherwise
-     */
-    public boolean hasActivityToday() {
-        Timestamp today = new Timestamp();
-        ChallengeRecord[] todayRecords = getRecordsByDate(today);
-        return todayRecords.length > 0;
     }
 }

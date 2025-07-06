@@ -17,7 +17,7 @@ public class ChallengeHistoryHandler extends CommandInstance.Handler {
         ChallengeManager challengeManager = GlobalManager.getInstance().getChallengeManager();
         ArrayList<ChallengeRecord> allRecords = challengeManager.getRecords();
         
-        OutputUtils.printSectionHeader("📜", "Your Eco Challenge History");
+        OutputUtils.printSectionHeader("Your Eco Challenge History");
         
         if (allRecords.isEmpty()) {
             OutputUtils.printError("No challenge records found yet.", false);
@@ -42,7 +42,7 @@ public class ChallengeHistoryHandler extends CommandInstance.Handler {
         
         for (String date : sortedDates) {
             ChallengeRecord record = recordsByDate.get(date);
-            OutputUtils.printSubsectionHeader("📅", date);
+            OutputUtils.printSubsectionHeader(date);
             
             String status = record.getStatus();
             OutputUtils.printStatus(status, record.getChallenge().getDescription());

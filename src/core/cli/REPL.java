@@ -24,7 +24,7 @@ public class REPL {
      */
     private static CommandParser.ParsedCommand promptAndParseCommand() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print(new Chalk("\n❯ ").bold().green());
+        System.out.print(new Chalk("\n> ").bold().green());
         String input = scanner.nextLine().trim();
 
         return CommandParser.parseFromRaw(input);

@@ -19,7 +19,7 @@ public class HabitAddHandler extends CommandInstance.Handler {
         HabitManager habitManager = GlobalManager.getInstance().getHabitManager();
         Habit habit = habitManager.addHabit(habitName.trim());
 
-        OutputUtils.printSectionHeader("📗", "Add a New Habit");
+        OutputUtils.printSectionHeader("Add a New Habit");
         OutputUtils.printDataRow("Name", habit.getName());
         OutputUtils.printSuccess("Added successfully!");
     }

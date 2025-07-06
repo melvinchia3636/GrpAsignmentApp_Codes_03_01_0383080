@@ -35,7 +35,7 @@ public class FootprintStatsChartHandler extends CommandInstance.Handler {
             return;
         }
 
-        OutputUtils.printSectionHeader("📊", "Carbon Footprint Chart for the Current Week");
+        OutputUtils.printSectionHeader("Carbon Footprint Chart for the Current Week");
 
         for (int i = 0; i < daysOfWeek.length; i++) {
             String day = daysOfWeek[i];

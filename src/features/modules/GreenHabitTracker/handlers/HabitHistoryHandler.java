@@ -43,7 +43,7 @@ public class HabitHistoryHandler extends CommandInstance.Handler {
 
             HabitRecord[] records = habitManager.getRecordsByHabitId(habitId);
             
-            OutputUtils.printSectionHeader("📅", "History for: " + habit.getName());
+            OutputUtils.printSectionHeader("History for: " + habit.getName());
             
             if (records.length == 0) {
                 OutputUtils.printInfo("No completion records found for this habit.");
@@ -58,7 +58,7 @@ public class HabitHistoryHandler extends CommandInstance.Handler {
                 Timestamp timestamp = record.getTimestamp();
                 String dateStr = String.format("%04d-%02d-%02d", 
                     timestamp.getYear(), timestamp.getMonth(), timestamp.getDay());
-                System.out.println("✅ " + dateStr);
+                System.out.println("- " + dateStr);
             }
 
         } catch (NumberFormatException e) {

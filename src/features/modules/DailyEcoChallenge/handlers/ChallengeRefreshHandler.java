@@ -15,7 +15,7 @@ public class ChallengeRefreshHandler extends CommandInstance.Handler {
         ChallengeManager challengeManager = GlobalManager.getInstance().getChallengeManager();
         
         if (challengeManager.hasCompletedChallengeToday()) {
-            OutputUtils.printSectionHeader("🎉", "Already Completed Today!");
+            OutputUtils.printSectionHeader("Already Completed Today!");
             OutputUtils.printSuccess("You've already completed a challenge today!");
             OutputUtils.printInfo("Great job! No need to refresh since you've already succeeded. 🌱");
             OutputUtils.printInfo("Come back tomorrow for a new challenge!");
@@ -24,7 +24,7 @@ public class ChallengeRefreshHandler extends CommandInstance.Handler {
         
         Challenge currentChallenge = challengeManager.getTodaysChallenge();
         
-        OutputUtils.printSectionHeader("🔄", "Refresh Today's Challenge");
+        OutputUtils.printSectionHeader("Refresh Today's Challenge");
         OutputUtils.printDataRow("Current Challenge", currentChallenge.getDescription());
         OutputUtils.printDataRow("Difficulty", new Chalk(currentChallenge.getDifficulty()).bold());
         
@@ -35,7 +35,7 @@ public class ChallengeRefreshHandler extends CommandInstance.Handler {
         if (response.equals("y") || response.equals("yes")) {
             Challenge newChallenge = challengeManager.refreshTodaysChallenge();
             
-            OutputUtils.printSectionHeader("✨", "New Challenge Assigned!");
+            OutputUtils.printSectionHeader("New Challenge Assigned!");
             OutputUtils.printDataRow("New Challenge", newChallenge.getDescription());
             OutputUtils.printDataRow("Difficulty", new Chalk(newChallenge.getDifficulty()).bold());
             OutputUtils.printEncouragement("Ready for your new eco-friendly adventure? 🌱");

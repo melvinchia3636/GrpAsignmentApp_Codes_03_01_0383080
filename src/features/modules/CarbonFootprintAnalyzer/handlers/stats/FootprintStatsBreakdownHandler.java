@@ -36,7 +36,7 @@ public class FootprintStatsBreakdownHandler extends CommandInstance.Handler {
                 .mapToDouble(FootprintRecord::getEstimatedFootprint)
                 .sum();
 
-        OutputUtils.printSectionHeader("🧾", "Emission Breakdown by Activity Type for the Last " + lastXDays + " Days");
+        OutputUtils.printSectionHeader("Emission Breakdown by Activity Type for the Last " + lastXDays + " Days");
 
         SimpleMap<FootprintFactor, Double> activityBreakdown = new SimpleMap<>();
 

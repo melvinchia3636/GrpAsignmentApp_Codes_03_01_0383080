@@ -25,7 +25,7 @@ public class OutputUtils {
                 new Chalk("_  /___  / /__ / /_/ /").bold().green() + "/_____/ /___  _  /____/ /   \n" +
                 new Chalk("/_____/  \\___/ \\____/").bold().green() + "       \\____/  /_____/___/   \n");
         System.out.println(("Welcome to the "
-                + new Chalk("🌿Eco-CLI").bold().green()
+                + new Chalk("Eco-CLI").bold().green()
                 + ", your comprehensive personal climate console!")
         );
         if (userManager.isLoggedIn) {
@@ -45,7 +45,7 @@ public class OutputUtils {
     }
 
     public static void printSuccess(String message) {
-        System.out.println(new Chalk("✔ ").green() + message);
+        System.out.println(new Chalk("[SUCCESS] ").green() + message);
     }
 
     public static void printError(String message) {
@@ -61,7 +61,7 @@ public class OutputUtils {
     }
 
     public static void printError(String message, boolean printHelpString, String commandName) {
-        System.err.println(new Chalk("✘ " + message).red());
+        System.err.println(new Chalk("[ERROR] " + message).red());
 
         if (!printHelpString) return;
 
@@ -77,16 +77,16 @@ public class OutputUtils {
     /**
      * Prints a section header with emoji and heavy separator
      */
-    public static void printSectionHeader(String emoji, String title) {
-        System.out.println("\n" + emoji + " " + new Chalk(title).bold());
+    public static void printSectionHeader(String title) {
+        System.out.println("\n" + new Chalk(title).bold());
         System.out.println(SEPARATOR_HEAVY);
     }
 
     /**
      * Prints a subsection header with light separator
      */
-    public static void printSubsectionHeader(String emoji, String title) {
-        System.out.println("\n" + emoji + " " + new Chalk(title).bold());
+    public static void printSubsectionHeader(String title) {
+        System.out.println("\n" +  new Chalk(title).bold());
         System.out.println(SEPARATOR_LIGHT);
     }
 
@@ -108,40 +108,34 @@ public class OutputUtils {
      * Prints a status with appropriate color coding
      */
     public static void printStatus(String status, String description) {
-        String emoji;
         Chalk statusColor;
         
         switch (status.toLowerCase()) {
             case "completed":
-                emoji = "✅";
                 statusColor = new Chalk(status).green().bold();
                 break;
             case "skipped":
-                emoji = "⏭️";
                 statusColor = new Chalk(status).yellow().bold();
                 break;
             case "failed":
             case "missed":
-                emoji = "❌";
                 statusColor = new Chalk(status).red().bold();
                 break;
             case "in-progress":
             case "active":
-                emoji = "🔄";
                 statusColor = new Chalk(status).blue().bold();
                 break;
             default:
-                emoji = "ℹ️";
                 statusColor = new Chalk(status).white().bold();
         }
         
-        System.out.println(emoji + " " + statusColor + " - " + description);
+        System.out.println(statusColor + " - " + description);
     }
 
     /**
      * Prints a statistic with icon and colored value
      */
-    public static void printStatistic(String icon, String label, String value, String color) {
+    public static void printStatistic(String label, String value, String color) {
         Chalk coloredValue;
         switch (color.toLowerCase()) {
             case "green":
@@ -165,35 +159,35 @@ public class OutputUtils {
             default:
                 coloredValue = new Chalk(value).white().bold();
         }
-        System.out.println(icon + " " + label + ": " + coloredValue);
+        System.out.println(label + ": " + coloredValue);
     }
 
     /**
      * Prints an info message with standard formatting
      */
     public static void printInfo(String message) {
-        System.out.println(new Chalk("ℹ️ " + message).blue());
+        System.out.println(new Chalk("[INFO] " + message).blue());
     }
 
     /**
      * Prints a warning message with standard formatting
      */
     public static void printWarning(String message) {
-        System.out.println(new Chalk("⚠️ " + message).yellow());
+        System.out.println(new Chalk("[WARNING] " + message).yellow());
     }
 
     /**
      * Prints a tip/suggestion with standard formatting
      */
     public static void printTip(String message) {
-        System.out.println(new Chalk("💡 Tip: " + message).cyan());
+        System.out.println(new Chalk("[TIP] " + message).cyan());
     }
 
     /**
      * Prints an encouragement message with standard formatting
      */
     public static void printEncouragement(String message) {
-        System.out.println(new Chalk("🌟 " + message).purple());
+        System.out.println(new Chalk(message).purple());
     }
 
     /**
@@ -204,7 +198,7 @@ public class OutputUtils {
         
         StringBuilder bar = new StringBuilder();
         for (int i = 0; i < barLength; i++) {
-            bar.append("█");
+            bar.append("O");
         }
         for (int i = barLength; i < width; i++) {
             bar.append(" ");
@@ -218,11 +212,11 @@ public class OutputUtils {
      * Prints a summary box with statistics
      */
     public static void printSummaryBox(String title, String[][] stats) {
-        printSubsectionHeader("📊", title);
+        printSubsectionHeader(title);
         for (String[] stat : stats) {
             if (stat.length >= 2) {
                 String color = stat.length > 2 ? stat[2] : "white";
-                printStatistic("", stat[0], stat[1], color);
+                printStatistic(stat[0], stat[1], color);
             }
         }
     }
