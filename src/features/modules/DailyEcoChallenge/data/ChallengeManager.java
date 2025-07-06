@@ -9,7 +9,6 @@ import features.modules.DailyEcoChallenge.instances.Challenge;
 import features.modules.DailyEcoChallenge.instances.ChallengeRecord;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 
 /**
@@ -164,18 +163,17 @@ public class ChallengeManager {
         if (records.isEmpty()) return 0;
 
         int streak = 0;
-        Calendar today = Calendar.getInstance();
-        today.set(Calendar.HOUR_OF_DAY, 0);
-        today.set(Calendar.MINUTE, 0);
-        today.set(Calendar.SECOND, 0);
-        today.set(Calendar.MILLISECOND, 0);
+        Timestamp today = new Timestamp();
+        today.setHour(0);
+        today.setMinute(0);
+        today.setSecond(0);
+        today.setMillisecond(0);
 
         // Check each day going backwards from today
         for (int daysBack = 0; daysBack < records.size(); daysBack++) {
-            Calendar checkDate = (Calendar) today.clone();
-            checkDate.add(Calendar.DATE, -daysBack);
-            
-            Timestamp dateToCheck = new Timestamp(checkDate.getTimeInMillis());
+            Timestamp dateToCheck = new Timestamp(today.getTimestamp());
+            dateToCheck.subtract("day", daysBack);
+
             ChallengeRecord[] dayRecords = getRecordsByDate(dateToCheck);
             
             boolean hasCompletedChallenge = false;

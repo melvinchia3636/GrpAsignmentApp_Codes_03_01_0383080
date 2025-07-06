@@ -1,14 +1,13 @@
 package features.modules.DailyEcoChallenge.handlers;
 
 import core.cli.commands.CommandInstance;
-import core.instances.SimpleMap;
+import core.instances.ListOfPairs;
+import core.instances.Timestamp;
 import core.manager.GlobalManager;
 import core.terminal.Chalk;
 import core.terminal.OutputUtils;
 import features.modules.DailyEcoChallenge.data.ChallengeManager;
 import features.modules.DailyEcoChallenge.instances.ChallengeRecord;
-
-import java.util.Calendar;
 
 public class ChallengeStreakHandler extends CommandInstance.Handler {
     @Override
@@ -47,16 +46,16 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
             OutputUtils.printSubsectionHeader("Last 7 Days Activity");
             
             // Group by date and show activity
-            SimpleMap<String, String> dailyActivity = getDailyActivity(recentRecords);
+            ListOfPairs<String, String> dailyActivity = getDailyActivity(recentRecords);
 
             // Show the last 7 days
-            java.util.Calendar cal = Calendar.getInstance();
+            Timestamp t = new Timestamp();
             for (int i = 6; i >= 0; i--) {
-                cal.add(java.util.Calendar.DATE, i == 6 ? -6 : 1);
+                t.add("day", i == 6 ? -6 : 1);
                 String date = String.format("%04d-%02d-%02d", 
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH) + 1,
-                    cal.get(Calendar.DAY_OF_MONTH));
+                    t.getYear(),
+                    t.getMonth(),
+                    t.getYear());
                 
                 String activity = dailyActivity.get(date);
                 if (activity == null) {
@@ -70,8 +69,8 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
         OutputUtils.printClosingMessage("Keep pushing forward! Every action makes a difference!");
     }
 
-    private static SimpleMap<String, String> getDailyActivity(ChallengeRecord[] recentRecords) {
-        SimpleMap<String, String> dailyActivity = new SimpleMap<>();
+    private static ListOfPairs<String, String> getDailyActivity(ChallengeRecord[] recentRecords) {
+        ListOfPairs<String, String> dailyActivity = new ListOfPairs<>();
         for (ChallengeRecord record : recentRecords) {
             String date = String.format("%04d-%02d-%02d",
                 record.getTimestamp().getYear(),

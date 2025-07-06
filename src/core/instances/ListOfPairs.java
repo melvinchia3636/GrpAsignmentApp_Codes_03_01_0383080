@@ -1,24 +1,23 @@
 package core.instances;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Since the project does not allow the use of Java's built-in Map interface, I'll just implement it myself :)
- * A simple map-like data structure using an ArrayList to store key-value pairs.
+ * Since the project does not allow the use of Java's built-in data structure interface, I'll just implement it myself :)
+ * A simple data structure using an ArrayList to store key-value pairs.
  *
- * @param <K> the type of keys maintained by this map
+ * @param <K> the type of keys maintained by this data structure
  * @param <V> the type of mapped values
  */
-public class SimpleMap<K, V> {
+public class ListOfPairs<K, V> {
     private final ArrayList<Entry<K, V>> entries;
 
-    public SimpleMap() {
+    public ListOfPairs() {
         this.entries = new ArrayList<>();
     }
 
     /**
-     * Adds a key-value pair to the map. If the key already exists, it updates the value.
+     * Adds a key-value pair to the data structure. If the key already exists, it updates the value.
      *
      * @param key   the key to add or update
      * @param value the value to associate with the key
@@ -81,20 +80,20 @@ public class SimpleMap<K, V> {
     }
 
     /**
-     * Gets the number of key-value pairs in the map.
+     * Gets the number of key-value pairs in the data structure.
      *
-     * @return the number of entries in the map
+     * @return the number of entries in the data structure
      */
     public int size() {
         return entries.size();
     }
 
     /**
-     * Returns a list of all entries in the map.
+     * Returns a list of all entries in the data structure.
      *
      * @return a list of entries, where each entry is a key-value pair
      */
-    public List<Entry<K, V>> entries() {
+    public ArrayList<Entry<K, V>> entries() {
         return new ArrayList<>(entries);
     }
 
@@ -119,7 +118,7 @@ public class SimpleMap<K, V> {
     }
 
     /**
-     * Represents a key-value pair entry in the {@link SimpleMap}.
+     * Represents a key-value pair entry in the {@link ListOfPairs}.
      *
      * @param <K> the type of keys maintained by this entry
      * @param <V> the type of mapped values

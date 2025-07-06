@@ -10,7 +10,6 @@ import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
 import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
 
 import java.util.Arrays;
-import java.util.Calendar;
 
 public class FootprintGoalStreakHandler extends CommandInstance.Handler {
     @Override
@@ -25,25 +24,24 @@ public class FootprintGoalStreakHandler extends CommandInstance.Handler {
             return;
         }
 
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 100);
+        Timestamp t = new Timestamp();
+        t.setHour(0);
+        t.setMinute(0);
+        t.setSecond(0);
+        t.setMillisecond(100);
 
         int streak = 0;
         int longestStreak = 0;
 
         long timestampOfFirstRecord = footprintManager.getRecords().get(0).getTimestamp().getTimestamp();
-        Calendar firstRecordDate = Calendar.getInstance();
-        firstRecordDate.setTimeInMillis(timestampOfFirstRecord);
-        firstRecordDate.set(Calendar.HOUR_OF_DAY, 0);
-        firstRecordDate.set(Calendar.MINUTE, 0);
-        firstRecordDate.set(Calendar.SECOND, 0);
-        firstRecordDate.set(Calendar.MILLISECOND, 0);
+        Timestamp firstRecordDate = new Timestamp(timestampOfFirstRecord);
+        firstRecordDate.setHour(0);
+        firstRecordDate.setMinute(0);
+        firstRecordDate.setSecond(0);
+        firstRecordDate.setMillisecond(0);
 
-        while (c.getTimeInMillis() > firstRecordDate.getTimeInMillis()) {
-            FootprintRecord[] records = footprintManager.getRecordsByDate(new Timestamp(c.getTimeInMillis()));
+        while (t.getTimestamp() > firstRecordDate.getTimestamp()) {
+            FootprintRecord[] records = footprintManager.getRecordsByDate(t);
             double totalAmount = Arrays.stream(records).mapToDouble(FootprintRecord::getEstimatedFootprint).sum();
 
             if (totalAmount <= goal) {
@@ -56,7 +54,7 @@ public class FootprintGoalStreakHandler extends CommandInstance.Handler {
                 streak = 0;
             }
 
-            c.add(Calendar.DATE, -1);
+            t.subtract("day", 1);
         }
 
         System.out.println();

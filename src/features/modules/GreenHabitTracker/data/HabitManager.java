@@ -8,7 +8,6 @@ import features.modules.GreenHabitTracker.instances.Habit;
 import features.modules.GreenHabitTracker.instances.HabitRecord;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 
 /**
@@ -244,109 +243,6 @@ public class HabitManager {
         return records.stream()
                 .filter(record -> record.getHabitId() == habitId)
                 .toArray(HabitRecord[]::new);
-    }
-
-    /**
-     * Gets all records for a specific date.
-     *
-     * @param date the date to filter records by
-     * @return an array of HabitRecord objects from the specified date
-     */
-    public HabitRecord[] getRecordsByDate(Timestamp date) {
-        return records.stream()
-                .filter(record -> 
-                    record.getTimestamp().getYear() == date.getYear() &&
-                    record.getTimestamp().getMonth() == date.getMonth() &&
-                    record.getTimestamp().getDay() == date.getDay())
-                .toArray(HabitRecord[]::new);
-    }
-
-    /**
-     * Calculates the completion rate for all habits over the last N days.
-     *
-     * @param days the number of days to look back
-     * @return the completion rate as a percentage
-     */
-    public double getCompletionRate(int days) {
-        if (habits.isEmpty()) return 0.0;
-
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, -days + 1); // Include today
-        
-        int totalPossibleCompletions = habits.size() * days;
-        int actualCompletions = 0;
-
-        for (int i = 0; i < days; i++) {
-            Timestamp date = new Timestamp(cal.getTimeInMillis());
-            HabitRecord[] dayRecords = getRecordsByDate(date);
-            actualCompletions += dayRecords.length;
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        return totalPossibleCompletions > 0 ? (double) actualCompletions / totalPossibleCompletions * 100 : 0.0;
-    }
-
-    /**
-     * Calculates the longest streak for any habit.
-     *
-     * @return the length of the longest streak in days
-     */
-    public int getLongestStreak() {
-        int maxStreak = 0;
-
-        for (Habit habit : habits) {
-            int currentStreak = getCurrentStreak(habit.getId());
-            maxStreak = Math.max(maxStreak, currentStreak);
-        }
-
-        return maxStreak;
-    }
-
-    /**
-     * Gets the current streak for a specific habit.
-     *
-     * @param habitId the ID of the habit
-     * @return the current streak length in days
-     */
-    private int getCurrentStreak(int habitId) {
-        HabitRecord[] habitRecords = getRecordsByHabitId(habitId);
-        if (habitRecords.length == 0) return 0;
-
-        // Sort records by timestamp descending
-        java.util.Arrays.sort(habitRecords, (a, b) -> 
-            Long.compare(b.getTimestamp().getTimestamp(), a.getTimestamp().getTimestamp()));
-
-        Calendar cal = Calendar.getInstance();
-        int streak = 0;
-
-        // Check if completed today, if not, start from yesterday
-        if (!isHabitCompletedToday(habitId)) {
-            cal.add(Calendar.DAY_OF_MONTH, -1);
-        }
-
-        // Count consecutive days going backward
-        for (int i = 0; i < habitRecords.length; i++) {
-            Timestamp checkDate = new Timestamp(cal.getTimeInMillis());
-            boolean foundRecord = false;
-
-            for (HabitRecord record : habitRecords) {
-                if (record.getTimestamp().getYear() == checkDate.getYear() &&
-                    record.getTimestamp().getMonth() == checkDate.getMonth() &&
-                    record.getTimestamp().getDay() == checkDate.getDay()) {
-                    foundRecord = true;
-                    break;
-                }
-            }
-
-            if (foundRecord) {
-                streak++;
-                cal.add(Calendar.DAY_OF_MONTH, -1);
-            } else {
-                break;
-            }
-        }
-
-        return streak;
     }
 
     /**

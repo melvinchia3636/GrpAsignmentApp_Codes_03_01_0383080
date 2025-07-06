@@ -2,7 +2,7 @@ package core.cli.commands;
 
 import core.cli.arguments.*;
 import core.terminal.OutputUtils;
-import core.instances.SimpleMap;
+import core.instances.ListOfPairs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class CommandParser {
      * @param allowedArguments The allowed argument definitions (positional and keyword).
      * @return SimpleMap mapping argument names to their values.
      */
-    public static SimpleMap<String, String> validateAndGenerateArgsMap(
+    public static ListOfPairs<String, String> validateAndGenerateArgsMap(
             ParsedCommand parsedCommand,
             ArgumentList allowedArguments,
             String commandPath
@@ -60,7 +60,7 @@ public class CommandParser {
         PositionalArgument[] positionalArgs = allowedArguments.getPositionalArguments();
         KeywordArgument[] keywordArgs = allowedArguments.getKeywordArguments();
 
-        SimpleMap<String, String> argsMap = new SimpleMap<>();
+        ListOfPairs<String, String> argsMap = new ListOfPairs<>();
         boolean positionalArgsNeedPrompting = false;
 
         if (parsedCommand.positionalArgs.length != 0) {
@@ -181,8 +181,8 @@ public class CommandParser {
      * @return A SimpleMap containing keyword argument names and their corresponding values.
      * @throws IllegalArgumentException if an argument does not start with '-' or '--'.
      */
-    private static SimpleMap<String, String> parseKeywordArgs(String[] args, String commandPath) {
-        SimpleMap<String, String> keywordArguments = new SimpleMap<>();
+    private static ListOfPairs<String, String> parseKeywordArgs(String[] args, String commandPath) {
+        ListOfPairs<String, String> keywordArguments = new ListOfPairs<>();
 
         for (int i = 0; i < args.length; i++) {
             if (!args[i].startsWith("-")) {
@@ -232,7 +232,7 @@ public class CommandParser {
      */
     private static void promptPositionalArgs(
             PositionalArgument[] allowedPositionalArgs,
-            SimpleMap<String, String> argsMap
+            ListOfPairs<String, String> argsMap
     ) {
         Scanner scanner = new Scanner(System.in);
         for (PositionalArgument positionalArgs : allowedPositionalArgs) {
@@ -265,7 +265,7 @@ public class CommandParser {
     private static void validateAndMapPositionalArgs(
             ParsedCommand parsedCommand,
             PositionalArgument[] positionalArgs,
-            SimpleMap<String, String> argsMap,
+            ListOfPairs<String, String> argsMap,
             String commandPath
     ) {
         // Check if the number of positional arguments matches the expected count
@@ -320,7 +320,7 @@ public class CommandParser {
             KeywordArgument[] keywordArgs,
             String commandPath
     ) {
-        for (SimpleMap.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
+        for (ListOfPairs.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
             boolean isValid = false;
             String argName = arg.getKey();
 
@@ -351,17 +351,17 @@ public class CommandParser {
     private static void validateAndMapKeywordArgs(
             ParsedCommand parsedCommand,
             KeywordArgument[] keywordArgs,
-            SimpleMap<String, String> argsMap,
+            ListOfPairs<String, String> argsMap,
             String commandPath
     ) {
         for (KeywordArgument requiredArgument : keywordArgs) {
-            SimpleMap.Entry<String, String> targetArg = null;
+            ListOfPairs.Entry<String, String> targetArg = null;
 
             String targetName = requiredArgument.getName();
             String targetAbbreviation = requiredArgument.getAbbreviation();
             ArgumentDataType targetDataType = requiredArgument.getDataType();
 
-            for (SimpleMap.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
+            for (ListOfPairs.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
                 String argName = arg.getKey();
 
                 // Check if the argument matches either the full name or the abbreviation
@@ -442,7 +442,7 @@ public class CommandParser {
     public static class ParsedCommand {
         public String command;
         public String[] positionalArgs;
-        public SimpleMap<String, String> keywordArgs;
+        public ListOfPairs<String, String> keywordArgs;
 
         @Override
         public String toString() {

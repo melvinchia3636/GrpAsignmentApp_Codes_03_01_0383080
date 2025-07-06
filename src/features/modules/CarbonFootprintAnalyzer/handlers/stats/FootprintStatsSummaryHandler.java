@@ -8,7 +8,6 @@ import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
 
 import java.util.Arrays;
 import java.util.DoubleSummaryStatistics;
-import java.util.stream.Stream;
 
 public class FootprintStatsSummaryHandler extends CommandInstance.Handler {
     @Override
@@ -30,25 +29,29 @@ public class FootprintStatsSummaryHandler extends CommandInstance.Handler {
             return;
         }
 
-        double[] amounts = Stream.of(filteredRecords)
+        double[] amounts = Arrays.stream(filteredRecords)
                 .mapToDouble(FootprintRecord::getEstimatedFootprint)
                 .toArray();
 
         DoubleSummaryStatistics statistics = Arrays.stream(amounts).summaryStatistics();
 
+        String[][] summaryStats = getSummaryStats(statistics, lastXDays);
+
+        OutputUtils.printSummaryBox("Carbon Footprint Summary for the Last " + lastXDays + " Days", summaryStats);
+        OutputUtils.printTip("Setting a daily goal helps you stay consistent!");
+    }
+
+    private static String[][] getSummaryStats(DoubleSummaryStatistics statistics, int lastXDays) {
         double totalAmount = statistics.getSum();
         double averageAmount = totalAmount / lastXDays;
         double highestAmount = statistics.getMax();
         double lowestAmount = statistics.getMin();
 
-        String[][] summaryStats = {
+        return new String[][]{
             {"Total Amount", String.format("%.4f kg CO2e", totalAmount), "red"},
             {"Average Amount", String.format("%.4f kg CO2e", averageAmount), "blue"},
             {"Highest Amount", String.format("%.4f kg CO2e", highestAmount), "yellow"},
             {"Lowest Amount", String.format("%.4f kg CO2e", lowestAmount), "green"}
         };
-
-        OutputUtils.printSummaryBox("Carbon Footprint Summary for the Last " + lastXDays + " Days", summaryStats);
-        OutputUtils.printTip("Setting a daily goal helps you stay consistent!");
     }
 }

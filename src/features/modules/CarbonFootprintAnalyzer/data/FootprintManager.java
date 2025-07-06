@@ -8,7 +8,6 @@ import features.modules.CarbonFootprintAnalyzer.instances.FootprintFactor;
 import features.modules.CarbonFootprintAnalyzer.instances.FootprintRecord;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 
 /**
@@ -122,19 +121,21 @@ public class FootprintManager {
     public FootprintRecord[][] getRecordsGroupedByWeekDay() {
         FootprintRecord[][] allRecords = new FootprintRecord[7][];
 
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
+        Timestamp t = new Timestamp();
+        t.setHour(0);
+        t.setMinute(0);
+        t.setSecond(0);
+        t.setMillisecond(0);
 
-        while (c.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
-            c.add(Calendar.DATE, -1);
+
+        while (t.getDayOfWeek() != 1) {
+            t.subtract("day", 1);
         }
+
         for (int i = 0; i < 7; i++) {
-            Timestamp startOfDay = new Timestamp(c.getTimeInMillis());
-            c.add(Calendar.DATE, 1);
-            Timestamp endOfDay = new Timestamp(c.getTimeInMillis());
+            Timestamp startOfDay = new Timestamp(t.getTimestamp());
+            t.add("day", 1);
+            Timestamp endOfDay = new Timestamp(t.getTimestamp() - 1);
             FootprintRecord[] records = getRecordsForPeriod(startOfDay, endOfDay);
             allRecords[i] = records;
         }

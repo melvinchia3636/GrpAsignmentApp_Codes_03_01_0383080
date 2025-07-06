@@ -2,7 +2,7 @@ package core.cli.commands;
 
 import core.cli.arguments.ArgumentList;
 import core.manager.GlobalManager;
-import core.instances.SimpleMap;
+import core.instances.ListOfPairs;
 import features.auth.data.UserManager;
 
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public abstract class CommandInstance {
      * @param parsedCommand the parsed command containing arguments
      */
     public void execute(CommandParser.ParsedCommand parsedCommand) {
-        SimpleMap<String, String> argsMap = CommandParser.validateAndGenerateArgsMap(
+        ListOfPairs<String, String> argsMap = CommandParser.validateAndGenerateArgsMap(
                 parsedCommand,
                 this.getArgs(),
                 String.join(".", getFullPath())
@@ -225,7 +225,7 @@ public abstract class CommandInstance {
      * It contains a map of arguments and an abstract run method that must be implemented by subclasses.
      */
     public abstract static class Handler {
-        protected SimpleMap<String, String> argsMap;
+        protected ListOfPairs<String, String> argsMap;
 
         public abstract void run();
     }
