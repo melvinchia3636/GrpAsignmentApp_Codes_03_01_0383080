@@ -21,7 +21,7 @@ public class ChallengeHistoryHandler extends CommandInstance.Handler {
         
         if (allRecords.isEmpty()) {
             OutputUtils.printError("No challenge records found yet.", false);
-            OutputUtils.printTip("Start your eco journey today with 'challenge today'! 🌱");
+            OutputUtils.printTip("Start your eco journey today with 'challenge today'!");
             return;
         }
         
@@ -67,6 +67,6 @@ public class ChallengeHistoryHandler extends CommandInstance.Handler {
         };
         
         OutputUtils.printSummaryBox("Summary", summaryStats);
-        OutputUtils.printClosingMessage("🌍 Keep making a positive impact on our planet! 🌱");
+        OutputUtils.printClosingMessage("Keep making a positive impact on our planet!");
     }
 }

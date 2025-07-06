@@ -67,7 +67,7 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
             }
         }
         
-        OutputUtils.printClosingMessage("💪 Keep pushing forward! Every action makes a difference! 🌍");
+        OutputUtils.printClosingMessage("Keep pushing forward! Every action makes a difference!");
     }
 
     private static SimpleMap<String, String> getDailyActivity(ChallengeRecord[] recentRecords) {

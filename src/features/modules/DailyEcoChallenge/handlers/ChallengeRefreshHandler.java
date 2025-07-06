@@ -17,7 +17,7 @@ public class ChallengeRefreshHandler extends CommandInstance.Handler {
         if (challengeManager.hasCompletedChallengeToday()) {
             OutputUtils.printSectionHeader("Already Completed Today!");
             OutputUtils.printSuccess("You've already completed a challenge today!");
-            OutputUtils.printInfo("Great job! No need to refresh since you've already succeeded. 🌱");
+            OutputUtils.printInfo("Great job! No need to refresh since you've already succeeded.");
             OutputUtils.printInfo("Come back tomorrow for a new challenge!");
             return;
         }
@@ -38,7 +38,7 @@ public class ChallengeRefreshHandler extends CommandInstance.Handler {
             OutputUtils.printSectionHeader("New Challenge Assigned!");
             OutputUtils.printDataRow("New Challenge", newChallenge.getDescription());
             OutputUtils.printDataRow("Difficulty", new Chalk(newChallenge.getDifficulty()).bold());
-            OutputUtils.printEncouragement("Ready for your new eco-friendly adventure? 🌱");
+            OutputUtils.printEncouragement("Ready for your new eco-friendly adventure?");
         } else {
             OutputUtils.printWarning("Refresh cancelled. Your current challenge remains active.");
         }

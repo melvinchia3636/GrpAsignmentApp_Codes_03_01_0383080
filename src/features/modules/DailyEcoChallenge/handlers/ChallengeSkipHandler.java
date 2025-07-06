@@ -17,7 +17,7 @@ public class ChallengeSkipHandler extends CommandInstance.Handler {
         if (challengeManager.hasCompletedChallengeToday()) {
             OutputUtils.printSectionHeader("Already Completed Today!");
             OutputUtils.printSuccess("You've already completed a challenge today!");
-            OutputUtils.printInfo("Great job! No need to skip since you've already succeeded. 🌱");
+            OutputUtils.printInfo("Great job! No need to skip since you've already succeeded.");
             OutputUtils.printInfo("Come back tomorrow for a new challenge!");
             return;
         }
@@ -25,7 +25,7 @@ public class ChallengeSkipHandler extends CommandInstance.Handler {
         if (challengeManager.hasSkippedChallengeToday()) {
             OutputUtils.printSectionHeader("Already Skipped Today");
             OutputUtils.printWarning("You've already skipped today's challenge.");
-            OutputUtils.printEncouragement("Tomorrow brings a new opportunity! 🌱");
+            OutputUtils.printEncouragement("Tomorrow brings a new opportunity!");
             return;
         }
         
@@ -44,7 +44,7 @@ public class ChallengeSkipHandler extends CommandInstance.Handler {
         
         if (!response.equalsIgnoreCase("yes")) {
             OutputUtils.printSuccess("Skip cancelled. Your challenge is still active!");
-            OutputUtils.printEncouragement("You've got this! 💪");
+            OutputUtils.printEncouragement("You've got this!");
             return;
         }
 
@@ -52,7 +52,7 @@ public class ChallengeSkipHandler extends CommandInstance.Handler {
         challengeManager.recordChallenge(todaysChallenge, "skipped", notes);
 
         OutputUtils.printSectionHeader("Challenge Skipped");
-        OutputUtils.printEncouragement("Don't worry! Tomorrow brings a new opportunity to make a difference. 🌱");
+        OutputUtils.printEncouragement("Don't worry! Tomorrow brings a new opportunity to make a difference.");
         OutputUtils.printTip("Remember: Every small action counts towards a greener future!");
     }
 }

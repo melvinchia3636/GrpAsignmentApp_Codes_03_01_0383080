@@ -17,7 +17,7 @@ public class ChallengeCompleteHandler extends CommandInstance.Handler {
         if (challengeManager.hasCompletedChallengeToday()) {
             OutputUtils.printSectionHeader("Already Completed Today!");
             OutputUtils.printSuccess("You've already completed a challenge today!");
-            OutputUtils.printInfo("Great job! Come back tomorrow for a new challenge. 🌱");
+            OutputUtils.printInfo("Great job! Come back tomorrow for a new challenge.");
             OutputUtils.printTip("Check your progress with 'challenge streak' or 'challenge history'.");
             return;
         }
