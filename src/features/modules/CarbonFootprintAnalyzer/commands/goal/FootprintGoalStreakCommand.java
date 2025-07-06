@@ -8,7 +8,7 @@ public class FootprintGoalStreakCommand extends CommandInstance {
         super(
                 "streak",
                 "Analyze your carbon footprint streaks",
-                "Show your longest streak of days with reduced carbon footprint",
+                "",
                 new FootprintGoalStreakHandler()
         );
     }

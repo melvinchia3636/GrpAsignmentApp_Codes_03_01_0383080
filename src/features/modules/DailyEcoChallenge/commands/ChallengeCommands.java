@@ -16,6 +16,8 @@ public class ChallengeCommands extends CommandInstance {
                         new ChallengeHistoryCommand()
                 }
         );
+
+        this.setAuthRequired(true);
     }
 
 }

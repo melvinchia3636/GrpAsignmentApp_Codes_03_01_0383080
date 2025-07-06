@@ -39,7 +39,5 @@ public class FootprintDataDeleteHandler extends CommandInstance.Handler {
         } else {
             OutputUtils.printError("Operation cancelled. No data was deleted.", false);
         }
-        
-        sc.close();
     }
 }

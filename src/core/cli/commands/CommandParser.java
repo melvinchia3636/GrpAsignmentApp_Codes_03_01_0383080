@@ -417,7 +417,7 @@ public class CommandParser {
                     false
             );
 
-            return;
+            if (!noError) throw new Error();
         }
 
         OutputUtils.printError(

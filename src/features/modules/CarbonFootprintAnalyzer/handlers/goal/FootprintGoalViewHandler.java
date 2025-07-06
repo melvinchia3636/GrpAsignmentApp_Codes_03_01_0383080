@@ -42,7 +42,7 @@ public class FootprintGoalViewHandler extends CommandInstance.Handler {
                 OutputUtils.printTip("Consider reducing high-impact activities to meet your goal.");
             } else {
                 OutputUtils.printSuccess("You are within your carbon footprint goal!");
-                OutputUtils.printEncouragement("Keep up the great work! 🌱");
+                OutputUtils.printEncouragement("Keep up the great work!");
             }
         }
     }

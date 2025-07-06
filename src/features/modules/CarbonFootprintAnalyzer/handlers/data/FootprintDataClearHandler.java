@@ -26,7 +26,5 @@ public class FootprintDataClearHandler extends CommandInstance.Handler {
         } else {
             OutputUtils.printInfo("Operation cancelled. No data was cleared.");
         }
-        
-        sc.close();
     }
 }
