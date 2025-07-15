@@ -3,6 +3,7 @@ package core.manager;
 import core.io.IOManager;
 import features.auth.data.UserManager;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintManager;
+import features.modules.CarbonFootprintAnalyzer.data.GlobalEmissionsPerCapita;
 import features.modules.DailyEcoChallenge.data.ChallengeManager;
 import features.modules.GreenHabitTracker.data.HabitManager;
 
@@ -14,24 +15,44 @@ import features.modules.GreenHabitTracker.data.HabitManager;
  * In ReactJS, this would be similar to using a context provider to share state
  */
 public class GlobalManager {
-    private static final GlobalManager INSTANCE = new GlobalManager();
+    private static GlobalManager INSTANCE;
 
     private final UserManager userManager;
     private final IOManager ioManager;
     private final FootprintManager footprintManager;
     private final ChallengeManager challengeManager;
     private final HabitManager habitManager;
+    private final GlobalEmissionsPerCapita globalEmissionsPerCapita;
 
     /**
      * Private constructor to prevent instantiation from outside the class.
-     * Initializes the UserManager and IOManager instances.
+     * Initializes the managers for user, IO, footprint, challenge, and habit modules.
      */
-    private GlobalManager() {
+    private GlobalManager(String emissionsDatasetFilePath) {
+        if (INSTANCE != null) {
+            throw new IllegalStateException("GlobalManager has already been initialized.");
+        }
+
+        INSTANCE = this;
+
         userManager = new UserManager();
         ioManager = new IOManager();
         footprintManager = new FootprintManager();
         challengeManager = new ChallengeManager();
         habitManager = new HabitManager();
+        globalEmissionsPerCapita = new GlobalEmissionsPerCapita(emissionsDatasetFilePath);
+    }
+
+    /**
+     * Static factory method to create the singleton instance of GlobalManager.
+     * This method should be called once at the start of the application.
+     *
+     * @param emissionsDatasetFilePath the file path for the emissions dataset
+     */
+    public static void createInstance(String emissionsDatasetFilePath) {
+        if (INSTANCE == null) {
+            new GlobalManager(emissionsDatasetFilePath);
+        }
     }
 
     /**
@@ -102,5 +123,14 @@ public class GlobalManager {
      */
     public HabitManager getHabitManager() {
         return habitManager;
+    }
+
+    /**
+     * Returns the GlobalEmissionsPerCapita instance.
+     *
+     * @return the GlobalEmissionsPerCapita instance
+     */
+    public GlobalEmissionsPerCapita getGlobalEmissionsPerCapita() {
+        return globalEmissionsPerCapita;
     }
 }

@@ -7,7 +7,7 @@ package core.instances;
  * (Why? Because if I want to implement a full JSON parser, my sanity will be completely destroyed.)
  */
 public class JSONObject {
-    private ListOfPairs<String, Object> map = new ListOfPairs<>();
+    private ListOfKVs<String, Object> map = new ListOfKVs<>();
 
     /**
      * Puts a string value into the JSON object with the specified key.
@@ -101,7 +101,7 @@ public class JSONObject {
      * @throws IllegalArgumentException if the JSON is invalid or contains unsupported types
      */
     public void parseFromString(String json) {
-        ListOfPairs<String, Object> newMap = new ListOfPairs<>();
+        ListOfKVs<String, Object> newMap = new ListOfKVs<>();
 
         json = json.trim();
 

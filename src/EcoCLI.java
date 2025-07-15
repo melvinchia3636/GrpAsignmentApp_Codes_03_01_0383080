@@ -6,6 +6,6 @@ import core.cli.REPL;
 public class EcoCLI {
     public static void main(String[] args) {
         // Initialize the REPL (Read-Eval-Print Loop)
-        REPL.start();
+        REPL.start(args);
     }
 }

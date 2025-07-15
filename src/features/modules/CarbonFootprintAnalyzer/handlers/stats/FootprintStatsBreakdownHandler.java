@@ -1,7 +1,7 @@
 package features.modules.CarbonFootprintAnalyzer.handlers.stats;
 
 import core.cli.commands.CommandInstance;
-import core.instances.ListOfPairs;
+import core.instances.ListOfKVs;
 import core.manager.GlobalManager;
 import core.terminal.OutputUtils;
 import features.modules.CarbonFootprintAnalyzer.data.FootprintFactors;
@@ -38,7 +38,7 @@ public class FootprintStatsBreakdownHandler extends CommandInstance.Handler {
 
         OutputUtils.printSectionHeader("Emission Breakdown by Activity Type for the Last " + lastXDays + " Days");
 
-        ListOfPairs<FootprintFactor, Double> activityBreakdown = new ListOfPairs<>();
+        ListOfKVs<FootprintFactor, Double> activityBreakdown = new ListOfKVs<>();
 
         for (FootprintFactor factor : FootprintFactors.FACTORS) {
             FootprintRecord[] recordsForFactor = footprintManager.getRecordsForFactor(factor, lastXDays);
@@ -53,7 +53,7 @@ public class FootprintStatsBreakdownHandler extends CommandInstance.Handler {
         activityBreakdown.sortByValue();
         activityBreakdown.reverse();
 
-        for (ListOfPairs.Entry<FootprintFactor, Double> activity : activityBreakdown.entries()) {
+        for (ListOfKVs.Entry<FootprintFactor, Double> activity : activityBreakdown.entries()) {
             String activityName = activity.getKey().getName();
             double amount = activity.getValue();
             double percentage = (amount / totalAmount) * 100;

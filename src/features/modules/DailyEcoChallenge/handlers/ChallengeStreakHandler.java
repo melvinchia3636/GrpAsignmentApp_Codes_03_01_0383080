@@ -1,7 +1,7 @@
 package features.modules.DailyEcoChallenge.handlers;
 
 import core.cli.commands.CommandInstance;
-import core.instances.ListOfPairs;
+import core.instances.ListOfKVs;
 import core.instances.Timestamp;
 import core.manager.GlobalManager;
 import core.terminal.Chalk;
@@ -46,7 +46,7 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
             OutputUtils.printSubsectionHeader("Last 7 Days Activity");
             
             // Group by date and show activity
-            ListOfPairs<String, String> dailyActivity = getDailyActivity(recentRecords);
+            ListOfKVs<String, String> dailyActivity = getDailyActivity(recentRecords);
 
             // Show the last 7 days
             Timestamp t = new Timestamp();
@@ -69,8 +69,8 @@ public class ChallengeStreakHandler extends CommandInstance.Handler {
         OutputUtils.printClosingMessage("Keep pushing forward! Every action makes a difference!");
     }
 
-    private static ListOfPairs<String, String> getDailyActivity(ChallengeRecord[] recentRecords) {
-        ListOfPairs<String, String> dailyActivity = new ListOfPairs<>();
+    private static ListOfKVs<String, String> getDailyActivity(ChallengeRecord[] recentRecords) {
+        ListOfKVs<String, String> dailyActivity = new ListOfKVs<>();
         for (ChallengeRecord record : recentRecords) {
             String date = String.format("%04d-%02d-%02d",
                 record.getTimestamp().getYear(),

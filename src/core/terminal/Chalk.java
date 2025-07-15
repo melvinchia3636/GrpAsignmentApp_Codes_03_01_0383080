@@ -70,11 +70,6 @@ public class Chalk {
         return this;
     }
 
-    public Chalk black() {
-        this.string = ANSI_BLACK + this.string + ANSI_RESET;
-        return this;
-    }
-
     public Chalk white() {
         this.string = ANSI_WHITE + this.string + ANSI_RESET;
         return this;

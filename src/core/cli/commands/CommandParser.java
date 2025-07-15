@@ -2,7 +2,7 @@ package core.cli.commands;
 
 import core.cli.arguments.*;
 import core.terminal.OutputUtils;
-import core.instances.ListOfPairs;
+import core.instances.ListOfKVs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,28 +17,47 @@ public class CommandParser {
      * Parses the raw command-line arguments into a ParsedCommand object.
      * Handles extraction of the command, positional arguments, and keyword arguments.
      *
+     * @param tokenizedArgs The array of components of the command-line input, already tokenized.
+     * @param withCommand   Whether to include the command in the parsed result.
+     * @return ParsedCommand object containing the command, positional arguments, and keyword arguments.
+     */
+    public static ParsedCommand parseFromRaw(String[] tokenizedArgs, boolean withCommand) {
+        ParsedCommand parsed;
+
+        if (tokenizedArgs.length == 0) {
+            return new ParsedCommand(); // Return empty ParsedCommand if no arguments are provided
+        }
+
+        parsed = new ParsedCommand();
+        if (withCommand) {
+            parsed.setCommand(tokenizedArgs[0]);
+
+            int indexOfFirstPositionalArg = getIndexOfFirstPositionalArg(tokenizedArgs);
+            parsed.setPositionalArgs(Arrays.copyOfRange(tokenizedArgs, 1, indexOfFirstPositionalArg));
+            String[] kwargs = Arrays.copyOfRange(tokenizedArgs, indexOfFirstPositionalArg, tokenizedArgs.length);
+            parsed.setKeywordArgs(parseKeywordArgs(kwargs, parsed.getCommand()));
+
+            return parsed;
+        }
+
+        int indexOfFirstPositionalArg = getIndexOfFirstPositionalArg(tokenizedArgs);
+        parsed.setPositionalArgs(Arrays.copyOfRange(tokenizedArgs, 0, indexOfFirstPositionalArg));
+        String[] kwargs = Arrays.copyOfRange(tokenizedArgs, indexOfFirstPositionalArg, tokenizedArgs.length);
+        parsed.setKeywordArgs(parseKeywordArgs(kwargs, ""));
+
+        return parsed;
+    }
+
+    /**
+     * Parses the raw command-line arguments into a ParsedCommand object.
+     * Handles extraction of the command, positional arguments, and keyword arguments.
+     *
      * @param input The raw command string.
      * @return ParsedCommand object containing the command, positional arguments, and keyword arguments.
      */
     public static ParsedCommand parseFromRaw(String input) {
-        ParsedCommand parsed;
-
         String[] args = tokenize(input);
-
-        if (args.length == 0) {
-            return null;
-        }
-
-        parsed = new ParsedCommand();
-        parsed.command = args[0];
-
-        int indexOfFirstPositionalArg = getIndexOfFirstPositionalArg(args);
-
-        parsed.positionalArgs = Arrays.copyOfRange(args, 1, indexOfFirstPositionalArg);
-        args = Arrays.copyOfRange(args, indexOfFirstPositionalArg, args.length);
-        parsed.keywordArgs = parseKeywordArgs(args, parsed.command);
-
-        return parsed;
+        return parseFromRaw(args, true);
     }
 
     /**
@@ -48,7 +67,7 @@ public class CommandParser {
      * @param allowedArguments The allowed argument definitions (positional and keyword).
      * @return SimpleMap mapping argument names to their values.
      */
-    public static ListOfPairs<String, String> validateAndGenerateArgsMap(
+    public static ListOfKVs<String, String> validateAndGenerateArgsMap(
             ParsedCommand parsedCommand,
             ArgumentList allowedArguments,
             String commandPath
@@ -60,10 +79,10 @@ public class CommandParser {
         PositionalArgument[] positionalArgs = allowedArguments.getPositionalArguments();
         KeywordArgument[] keywordArgs = allowedArguments.getKeywordArguments();
 
-        ListOfPairs<String, String> argsMap = new ListOfPairs<>();
+        ListOfKVs<String, String> argsMap = new ListOfKVs<>();
         boolean positionalArgsNeedPrompting = false;
 
-        if (parsedCommand.positionalArgs.length != 0) {
+        if (parsedCommand.getPositionalArgs().length != 0) {
             validateAndMapPositionalArgs(parsedCommand, positionalArgs, argsMap, commandPath);
         } else {
             // Flag to indicate that positional arguments need prompting
@@ -158,15 +177,16 @@ public class CommandParser {
      * @return An array of positional arguments.
      */
     private static int getIndexOfFirstPositionalArg(String[] args) {
-        int indexOfFirstPositionalArg = 0;
-        for (int i = 1; i < args.length; i++) {
+        int indexOfFirstPositionalArg = -1;
+
+        for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("-")) {
                 indexOfFirstPositionalArg = i;
                 break;
             }
         }
 
-        if (indexOfFirstPositionalArg == 0) {
+        if (indexOfFirstPositionalArg == -1) {
             indexOfFirstPositionalArg = args.length;
         }
 
@@ -181,15 +201,15 @@ public class CommandParser {
      * @return A SimpleMap containing keyword argument names and their corresponding values.
      * @throws IllegalArgumentException if an argument does not start with '-' or '--'.
      */
-    private static ListOfPairs<String, String> parseKeywordArgs(String[] args, String commandPath) {
-        ListOfPairs<String, String> keywordArguments = new ListOfPairs<>();
+    private static ListOfKVs<String, String> parseKeywordArgs(String[] args, String commandPath) {
+        ListOfKVs<String, String> keywordArguments = new ListOfKVs<>();
 
         for (int i = 0; i < args.length; i++) {
             if (!args[i].startsWith("-")) {
                 throw new CommandError(
                         commandPath,
                         "Invalid argument format: " + args[i] + ". " +
-                        "Keyword arguments should start with '-' or '--'."
+                                "Keyword arguments should start with '-' or '--'."
                 );
             }
 
@@ -232,7 +252,7 @@ public class CommandParser {
      */
     private static void promptPositionalArgs(
             PositionalArgument[] allowedPositionalArgs,
-            ListOfPairs<String, String> argsMap
+            ListOfKVs<String, String> argsMap
     ) {
         Scanner scanner = new Scanner(System.in);
         for (PositionalArgument positionalArgs : allowedPositionalArgs) {
@@ -265,11 +285,11 @@ public class CommandParser {
     private static void validateAndMapPositionalArgs(
             ParsedCommand parsedCommand,
             PositionalArgument[] positionalArgs,
-            ListOfPairs<String, String> argsMap,
+            ListOfKVs<String, String> argsMap,
             String commandPath
     ) {
         // Check if the number of positional arguments matches the expected count
-        if (positionalArgs.length != parsedCommand.positionalArgs.length) {
+        if (positionalArgs.length != parsedCommand.getPositionalArgs().length) {
             String expectedArgs = positionalArgs.length > 0 ?
                     String.join(", ",
                             Arrays.stream(positionalArgs)
@@ -286,7 +306,7 @@ public class CommandParser {
                     String.format(
                             "Expected %d positional arguments, but got %d. Expected arguments: %s",
                             positionalArgs.length,
-                            parsedCommand.positionalArgs.length,
+                            parsedCommand.getPositionalArgs().length,
                             expectedArgs
                     )
             );
@@ -295,12 +315,12 @@ public class CommandParser {
         // Validate and map positional arguments
         for (int i = 0; i < positionalArgs.length; i++) {
             String argName = positionalArgs[i].getName();
-            String argValue = parsedCommand.positionalArgs[i];
+            String argValue = parsedCommand.getPositionalArgs()[i];
 
             // Check if the argument value matches the expected data type
             ArgumentDataType targetDataType = positionalArgs[i].getDataType();
             if (targetDataType.isInvalid(argValue)) {
-               printArgsError(positionalArgs[i]);
+                printArgsError(positionalArgs[i]);
             }
 
             argsMap.put(argName, argValue);
@@ -320,7 +340,7 @@ public class CommandParser {
             KeywordArgument[] keywordArgs,
             String commandPath
     ) {
-        for (ListOfPairs.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
+        for (ListOfKVs.Entry<String, String> arg : parsedCommand.getKeywordArgs().entries()) {
             boolean isValid = false;
             String argName = arg.getKey();
 
@@ -351,17 +371,17 @@ public class CommandParser {
     private static void validateAndMapKeywordArgs(
             ParsedCommand parsedCommand,
             KeywordArgument[] keywordArgs,
-            ListOfPairs<String, String> argsMap,
+            ListOfKVs<String, String> argsMap,
             String commandPath
     ) {
         for (KeywordArgument requiredArgument : keywordArgs) {
-            ListOfPairs.Entry<String, String> targetArg = null;
+            ListOfKVs.Entry<String, String> targetArg = null;
 
             String targetName = requiredArgument.getName();
             String targetAbbreviation = requiredArgument.getAbbreviation();
             ArgumentDataType targetDataType = requiredArgument.getDataType();
 
-            for (ListOfPairs.Entry<String, String> arg : parsedCommand.keywordArgs.entries()) {
+            for (ListOfKVs.Entry<String, String> arg : parsedCommand.getKeywordArgs().entries()) {
                 String argName = arg.getKey();
 
                 // Check if the argument matches either the full name or the abbreviation
@@ -418,6 +438,8 @@ public class CommandParser {
             );
 
             if (!noError) throw new Error();
+
+            return;
         }
 
         OutputUtils.printError(
@@ -440,17 +462,41 @@ public class CommandParser {
      * It contains the command name, a 1D array of positional arguments, and a Map object containing keyword arguments.
      */
     public static class ParsedCommand {
-        public String command;
-        public String[] positionalArgs;
-        public ListOfPairs<String, String> keywordArgs;
+        private String command;
+        private String[] positionalArgs = new String[0];
+        private ListOfKVs<String, String> keywordArgs = new ListOfKVs<>();
 
         @Override
         public String toString() {
             return "ParsedCommand{" +
-                    "command='" + command + '\'' +
-                    ", positionalArgs=" + Arrays.toString(positionalArgs) +
-                    ", keywordArgs=" + keywordArgs +
+                    "command='" + getCommand() + '\'' +
+                    ", positionalArgs=" + Arrays.toString(getPositionalArgs()) +
+                    ", keywordArgs=" + getKeywordArgs() +
                     '}';
+        }
+
+        public String getCommand() {
+            return command;
+        }
+
+        public void setCommand(String command) {
+            this.command = command;
+        }
+
+        public String[] getPositionalArgs() {
+            return positionalArgs;
+        }
+
+        public void setPositionalArgs(String[] positionalArgs) {
+            this.positionalArgs = positionalArgs;
+        }
+
+        public ListOfKVs<String, String> getKeywordArgs() {
+            return keywordArgs;
+        }
+
+        public void setKeywordArgs(ListOfKVs<String, String> keywordArgs) {
+            this.keywordArgs = keywordArgs;
         }
     }
 }

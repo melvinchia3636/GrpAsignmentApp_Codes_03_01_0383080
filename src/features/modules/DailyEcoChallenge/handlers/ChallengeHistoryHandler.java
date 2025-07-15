@@ -1,7 +1,7 @@
 package features.modules.DailyEcoChallenge.handlers;
 
 import core.cli.commands.CommandInstance;
-import core.instances.ListOfPairs;
+import core.instances.ListOfKVs;
 import core.instances.Timestamp;
 import core.manager.GlobalManager;
 import core.terminal.Chalk;
@@ -25,7 +25,7 @@ public class ChallengeHistoryHandler extends CommandInstance.Handler {
             return;
         }
         
-        ListOfPairs<String, ChallengeRecord> recordsByDate = new ListOfPairs<>();
+        ListOfKVs<String, ChallengeRecord> recordsByDate = new ListOfKVs<>();
         
         for (ChallengeRecord record : allRecords) {
             Timestamp timestamp = record.getTimestamp();

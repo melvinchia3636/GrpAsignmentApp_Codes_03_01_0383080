@@ -56,24 +56,6 @@ public class CSVParser {
     }
 
     /**
-     * Writes a 2D array of Strings to a CSV file.
-     *
-     * @param filePath the path to the CSV file
-     * @param data     a 2D array of Strings to be written to the CSV file
-     * @throws RuntimeException if an error occurs while writing to the file
-     */
-    public static void toCSVFile(String filePath, String[][] data) {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            for (String[] row : data) {
-                writer.write(String.join(",", row));
-                writer.write("\n");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Error writing CSV file: " + e.getMessage(), e);
-        }
-    }
-
-    /**
      * Converts a 2D array of Strings to a CSV formatted String.
      *
      * @param data a 2D array of Strings to be converted
@@ -88,5 +70,4 @@ public class CSVParser {
 
         return sb.toString();
     }
-
 }

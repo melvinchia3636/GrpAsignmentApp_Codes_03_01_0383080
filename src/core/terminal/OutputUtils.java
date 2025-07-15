@@ -100,8 +100,8 @@ public class OutputUtils {
     /**
      * Prints a data row with colored value
      */
-    public static void printDataRow(String label, Chalk valueColor) {
-        System.out.printf("  %-25s %s%n", label + ":", valueColor.toString());
+    public static void printDataRow(String label, Chalk valueWithColor) {
+        System.out.printf("  %-25s %s%n", label + ":", valueWithColor.toString());
     }
 
     /**

@@ -84,39 +84,4 @@ public class Challenges {
         int randomIndex = (int) (Math.random() * CHALLENGES.length);
         return CHALLENGES[randomIndex];
     }
-
-    /**
-     * Gets a random challenge of a specific difficulty level.
-     *
-     * @param difficulty The desired difficulty level
-     * @return A randomly selected challenge of the specified difficulty
-     * @throws IllegalArgumentException if no challenges exist for the given difficulty
-     */
-    public static Challenge getRandomChallengeByDifficulty(String difficulty) {
-        Challenge[] difficultyChallenges = getChallengesByDifficulty(difficulty);
-        if (difficultyChallenges.length == 0) {
-            throw new IllegalArgumentException("No challenges found for difficulty: " + difficulty);
-        }
-        int randomIndex = (int) (Math.random() * difficultyChallenges.length);
-        return difficultyChallenges[randomIndex];
-    }
-
-    /**
-     * Gets the total number of available challenges.
-     *
-     * @return The total count of challenges
-     */
-    public static int getTotalChallengeCount() {
-        return CHALLENGES.length;
-    }
-
-    /**
-     * Gets the count of challenges for a specific difficulty level.
-     *
-     * @param difficulty The difficulty level to count
-     * @return The number of challenges for the specified difficulty
-     */
-    public static int getChallengeCountByDifficulty(String difficulty) {
-        return getChallengesByDifficulty(difficulty).length;
-    }
 }

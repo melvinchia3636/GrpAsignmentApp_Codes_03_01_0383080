@@ -9,10 +9,10 @@ import java.util.ArrayList;
  * @param <K> the type of keys maintained by this data structure
  * @param <V> the type of mapped values
  */
-public class ListOfPairs<K, V> {
+public class ListOfKVs<K, V> {
     private final ArrayList<Entry<K, V>> entries;
 
-    public ListOfPairs() {
+    public ListOfKVs() {
         this.entries = new ArrayList<>();
     }
 
@@ -118,7 +118,7 @@ public class ListOfPairs<K, V> {
     }
 
     /**
-     * Represents a key-value pair entry in the {@link ListOfPairs}.
+     * Represents a key-value pair entry in the {@link ListOfKVs}.
      *
      * @param <K> the type of keys maintained by this entry
      * @param <V> the type of mapped values

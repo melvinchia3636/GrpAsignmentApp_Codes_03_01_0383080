@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="97ea308d-32c3-4fbd-b7af-6422cf37fd66" name="Changes" comment="feat: more functions implemented">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EcoCLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EcoCLI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/cli/REPL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/cli/REPL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/cli/commands/CommandInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/cli/commands/CommandInstance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/cli/commands/CommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/cli/commands/CommandParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/instances/JSONObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/instances/JSONObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/instances/ListOfPairs.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/io/CSVParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/io/CSVParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/manager/GlobalManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/manager/GlobalManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/terminal/OutputUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/terminal/OutputUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/auth/data/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/data/UserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/commands/FootprintCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/commands/FootprintCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/handlers/stats/FootprintStatsBreakdownHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/handlers/stats/FootprintStatsBreakdownHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/modules/DailyEcoChallenge/handlers/ChallengeHistoryHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/DailyEcoChallenge/handlers/ChallengeHistoryHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/modules/DailyEcoChallenge/handlers/ChallengeStreakHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/DailyEcoChallenge/handlers/ChallengeStreakHandler.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+</project>

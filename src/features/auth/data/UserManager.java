@@ -9,6 +9,7 @@ public class UserManager {
     private String username;
     private Password password;
     private double footprintGoal = 0.0;
+    private String footprintCountry = "";
     private String todayChallengeId = "";
     public boolean isLoggedIn = false;
 
@@ -34,6 +35,7 @@ public class UserManager {
         this.password = new Password(password);
         this.username = username;
         this.footprintGoal = data.getDouble("footprintGoal");
+        this.footprintCountry = data.getString("footprintCountry");
         String challengeId = data.getString("todayChallengeId");
         this.todayChallengeId = challengeId != null ? challengeId : "";
         isLoggedIn = true;
@@ -45,6 +47,8 @@ public class UserManager {
         username = null;
         password = null;
         todayChallengeId = "";
+        footprintGoal = 0.0;
+        footprintCountry = "";
         isLoggedIn = false;
     }
 
@@ -56,10 +60,11 @@ public class UserManager {
         return password;
     }
 
-
     public double getFootprintGoal() {
         return footprintGoal;
     }
+
+    public String getFootprintCountry() { return footprintCountry; }
 
     public String getTodayChallengeId() {
         return todayChallengeId;
@@ -67,6 +72,11 @@ public class UserManager {
 
     public void setFootprintGoal(double footprintGoal) {
         this.footprintGoal = footprintGoal;
+        writeToFile();
+    }
+
+    public void setFootprintCountry(String footprintCountry) {
+        this.footprintCountry = footprintCountry;
         writeToFile();
     }
 
@@ -92,6 +102,7 @@ public class UserManager {
 
         JSONObject JSONObject = new JSONObject();
         JSONObject.put("footprintGoal", footprintGoal);
+        JSONObject.put("footprintCountry", footprintCountry);
         JSONObject.put("todayChallengeId", todayChallengeId);
 
         return JSONObject;
