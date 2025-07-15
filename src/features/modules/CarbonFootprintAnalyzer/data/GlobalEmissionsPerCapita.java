@@ -9,6 +9,13 @@ import java.util.ArrayList;
 public class GlobalEmissionsPerCapita {
     private final ArrayList<GlobalEmissionPerCapitaRecord> records;
 
+    /**
+     * Constructs a GlobalEmissionsPerCapita object by parsing the CSV dataset file.
+     * The dataset should contain global CO₂ emissions per capita data.
+     *
+     * @param datasetPath The path to the CSV file containing the emissions data.
+     * @throws IllegalArgumentException If the CSV format is invalid or if there are parsing errors.
+     */
     public GlobalEmissionsPerCapita(String datasetPath) {
         ArrayList<String[]> csvData = CSVParser.parseCSVFile(datasetPath);
         records = new ArrayList<>();
@@ -47,10 +54,20 @@ public class GlobalEmissionsPerCapita {
         }
     }
 
+    /**
+     * Returns the list of records containing global emissions per capita data.
+     *
+     * @return An ArrayList of GlobalEmissionPerCapitaRecord objects.
+     */
     public ArrayList<GlobalEmissionPerCapitaRecord> getRecords() {
         return records;
     }
 
+    /**
+     * Returns an array of unique entities (countries or regions) present in the dataset.
+     *
+     * @return An array of strings representing unique entities.
+     */
     public String[] getEntities() {
         ArrayList<String> entities = new ArrayList<>();
         for (GlobalEmissionPerCapitaRecord record : records) {
@@ -63,6 +80,12 @@ public class GlobalEmissionsPerCapita {
         return entities.toArray(new String[0]);
     }
 
+    /**
+     * Filters the records for a specific entity (country or region).
+     *
+     * @param entity The name of the entity to filter by.
+     * @return An array of GlobalEmissionPerCapitaRecord objects for the specified entity.
+     */
     public GlobalEmissionPerCapitaRecord[] filterEntityRecords(String entity) {
         ArrayList<GlobalEmissionPerCapitaRecord> filteredRecords = new ArrayList<>();
         for (GlobalEmissionPerCapitaRecord record : records) {

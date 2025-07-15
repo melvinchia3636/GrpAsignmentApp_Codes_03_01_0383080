@@ -18,14 +18,29 @@ public class GlobalEmissionPerCapitaRecord {
         this.co2ePerCapita = co2ePerCapita;
     }
 
+    /**
+     * Returns the name of the entity (e.g., country or region).
+     *
+     * @return the entity name
+     */
     public String getEntity() {
         return entity;
     }
 
+    /**
+     * Returns the year of the record.
+     *
+     * @return the year
+     */
     public int getYear() {
         return year;
     }
 
+    /**
+     * Returns the CO2 equivalent emissions per capita for the specified year.
+     *
+     * @return the CO2e per capita in tonnes
+     */
     public double getCo2ePerCapita() {
         return co2ePerCapita;
     }

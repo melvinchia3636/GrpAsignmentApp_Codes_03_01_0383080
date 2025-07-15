@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="97ea308d-32c3-4fbd-b7af-6422cf37fd66" name="Changes" comment="feat: more functions implemented">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EcoCLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EcoCLI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/cli/REPL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/cli/REPL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/cli/commands/CommandInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/cli/commands/CommandInstance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/cli/commands/CommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/cli/commands/CommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/instances/JSONObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/instances/JSONObject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/instances/ListOfPairs.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/io/CSVParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/io/CSVParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/manager/GlobalManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/manager/GlobalManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/terminal/OutputUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/terminal/OutputUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/data/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/data/UserManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/commands/FootprintCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/commands/FootprintCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/handlers/stats/FootprintStatsBreakdownHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/handlers/stats/FootprintStatsBreakdownHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/modules/DailyEcoChallenge/handlers/ChallengeHistoryHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/DailyEcoChallenge/handlers/ChallengeHistoryHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/modules/DailyEcoChallenge/handlers/ChallengeStreakHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/DailyEcoChallenge/handlers/ChallengeStreakHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/data/GlobalEmissionsPerCapita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/data/GlobalEmissionsPerCapita.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/instances/GlobalEmissionPerCapitaRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/modules/CarbonFootprintAnalyzer/instances/GlobalEmissionPerCapitaRecord.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,13 +23,75 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main"
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "melvinchia3636"
   }
 }]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/melvinchia3636/GrpAsignmentApp_Codes_03_01_0383080",
+    "accountId": "44c3cfd3-d26a-45ef-8ac8-207ccc43b97c"
+  }
+}]]></component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="true" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="2zuCUJjgzfgUpKRt2bWQxt9Q1FS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.EcoCLI.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main",
+    "go.import.settings.migrated": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="97ea308d-32c3-4fbd-b7af-6422cf37fd66" name="Changes" comment="feat: more functions implemented" />
+      <created>1752571586218</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1752571586218</updated>
+      <workItem from="1752571588420" duration="2717000" />
+    </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>false</integration-enabled>
+    <settings-migrated>true</settings-migrated>
   </component>
 </project>
